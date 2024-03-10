@@ -168,6 +168,8 @@ class BaseClient:
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         follow_redirects: bool = False,
         max_redirects: int = DEFAULT_MAX_REDIRECTS,
+        verify_ssl: bool = DEFAULT_VERIFY_SSL,
+        cert: CertTypes = DEFAULT_CERT_CONFIG,
         event_hooks: typing.Optional[
             typing.Mapping[str, typing.List[EventHook]]
         ] = None,
