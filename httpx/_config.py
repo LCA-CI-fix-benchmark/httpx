@@ -140,6 +140,51 @@ class SSLContext(ssl.SSLContext):
 
     def __new__(
         cls,
+        verify: bool = True,
+        ca_certs: Optional[str] = None,
+        ciphers: Optional[str] = None,
+        alpn_protocols: Optional[str] = None,
+        certfile: Optional[str] = None,
+        keyfile: Optional[str] = None,
+        passphrase: Optional[str] = None,
+        cert_reqs: Optional[int] = None,
+        options: Optional[int] = None,
+        pkcs12: Optional[bytes] = None,
+        ssl_version: Optional[int] = None,
+        alpn_select_callback: Optional[Callable[..., str]] = None,
+        http2: bool = False
+    ):
+        return object.__new__(cls)
+
+    def __init__(
+        self,
+        verify: bool = True,
+        ca_certs: Optional[str] = None,
+        ciphers: Optional[str] = None,
+        alpn_protocols: Optional[str] = None,
+        certfile: Optional[str] = None,
+        keyfile: Optional[str] = None,
+        passphrase: Optional[str] = None,
+        cert_reqs: Optional[int] = None,
+        options: Optional[int] = None,
+        pkcs12: Optional[bytes] = None,
+        ssl_version: Optional[int] = None,
+        alpn_select_callback: Optional[Callable[..., str]] = None,
+        http2: bool = False
+    ):
+        object.__init__(self)
+
+    @property
+    def verify(self) -> bool:
+        return self._verify
+
+    @verify.setter
+    def verify(self, value: bool) -> None:
+        self._verify = value
+
+    def __repr__(self) -> str:
+        return f"<SSLContext [verify={self.verify}]>"
+
         protocol: ssl._SSLMethod = ssl.PROTOCOL_TLS_CLIENT,
         *args: typing.Any,
         **kwargs: typing.Any,
