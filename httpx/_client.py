@@ -168,6 +168,13 @@ class BaseClient:
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         follow_redirects: bool = False,
         max_redirects: int = DEFAULT_MAX_REDIRECTS,
+
+        # Check if the requested name is present in the cookies
+        if cookies and name not in cookies:
+            raise KeyError(name)
+
+        # Continue with the rest of the method
+
         event_hooks: typing.Optional[
             typing.Mapping[str, typing.List[EventHook]]
         ] = None,
