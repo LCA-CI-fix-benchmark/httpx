@@ -12,10 +12,10 @@ httpx.ConnectError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
 You can configure the verification using `httpx.SSLContext()`.
 
 ```pycon
->>> ssl_context = httpx.SSLContext()
+>>> ssl_context = httpx.SSLContext(verify=True)
 >>> ssl_context
 <SSLContext [verify=True]>
->>> httpx.get("https://www.example.com", ssl_context=ssl_context)
+>>> httpx.get("https://www.example.com", ssl=ssl_context)
 httpx.ConnectError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:997)
 ```
 
