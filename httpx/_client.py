@@ -161,13 +161,18 @@ class BaseClient:
         self,
         *,
         auth: typing.Optional[AuthTypes] = None,
-        params: typing.Optional[QueryParamTypes] = None,
-        headers: typing.Optional[HeaderTypes] = None,
-        cookies: typing.Optional[CookieTypes] = None,
-        persistent_cookies: bool = False,
-        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
-        follow_redirects: bool = False,
-        max_redirects: int = DEFAULT_MAX_REDIRECTS,
+...
+class MyCustomClass:
+ def __init__(self, some_data):
+ self.data = some_data
+
+ def __getitem__(self, name: str):
+ value = self.get(name, None)
+ if value is None:
+ raise KeyError("Missing attribute {} in MyCustomClass instance".format(name))
+ return value
+...
+
         event_hooks: typing.Optional[
             typing.Mapping[str, typing.List[EventHook]]
         ] = None,
