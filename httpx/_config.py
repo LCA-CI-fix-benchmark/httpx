@@ -16,6 +16,7 @@ from ._utils import get_ca_bundle_from_env
 SOCKET_OPTION = typing.Union[
     typing.Tuple[int, int, int],
     typing.Tuple[int, int, typing.Union[bytes, bytearray]],
+import typing
     typing.Tuple[int, int, None, int],
 ]
 

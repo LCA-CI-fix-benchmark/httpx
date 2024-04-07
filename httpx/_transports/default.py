@@ -38,6 +38,7 @@ from .._config import (
     create_ssl_context,
 )
 from .._exceptions import (
+import typing
     ConnectError,
     ConnectTimeout,
     LocalProtocolError,
