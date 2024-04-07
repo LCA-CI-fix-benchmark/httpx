@@ -71,12 +71,17 @@ def test_load_ssl_config_no_verify():
 def test_SSLContext_with_get_request(server, cert_pem_file):
     context = httpx.SSLContext(verify=cert_pem_file)
     response = httpx.get(server.url, ssl_context=context)
+```python
     assert response.status_code == 200
 
+def test_sslcontext_repr():
+    ssl_context = httpx.SSLContext()
+    assert repr(ssl_context) == "<SSLContext [verify=True]>"
 
 def test_limits_repr():
     limits = httpx.Limits(max_connections=100)
     expected = (
+```
         "Limits(max_connections=100, max_keepalive_connections=None,"
         " keepalive_expiry=5.0)"
     )
