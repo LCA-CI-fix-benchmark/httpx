@@ -168,6 +168,11 @@ class BaseClient:
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         follow_redirects: bool = False,
         max_redirects: int = DEFAULT_MAX_REDIRECTS,
+    def __getitem__(self, name: str) -> str:
+        value = self.get(name)
+        if value is None:
+            raise KeyError(name)
+        return value
         event_hooks: typing.Optional[
             typing.Mapping[str, typing.List[EventHook]]
         ] = None,
