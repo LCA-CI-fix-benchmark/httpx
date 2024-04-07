@@ -168,6 +168,8 @@ class BaseClient:
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         follow_redirects: bool = False,
         max_redirects: int = DEFAULT_MAX_REDIRECTS,
+        raise_for_status: bool = True,
+        decode_content: bool = True
         event_hooks: typing.Optional[
             typing.Mapping[str, typing.List[EventHook]]
         ] = None,
