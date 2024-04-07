@@ -29,13 +29,14 @@ from types import TracebackType
 
 import httpcore
 
+from typing import Union, Tuple
 from .._config import (
+    create_ssl_context,
     DEFAULT_LIMITS,
     DEFAULT_NETWORK_OPTIONS,
-    Proxy,
     Limits,
     NetworkOptions,
-    create_ssl_context,
+    Proxy,
 )
 from .._exceptions import (
     ConnectError,
