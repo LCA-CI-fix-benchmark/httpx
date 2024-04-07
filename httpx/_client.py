@@ -1460,6 +1460,7 @@ class AsyncClient(BaseClient):
             http1=http1,
             http2=http2,
             limits=limits,
+        )
             proxy=proxy,
         )
 
