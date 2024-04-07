@@ -133,7 +133,6 @@ class SSLContext(ssl.SSLContext):
                     certfile=cert[0],
                     keyfile=cert[1],
                     password=cert[2],
-                )
 
     def __repr__(self) -> str:
         return f"<SSLContext [verify={self.verify}]>"
