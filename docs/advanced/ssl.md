@@ -13,10 +13,11 @@ You can configure the verification using `httpx.SSLContext()`.
 
 ```pycon
 >>> ssl_context = httpx.SSLContext()
+>>> ssl_context.verify = False
 >>> ssl_context
-<SSLContext [verify=True]>
+<SSLContext [verify=False]>
 >>> httpx.get("https://www.example.com", ssl_context=ssl_context)
-httpx.ConnectError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:997)
+<Response [200 OK]>
 ```
 
 For example, you can use this to disable verification completely and allow insecure requests...
