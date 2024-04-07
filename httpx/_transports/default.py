@@ -38,6 +38,161 @@ from .._config import (
     create_ssl_context,
 )
 from .._exceptions import (
+    ConnectTimeout,
+    ConnectError,
+    ConnectTimeout,
+    ConnectError,
+    ConnectTimeout,
+    ConnectError,
+)
+from .._models import (
+    Request,
+    Response,
+)
+from .._version import __version__, version_info
+
+
+class DefaultTransport(HTTPTransport):
+    """Default HTTP transport implementation."""
+
+    def __init__(
+        self,
+        verify: VerifyTypes = True,
+        cert: CertTypes = None,
+        limits: Limits = DEFAULT_LIMITS,
+        network_options: NetworkOptions = DEFAULT_NETWORK_OPTIONS,
+        proxy: typing.Union[str, Proxy] = None,
+        event_handler: typing.Callable = None,
+    ) -> None:
+        super().__init__(
+            verify=verify,
+            cert=cert,
+            limits=limits,
+            network_options=network_options,
+            proxy=proxy,
+            event_handler=event_handler,
+        )
+        self._is_verifying = verify
+        self._ssl_context = create_ssl_context(verify=verify, cert=cert)
+
+    def __enter__(self) -> "DefaultTransport":
+        return self
+
+    def __exit__(self, *args: typing.Any) -> None:
+        self.close()
+
+    @property
+    def is_verifying(self) -> bool:
+        return self._is_verifying
+
+    @property
+    def ssl_context(self) -> "ssl.SSLContext":
+        return self._ssl_context
+
+    def handle_async_request(
+        self, request: Request, timeout: typing.Optional[float] = None
+    ) -> asyncio.Future:
+        loop = asyncio.get_event_loop()
+        return asyncio.ensure_future(self.handle_request(request, timeout=timeout))
+
+    async def handle_request(
+        self, request: Request, timeout: typing.Optional[float] = None
+    ) -> Response:
+        try:
+            async with self._create_connection(request) as connection:
+                return await self._send_request(connection, request, timeout)
+        except OSError as exc:
+            raise ConnectError(str(exc)) from exc
+
+    async def _create_connection(
+        self, request: Request, timeout: typing.Optional[float] = None
+    ) -> HTTPConnection:
+        timeout, deadline = self._resolve_timeout(timeout)
+        scheme = request.url.scheme
+        host = request.url.host
+        port = request.url.port
+
+        sock_options = self._get_socket_options(request)
+        ssl = scheme == "https" and self.is_verifying
+        ssl_context = self.ssl_context if ssl else None
+
+        if ssl:
+            proxy = None
+        else:
+            proxy = self._get_proxy(request)
+
+        connection_factory = self._get_connection_factory(request)
+        connection = await connection_factory(
+            scheme, host, port, timeout=timeout, ssl=ssl, ssl_context=ssl_context, proxies=proxy, sock_options=sock_options, deadline=deadline
+        )
+
+        return connection
+
+    def _get_socket_options(self, request: Request) -> typing.Optional[typing.Iterable[typing.Union[int, str]]]:
+        socket_options = None
+        timeout = self._get_timeout(request)
+        if timeout is not None:
+            socket_options = self._get_socket_options_from_timeout(timeout)
+        return socket_options
+
+    @staticmethod
+    def _get_socket_options_from_timeout(timeout: float) -> typing.Optional[typing.Iterable[typing.Union[int, str]]]:
+        socket_options = [(socket.SOL_SOCKET, socket.SO_SNDTIMEO, int(timeout * 1000)), (socket.SOL_SOCKET, socket.SO_RCVTIMEO, int(timeout * 1000))]
+        return socket_options
+
+    def _get_proxy(self, request: Request) -> typing.Optional[typing.Union[str, Proxy]]:
+        proxy = None
+        if self.proxy:
+            proxy = self.proxy
+        elif request.proxy:
+            proxy = request.proxy
+        return proxy
+
+    def _get_connection_factory(self, request: Request) -> typing.Callable:
+        connection_factory = self._get_connection_factory_using_pool
+        if request.url.scheme == "https" or self.is_verifying:
+            connection_factory = self._get_connection_factory_using_pool
+        else:
+            connection_factory = self._create_connection
+        return connection_factory
+
+    def _get_connection_factory_using_pool(
+        self, scheme: str, host: str, port: int, timeout: float, ssl: bool, ssl_context: typing.Optional["ssl.SSLContext"], proxies: typing.Optional[typing.Union[str, Proxy]], sock_options: typing.Optional[typing.Iterable[typing.Union[int, str]]], deadline: typing.Optional[float]
+    ) -> typing.Callable:
+        return self._connection_pool.connection
+
+    def _create_connection(
+        self, scheme: str, host: str, port: int, timeout: float, ssl: bool, ssl_context: typing.Optional["ssl.SSLContext"], proxies: typing.Optional[typing.Union[str, Proxy]], sock_options: typing.Optional[typing.Iterable[typing.Union[int, str]]], deadline: typing.Optional[float]
+    ) -> HTTPConnection:
+        connection_class = HTTPConnection
+        if ssl:
+            connection_class = VerifiedHTTPSConnection
+        connection = connection_class(
+            host=host,
+            port=port,
+            timeout=timeout,
+            ssl_context=ssl_context,
+            proxies=proxies,
+            sock_options=sock_options,
+        )
+        return connection
+
+    def _resolve_timeout(self, timeout: typing.Optional[float]) -> typing.Tuple[typing.Optional[float], typing.Optional[float]]:
+        if timeout is None:
+            timeout = self.timeout
+        deadline = None
+        if timeout is not None:
+            deadline = time.monotonic() + timeout
+        return timeout, deadline
+
+    def _get_timeout(self, request: Request) -> typing.Optional[float]:
+        timeout = None
+        if request.timeout is not None:
+            timeout = request.timeout
+        elif self.timeout is not None:
+            timeout = self.timeout
+        return timeout
+
     ConnectError,
     ConnectTimeout,
     LocalProtocolError,
