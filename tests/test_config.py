@@ -76,7 +76,28 @@ def test_SSLContext_with_get_request(server, cert_pem_file):
 
 def test_limits_repr():
     limits = httpx.Limits(max_connections=100)
-    expected = (
+    expected = f"<Limits [max_connections={limits.max_connections}]>"
+    assert limits.__repr__() == expected
+
+
+def test_ssl_context_repr():
+    ssl_context = httpx.SSLContext(verify=False)
+    expected = f"<SSLContext [verify={ssl_context.verify}]>"
+    assert ssl_context.__repr__() == expected
+
+
+def test_client_repr():
+    client = httpx.Client(limits=httpx.Limits(max_connections=100), ssl_context=httpx.SSLContext())
+    expected = f"<Client [limits={client.limits}, ssl_context={client.ssl_context}]>"
+    assert client.__repr__() == expected
+
+
+def test_get():
+    client = httpx.Client(limits=httpx.Limits(max_connections=100), ssl_context=httpx.SSLContext())
+    response = client.get("https://www.example.com", ssl_context=client.ssl_context)
+    assert response.status_code == 200
+    assert response.text == "<!DOCTYPE html><html><head><title>Example Domain</title><body><div>Hello, world!</div></body></html>"
+```
         "Limits(max_connections=100, max_keepalive_connections=None,"
         " keepalive_expiry=5.0)"
     )
