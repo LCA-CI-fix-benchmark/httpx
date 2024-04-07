@@ -29,15 +29,10 @@ from types import TracebackType
 
 import httpcore
 
-from .._config import (
-    DEFAULT_LIMITS,
-    DEFAULT_NETWORK_OPTIONS,
-    Proxy,
-    Limits,
-    NetworkOptions,
-    create_ssl_context,
-)
-from .._exceptions import (
+from .._config import DefaultLimits, Proxy, create_ssl_context
+from .._config import DefaultNetworkOptions, Limits, NetworkOptions
+from .._exceptions import *
+
     ConnectError,
     ConnectTimeout,
     LocalProtocolError,
