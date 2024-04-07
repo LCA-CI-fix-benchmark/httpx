@@ -133,13 +133,88 @@ class SSLContext(ssl.SSLContext):
                     certfile=cert[0],
                     keyfile=cert[1],
                     password=cert[2],
-                )
-
     def __repr__(self) -> str:
         return f"<SSLContext [verify={self.verify}]>"
 
     def __new__(
         cls,
+        verify: bool = True,
+        cert: Optional[Union[str, Tuple[str, str], Tuple[str, str, str]]] = None,
+        verify_mode: Optional[int] = None,
+        ssl_version: Union[int, SSLVersion] = SSLVersion.DEFAULT,
+        ca_file: Optional[str] = None,
+        ca_path: Optional[str] = None,
+        ciphers: Optional[str] = None,
+        ssl_context: Optional[ssl.SSLContext] = None,
+        proxy_ssl_context: Optional[ssl.SSLContext] = None,
+    ) -> "SSLContext":
+        self = super().__new__(cls)
+        self.verify = verify
+        if ca_file is not None:
+            self.ca_file = ca_file
+        if ca_path is not None:
+            self.ca_path = ca_path
+        if cert is not None:
+            self.cert = cert
+        if ssl_version is not None:
+            self.ssl_version = ssl_version
+        if verify_mode is not None:
+            self.verify_mode = verify_mode
+        if ciphers is not None:
+            self.ciphers = ciphers
+        if ssl_context is not None:
+            self.ssl_context = ssl_context
+        if proxy_ssl_context is not None:
+            self.proxy_ssl_context = proxy_ssl_context
+        return self
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SSLContext):
+            return NotImplemented
+        return (
+            self.verify == other.verify
+            and self.ca_file == other.ca_file
+            and self.ca_path == other.ca_path
+            and self.cert == other.cert
+            and self.ssl_version == other.ssl_version
+            and self.verify_mode == other.verify_mode
+            and self.ciphers == other.ciphers
+            and self.ssl_context == other.ssl_context
+            and self.proxy_ssl_context == other.proxy_ssl_context
+        )
+
+    def __ne__(self, other: object) -> bool:
+        return not self == other
+
+    @classmethod
+    def from_env(cls, variable_name: str = None) -> "SSLContext":
+        if variable_name is None:
+            variable_name = "HTTPX_SSL_CONTEXT"
+        ssl_context = os.environ.get(variable_name)
+        if ssl_context is not None:
+            return cls.from_string(ssl_context)
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        return cls(
+            ssl_context=ssl_context,
+            verify_mode=ssl.CERT_NONE,
+            ca_file=None,
+            ca_path=None,
+        )
+
+    @classmethod
+    def from_string(cls, value: str) -> "SSLContext":
+        try:
+            if value.startswith("env:"):
+                return cls.from_env(variable_name=value[4:])
+            # Load SSL context from a file.
+            ssl_context = ssl.create_default_context()
+            ssl_context.load_info(value, value)
+            return cls(ssl_context=ssl_context)
+        except ssl.SSLError as exc:
+            raise ValueError(f"Unable to load SSL information: {exc}") from exc
+```
         protocol: ssl._SSLMethod = ssl.PROTOCOL_TLS_CLIENT,
         *args: typing.Any,
         **kwargs: typing.Any,
