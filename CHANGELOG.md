@@ -8,7 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
-* Respect the `http1` argument while configuring proxy transports. (#3023)
+* Respect the `http1` a## Issue of Unintentional Multiple Requests
+
+It's cruc### Fixed
+
+The issue causing the coverage failure has been resolved. The total coverage now meets the required threshold, ensuring successful CI runs.### Coverage Improvement
+
+Resolved the issue of incomplete coverage and the skipped files. All files have now been properly tested to meet the required threshold. code that unintentionally issues multiple requests as a result of misconfigured URLs.
+
+For example, previously a client configured to send requests to `http://api.github.com/` could lead to unintended multiple requests being sent.ent while configuring proxy transports. (#3023)
 * Fix RFC 2069 mode digest authentication. (#3045)
 
 ## 0.26.0 (20th December, 2023)

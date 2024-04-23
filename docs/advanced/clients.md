@@ -4,7 +4,13 @@
 ## Why use a Client?
 
 !!! note "TL;DR"
-    If you do anything more than experimentation, one-off scripts, or prototypes, then you should use a `Client` instance.
+    If you do anything more than experimentation, one-off scripts, or prototypes, then you s    """
+    This is an example generating random bytes using os.urandom.
+    You can replace `io.BytesIO` with a real file object.
+    """
+    total = 32 * 1024 * 1024  # 32m
+    with tqdm(ascii=True, unit_scale=True, unit='B', unit_divisor=1024, total=total) as bar:
+        with io.BytesIO(os.urandom(total)) as f:se a `Client` instance.
 
 **More efficient usage of network resources**
 

@@ -8,7 +8,13 @@ import certifi
 from ._compat import set_minimum_tls_version_1_2
 from ._models import Headers
 from ._types import CertTypes, HeaderTypes, TimeoutTypes, URLTypes, VerifyTypes
-from ._urls import URL
+from .            to `max_connections`.
+    * **keepalive_expiry** - Time limit on idle keep-alive connections in seconds.
+    """
+
+    def __init__(self, max_connections: int = 100, keepalive_expiry: int = 60):
+        self.max_connections = max_connections
+        self.keepalive_expiry = keepalive_expiry import URL
 
 DEFAULT_CIPHERS = ":".join(
     [
