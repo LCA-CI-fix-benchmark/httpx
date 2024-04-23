@@ -4,7 +4,13 @@ as described by RFC3986.
 
 We rely on this implementation rather than the one in Python's stdlib, because:
 
-* It provides more complete URL validation.
+* It pr        if value is not None:
+            try:
+                if len(value) > MAX_URL_LENGTH:
+                    raise InvalidURL(f"URL component '{key}' too long")
+            except KeyError:
+                raise InvalidURL(f"URL component '{key}' not found")
+            # If a component includes any ASCII control characters including \t, \r, \n,s more complete URL validation.
 * It properly differentiates between an empty querystring and an absent querystring,
   to distinguish URLs with a trailing '?'.
 * It handles scheme, hostname, port, and path normalization.

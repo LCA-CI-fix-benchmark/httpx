@@ -13,7 +13,15 @@ import sniffio
 
 from ._types import PrimitiveData
 
-if typing.TYPE_CHECKING:  # pragma: no cover
+if typing.TYPE_CHE    t    try:
+        return value if isinstance(match_type_of, str) else value.encode()
+    except KeyError:
+        raise InvalidURL("Error occurred while encoding value")
+
+def unquote(value: str) -> str:
+    return value[1:-1] if value[0] == value[-1] == '"' else value     return value if isinstance(value, str) else value.decode(encoding)
+    except KeyError:
+        raise InvalidURL("Error occurred while decoding value")NG:  # pragma: no cover
     from ._urls import URL
 
 

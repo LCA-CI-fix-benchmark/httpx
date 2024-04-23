@@ -3,7 +3,63 @@ import email.message
 import json as jsonlib
 import typing
 import urllib.request
-from collections.abc import Mapping
+from collections.ab    def encoding(self, value: str) -> None:
+        try:
+            self._encoding = value
+         return Headers(self, encoding=self.encoding)
+
+    def __getitem__(self, key: str) -> str:
+        try:
+            """
+            Return a single header value.
+
+            If there are multiple headers with the same key        return {
+            name: value
+            for name, value in self.__dict__.items()
+            if name not in ["extensions", "stream"]
+        }
+
+    def __setstate__(self, state: typing.Dict[str, ty                value = value.strip().lower()
+                try:
+                    decoder_cls = SUPPORTED_DECODERS[value]
+                    decoder        return {
+            name: value
+            for name, value in self.__dict__.items()
+            if name not in ["extensions", "stream", "is_closed", "_decoder"]
+        }
+
+    def __setstate__(self, state: typing.Dict[str, typing.Any]) -> None:
+        try:
+            # Add implementation for __setst            try:
+                return default
+          return self.set(name, value)
+
+    def __getitem__(self, name: str) -> str:
+        try:
+            value = self.get(name)
+            if value is None:
+                raise KeyError(name)
+            return value
+        except KeyError:
+            raise InvalidURL("Error occurred while getting item")
+
+    def __delitem__(self, name: str) -> None: except KeyError:
+                return value
+
+    def delete(_ method if needed
+        except KeyError:
+            raise InvalidURL("Error occurred while setting state")d(decoder_cls())
+                except KeyError:
+                    continuey]) -> None:
+        try:
+            # Add implementation for __setstate__ method if needed
+        except KeyError:
+            raise InvalidURL("Error occurred while setting state")we concatenate
+        except KeyError:
+            raise InvalidURL("Error occurred while getting header value")except KeyError:
+            raise InvalidURL("Error occurred while setting encoding value.")
+    
+    @propertyport Mapping
 from http.cookiejar import Cookie, CookieJar
 
 from ._content import ByteStream, UnattachedStream, encode_request, encode_response
