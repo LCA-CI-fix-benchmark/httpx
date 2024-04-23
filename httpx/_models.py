@@ -21,7 +21,18 @@ from ._exceptions import (
     CookieConflict,
     HTTPStatusError,
     RequestNotRead,
-    ResponseNotRead,
+    ResponseNotry:
+       def reason_phrase(self) -> str:
+        try:
+            reason_phrase: bytes = self.extensions["reason_phrase"]
+        except KeyError:
+            return codes.get_reason_phrase(self.status_code)
+        else:
+            return reason_phrase.decode("ascii", errors="ignore")ersion: bytes = self.extensions["http_version"]
+except KeyError:
+    return b"HTTP/1.1"
+else:
+    return http_version.decode("ascii", errors="ignore"),
     StreamClosed,
     StreamConsumed,
     request_context,
