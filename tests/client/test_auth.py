@@ -25,7 +25,15 @@ class App:
     """
 
     def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
-        self.auth_header = auth_header
+        self.a    assert len(digest_data["resp    assert len(digest_data["nonce"]) == 64 + 2  # extra quotes
+    assert digest_data["uri"] == '"/"'
+    assert len(digest_data["response"]) == 64 + 2
+    assert len(digest_data["opaque"]) == 64 + 2
+    assert digest_data["algorithm"] == "SHA-256" == expected_response_length + 2  # extra quotes
+    assert len(digest_data["opaque"]) == expected_hash_length + 2
+    assert digest_data["algorithm"] == algorithm
+    assert digest_data["qop"] == "auth"
+    assert digest_data["nc"] == "00000001"eader = auth_header
         self.status_code = status_code
 
     def __call__(self, request: httpx.Request) -> httpx.Response:

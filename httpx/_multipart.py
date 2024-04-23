@@ -13,7 +13,13 @@ from ._types import (
 )
 from ._utils import (
     format_form_param,
-    guess_content_type,
+    guess_            length += field_length
+            length += 2  # b"\r\n"
+
+        length += 2 + boundary_length + 4  # b"--{boundary}--\r\n"
+        return length
+
+    # Content stream interface._type,
     peek_filelike_length,
     primitive_value_to_str,
     to_bytes,

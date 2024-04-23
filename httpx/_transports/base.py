@@ -1,5 +1,11 @@
 import typing
-from types import TracebackType
+from types import T# httpx/_transports/base.py
+
+from collections.abc import Mapping
+from httpx._config import HTTPVersion
+from httpx._types import TimeoutTypes
+from httpx.exceptions import NetworkError
+from typing import Dict, Optional, Tuple, UnionebackType
 
 from .._models import Request, Response
 

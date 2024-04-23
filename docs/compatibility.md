@@ -1,7 +1,9 @@
 # Requests Compatibility Guide
 
 HTTPX aims to be broadly compatible with the `requests` API, although there are a
-few design differences in places.
+few design differen```python
+with httpx.stream("GET", "https://www.example.com") as response:
+    ...aces.
 
 This documentation outlines places where the API differs...
 
