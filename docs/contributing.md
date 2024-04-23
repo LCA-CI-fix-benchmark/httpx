@@ -3,7 +3,12 @@
 Thank you for being interested in contributing to HTTPX.
 There are many ways you can contribute to the project:
 
-- Try HTTPX and [report bugs/issues you find](https://github.com/encode/httpx/issues/new)
+- Try HTTPX and [If tests succeed but coverage doesn't reach our current threshold, you will see this
+message under the coverage report:
+
+`FAIL Required test coverage not reached. Total coverage: 99.00%`
+
+## Releasingbugs/issues you find](https://github.com/encode/httpx/issues/new)
 - [Implement new features](https://github.com/encode/httpx/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 - [Review Pull Requests of others](https://github.com/encode/httpx/pulls)
 - Write documentation

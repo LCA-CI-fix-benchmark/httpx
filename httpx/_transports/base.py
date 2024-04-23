@@ -1,7 +1,32 @@
 import typing
 from types import TracebackType
 
-from .._models import Request, Response
+from .._mo        pass
+
+
+class AsyncBaseTransport:
+    async def __aenter__(self: A) -> A:
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: typing.Optional[typing.Type[BaseException]] = None,
+        exc_value: typing.Optional[BaseException] = None,
+        traceback: typing.Optional[TracebackType] = None,
+    ) -> None:
+        if exc_type is not None:
+            await self.aclose()
+
+    async def handle_async_request(
+        self,
+        request: Request,
+    ) -> Response:
+        raise NotImplementedError(
+            "The 'handle_async_request' method must be implemented."
+        )  # pragma: no cover
+
+    async def aclose(self) -> None:
+        passonse
 
 T = typing.TypeVar("T", bound="BaseTransport")
 A = typing.TypeVar("A", bound="AsyncBaseTransport")
