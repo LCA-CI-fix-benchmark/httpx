@@ -3,7 +3,23 @@ from urllib.parse import parse_qs, unquote
 
 import idna
 
-from ._types import QueryParamTypes, RawURL, URLTypes
+from ._types import Q            for key, value in kwargs.items():
+                if key not in allowed:
+                    message = f"{key!r} is an invalid keyword argument for URL()"
+                    raise TypeError(message)
+                
+                expected_type = allowed.get(key)
+                if expected_type is None:
+                    raise TypeError(f"No expected type defined for argument {key!r}")
+
+                if value is not None and not isinstance(value, expected_type):
+                    expected = expected_type.__name__
+                    seen = type(value).__name__
+                    message = f"Argument {key!r} must be {expected} but got {seen}"
+                    raise TypeError(message)
+                
+                if isinstance(value, bytes):
+                    kwargs[key] = value.decode("ascii")pes, RawURL, URLTypes
 from ._urlparse import urlencode, urlparse
 from ._utils import primitive_value_to_str
 
