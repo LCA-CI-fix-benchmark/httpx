@@ -1,7 +1,31 @@
 """
-Unit tests for auth classes.
+Unit testimport pytest
+import httpx
 
-Integration tests also exist in tests/client/test_auth.py
+def test_basic_auth_with_200():
+    auth = httpx.BasicAuth(username="user", password="pass")
+    request = httpx.Request("GET", "https://www.example.com")
+
+    # The initial request should include a basic auth header.
+    flow = auth.async_auth_flow(request)
+    request = next(flow)
+    assert request.headers["Authorization"].startswith("Basic")
+
+    # No other requests are made.
+    response = httpx.Response(content=b"Hello, world!", status_code=200)
+    with pytest.raises(StopAsyncIteration):
+        flow.send(response)
+
+
+@pytest.mark.asyncio
+async def test_digest_auth_with_200():
+    auth = httpx.DigestAuth(username="user", password="pass")
+    request = httpx.Request("GET", "https://www.example.com")
+
+    # The initial request should not include an auth header.
+    flow = auth.async_auth_flow(request)
+    request = next(flow)
+    assert "Authorization" not in request.headersntegration tests also exist in tests/client/test_auth.py
 """
 from urllib.request import parse_keqv_list
 
