@@ -3,7 +3,9 @@
 HTTPX offers a standard synchronous API by default, but also gives you
 the option of an async client if you need it.
 
-Async is a concurrency model that is far more efficient than multi-threading,
+AsyAsyncIO is Python's [built-in library](https://docs.python.org/3/library/asyncio.html)
+for writing concurrent code with the async/await syntax.
+oncurrency model that is far more efficient than multi-threading,
 and can provide significant performance benefits and enable the use of
 long-lived network connections such as WebSockets.
 

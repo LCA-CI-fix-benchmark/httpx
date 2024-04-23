@@ -1,6 +1,12 @@
 # Requests Compatibility Guide
 
-HTTPX aims to be broadly compatible with the `requests` API, although there are a
+HTTPX aims to be broadly compatible with the `requests` API,HTTPX strictly enforces that upload files must be opened in binary mode, in order
+to avoid character encoding issues that can result from attempting to upload files
+opened in text mode.
+
+## Content encoding
+
+HTTPX uses `utf-8` for encoding `str` request bodies. For example, when using `content=<str>` the request body will be encoded to `utf-8` before being sent over the wire. This differs from Requests which uses `latin1`. If you need an explicit encoding, pass encoded bytes explicitly, e.g. `content=<str>.encode("latin1")`.h there are a
 few design differences in places.
 
 This documentation outlines places where the API differs...

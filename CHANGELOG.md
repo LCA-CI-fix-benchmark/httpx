@@ -6,9 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 0.26.0 (20th December, 2023)
 
-### Added
+### Addedto avoid code that unintentionally issues multiple re### Fixedests as a result of
+misconfigured URLs.
 
-* The `proxy` argument was added. You should use the `proxy` argument instead of the deprecated `proxies`, or use `mounts=` for more complex configurations. (#2879)
+For example, previously a client configured to send requests to `http://api.github.com/`The `proxy` argument was added. You should use the `proxy` argument instead of the deprecated `proxies`, or use `mounts=` for more complex configurations. (#2879)
 
 ### Deprecated
 

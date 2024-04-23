@@ -1,5 +1,10 @@
+"Unit tests for auth classes.
+
+Integration tests also exist in tests/client/test_auth.py
 """
-Unit tests for auth classes.
+import httpx
+import pytest
+from urllib.request import parse_keqv_listts for auth classes.
 
 Integration tests also exist in tests/client/test_auth.py
 """
