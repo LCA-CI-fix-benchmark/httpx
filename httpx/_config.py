@@ -1,4 +1,14 @@
-import logging
+iimport os
+
+# Configure httpx settings
+httpx_settings = {
+    "timeout": 10,
+    "verify": True,
+    "proxies": {
+        "http": "http://proxy.example.com",
+        "https": "https://proxy.example.com"
+    }
+}port logging
 import os
 import ssl
 import typing
