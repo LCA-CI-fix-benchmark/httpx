@@ -1,5 +1,13 @@
+"Unit tests for auth classes.
+
+Integration tests also exist in tests/client/test_auth.py
 """
-Unit tests for auth classes.
+from urllib.request import parse_keqv_list
+
+import pytest
+
+import httpx
+# Add import statements for authentication testing modules herets for auth classes.
 
 Integration tests also exist in tests/client/test_auth.py
 """

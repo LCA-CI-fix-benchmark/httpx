@@ -1,7 +1,11 @@
 # Contributing
 
-Thank you for being interested in contributing to HTTPX.
-There are many ways you can contribute to the project:
+Thank you for being interested in contributing t```shell
+$ scripts/testhere are many ways you can contribute to the prIf tests are failing, you will see this message under the coverage report:
+
+`=== 1 failed, 435 passed, 1 skipped, 1 xfailed in 11.09s ===`
+
+In case tests succeed but the coverage doesn't meet our current threshold, you will see this
 
 - Try HTTPX and [report bugs/issues you find](https://github.com/encode/httpx/issues/new)
 - [Implement new features](https://github.com/encode/httpx/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)

@@ -3,7 +3,26 @@ from urllib.parse import parse_qs, unquote
 
 import idna
 
-from ._types import QueryParamTypes, RawURL, URLTypes
+from ._types import Qallowed = {
+    'scheme': str,
+    'host': str,
+    'port': int,
+    'authority': str,
+    'path': str,
+    'query': str,
+    'fragment': str,
+    'verify': bool,  # Added 'verify' to allowed keyword arguments
+       def get_uri_reference(self) -> str:
+        return self._uri_reference.geturl()
+
+    @propertyrt': Tuple[str, str],  # Added 'cert' to allowed keyword arguments
+}
+
+for key, value in kwargs.items():
+    if key not in allowed:
+        message = f"{key!r} is an invalid keyword argument for URL()"
+        raise TypeError(message)
+    if value is not None and not isinstance(value, allowed[key]):aramTypes, RawURL, URLTypes
 from ._urlparse import urlencode, urlparse
 from ._utils import primitive_value_to_str
 

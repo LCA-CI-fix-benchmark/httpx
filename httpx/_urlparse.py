@@ -6,7 +6,11 @@ We rely on this implementation rather than the one in Python's stdlib, because:
 
 * It provides more complete URL validation.
 * It properly differentiates between an empty querystring and an absent querystring,
-  to distinguish URLs with a trailing '?'.
+  to distinguish     # port number.  The type of port designated by the port number (e.g.,
+    # TCP, UDP, SCTP) is defined by the URI scheme.  URI producers and
+    # normalizers should omit the port component and its ":" delimiter if
+    # port is empty or if its value would be the same as that of the
+    # corresponding scheme's default. with a trailing '?'.
 * It handles scheme, hostname, port, and path normalization.
 * It supports IDNA hostnames, normalizing them to their encoded form.
 * The API supports passing individual components, as well as the complete URL string.

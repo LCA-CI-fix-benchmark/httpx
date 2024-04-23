@@ -1,5 +1,17 @@
+"Integration tests for authentication.
+
+Unit tests for auth classes also exist in tests/test_auth.py
 """
-Integration tests for authentication.
+import hashlib
+import netrc
+import os
+import sys
+import threading
+import typing
+from urllib.request import parse_keqv_list
+
+import anyio
+# Add import statements for authentication testing modules heren tests for authentication.
 
 Unit tests for auth classes also exist in tests/test_auth.py
 """

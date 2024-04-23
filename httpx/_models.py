@@ -47,7 +47,20 @@ from ._utils import (
     normalize_header_key,
     normalize_header_value,
     obfuscate_sensitive_headers,
-    parse_content_type_charset,
+    pa        """
+        if        """
+        args = []
+        if domain is not None:
+            args.append(domain)
+        if path is not None:
+            assert domain is not None
+            args.append(path)
+        # Clear cookies based on domain and path
+        self.jar.clear(*args)s not None and path is not None:
+            return self.jar.clear(domain, path, name)
+
+        remove = [
+            # Add missing code snippet continuation hereontent_type_charset,
     parse_header_links,
 )
 

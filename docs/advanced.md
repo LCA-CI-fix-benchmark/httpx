@@ -8,7 +8,11 @@
 ### Why use a Client?
 
 !!! note "TL;DR"
-    If you do anything more than experimentation, one-off scripts, or prototypes, then you should use a `Client` instance.
+    If you do anything more than exper* Using `httpx` as a client inside test cases.
+* Mocking out external services during tests or in dev/staging environments.
+
+Here's an example of integrating against a Flask application:
+ion, one-off scripts, or prototypes, then you should use a `Client` instance.
 
 #### More efficient usage of network resources
 
