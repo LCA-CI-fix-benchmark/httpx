@@ -1,5 +1,5 @@
 """
-Custom transports, with nicely configured defaults.
+Custom transports, witfrom typing import List, Dict nicely configured defaults.
 
 The following additional keyword arguments are currently supported by httpcore...
 

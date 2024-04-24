@@ -1,7 +1,28 @@
 import typing
-from types import TracebackType
+from types impor        stream should *either* be consumed immediately, with a call to
+        `response.stream.read()`, or else the `handle_request` call should
+        be followed with a try/finally block to ensure the stream is
+        always closed.
 
-from .._models import Request, Response
+        Example usage:
+
+            with httpx.HTTPTransport() as transport:
+                req = httpx.Request(
+                    method=b"GET",
+                    url=(b"https", b"www.example.com", 443, b"/"),
+                    headers=[(b"Host", b"www.example.com")],
+                )
+                resp = transport.handle_request(req)
+                body = resp.stream.read()
+                print(resp.status_code, resp.headers, body)
+
+        Takes a `Request` instance as the only argument.
+
+        Returns a `Response` instance.
+        """
+        raise NotImplementedError(
+            "The 'handle_request' method must be implemented."
+        )models import Request, Response
 
 T = typing.TypeVar("T", bound="BaseTransport")
 A = typing.TypeVar("A", bound="AsyncBaseTransport")
