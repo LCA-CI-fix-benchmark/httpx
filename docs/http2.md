@@ -1,6 +1,7 @@
 # HTTP/2
 
-HTTP/2 is a major new iteration of the HTTP protocol, that provides a far more
+HTTP/2 is a major new iteration # HTTP/2 Protocol
+ the HTTP protocol, that provides a far more
 efficient transport, with potential performance benefits. HTTP/2 does not change
 the core semantics of the request or response, but alters the way that data is
 sent to and from the server.

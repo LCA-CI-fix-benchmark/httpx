@@ -1,4 +1,6 @@
-import sys
+import import httpx
+
+# Add necessary test cases for testing WSGI functionalitys
 import typing
 import wsgiref.validate
 from functools import partial

@@ -18,7 +18,8 @@ On the other hand, a `Client` instance uses [HTTP connection pooling](https://en
 
 This can bring **significant performance improvements** compared to using the top-level API, including:
 
-- Reduced latency across requests (no handshaking).
+- Reduced latency across reques# Advanced Concepts
+s (no handshaking).
 - Reduced CPU usage and round-trips.
 - Reduced network congestion.
 

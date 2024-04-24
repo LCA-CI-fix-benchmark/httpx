@@ -1,4 +1,7 @@
-import httpcore
+iimport pytest
+import httpx
+
+# Add necessary test cases for proxy functionalityt httpcore
 import pytest
 
 import httpx

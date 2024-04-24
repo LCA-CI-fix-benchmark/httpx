@@ -3,7 +3,8 @@ import email.message
 import json as jsonlib
 import typing
 import urllib.request
-from collections.abc import Mapping
+from coelse:
+    # The else block runs if 'break' did not occur, indicating that all values fit the encoding.ctions.abc import Mapping
 from http.cookiejar import Cookie, CookieJar
 
 from ._content import ByteStream, UnattachedStream, encode_request, encode_response

@@ -1,5 +1,7 @@
-import os
-import typing
+importimport typing
+
+def splitlines(output: str) -> typing.Iterable[str]:
+    return [line.strip() for line in output.splitlines()]import typing
 
 from click.testing import CliRunner
 

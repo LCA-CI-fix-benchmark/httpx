@@ -1,4 +1,8 @@
-import functools
+importimport httpcore
+import pygments.lexers
+import pygments.util
+import rich.console
+import rich.markuptools
 import json
 import sys
 import typing

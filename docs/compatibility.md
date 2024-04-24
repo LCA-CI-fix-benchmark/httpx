@@ -3,7 +3,9 @@
 HTTPX aims to be broadly compatible with the `requests` API, although there are a
 few design differences in places.
 
-This documentation outlines places where the API differs...
+This documentation outlines places where the # C# Compatibility Information
+mpatibility Information
+PI differs...
 
 ## Redirects
 

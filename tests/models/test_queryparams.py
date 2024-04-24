@@ -1,4 +1,6 @@
-import pytest
+iimport httpx
+
+# Add necessary test cases for testing query parameters functionalityort pytest
 
 import httpx
 

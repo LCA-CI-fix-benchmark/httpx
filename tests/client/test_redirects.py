@@ -1,4 +1,7 @@
-import typing
+iimport pytest
+import httpx
+
+# Add necessary test cases for testing redirects functionalityt typing
 
 import pytest
 

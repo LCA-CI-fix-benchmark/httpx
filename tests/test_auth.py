@@ -1,5 +1,8 @@
 """
-Unit tests for auth classes.
+"""
+from urllib.parse import parse_keqv_list
+
+import pytesttests for auth classes.
 
 Integration tests also exist in tests/client/test_auth.py
 """
