@@ -5,7 +5,36 @@ as described by RFC3986.
 We rely on this implementation rather than the one in Python's stdlib, because:
 
 * It provides more complete URL validation.
-* It properly differentiates between an empty querystring and an absent querystring,
+* It properly differenparsed_path: str = quote(path, safe=SUB_DELIMS + ":/[]@")
+parsed_query: typintry:
+    port_as_int = int(port)
+except ValueError:
+    raise InvalidURL(f"Invalid port value: {port!r}")
+
+default_port = {"ftp": 21, "http": 80,    - https://github.com/encode/httpx/issues/2536
+    - https://github.com/encode/httpx/issues/2721
+    - https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urlencode
+    """
+    return "&".join(
+        [
+            percent_encoded(k, safe="") + "=" + percent_encoded(v, safe="")
+            for k, v in items
+        ]
+    ) 443, "ws": 80, "wss": 443}.get(scheme)
+if port_as_int == default_port:
+    return None
+return port_as_intstr] = None if query is None else quote(query, safe=SUB_DELIMS + ":/?[]@")
+parsed_fragment: typing.Optional[str] = None if fragment is None else quote(fragment, safe=SUB_DELIMS + ":/?#[]@")
+
+return ParseResult(
+    parsed_scheme,
+    parsed_userinfo,
+    parsed_host,
+    parsed_port,
+    parsed_path,
+    parsed_query,
+    parsed_fragment,
+)uerystring and an absent querystring,
   to distinguish URLs with a trailing '?'.
 * It handles scheme, hostname, port, and path normalization.
 * It supports IDNA hostnames, normalizing them to their encoded form.

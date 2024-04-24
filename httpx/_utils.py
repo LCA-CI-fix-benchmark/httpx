@@ -4,9 +4,8 @@ import ipaddress
 import mimetypes
 import os
 import re
-import time
-import typing
-from urllib.request import getproxies
+impo        link = {"url": url.strip("<> '\"")}
+    return links urllib.request import getproxies
 
 import sniffio
 

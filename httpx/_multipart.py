@@ -12,8 +12,25 @@ from ._types import (
     SyncByteStream,
 )
 from ._utils import (
-    format_form_param,
-    guess_content_type,
+    format_form_para        """
+        Calculate the total length of the multipart encoded content.
+        Returns the length if all file lengths are determinable upfront,
+        otherwise returns `None`.
+        """
+        boundary_length = len(self.boundary)
+        length = 0
+
+        for field in self.fields:
+            field_length = field.get_length()
+            if field_length is None:
+                return None
+
+            length += 2 + boundary_length + 2  # b"--{boundary}\r\n"
+            length += field_length
+            length += 2  # b"\r\n"
+
+        length += 2 + boundary_length + 4  # b"--{boundary}--\r\n"
+        return lengthnt_type,
     peek_filelike_length,
     primitive_value_to_str,
     to_bytes,

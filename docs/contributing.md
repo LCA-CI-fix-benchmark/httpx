@@ -1,9 +1,25 @@
 # Contributing
 
-Thank you for being interested in contributing to HTTPX.
-There are many ways you can contribute to the project:
+Thank you for being interested i$ git clone https://github.c[Create a new release](https://github.com/encode/httpx/releases/new) with the following details:
 
-- Try HTTPX and [report bugs/issues you find](https://github.com/encode/httpx/issues/new)
+- Tag version: `0.13.3`
+- Release title: `Version 0.13.3`
+- Description: Copy the content from the changelog.
+
+Once the release is created, it will be automatically uploaded to PyPI.
+
+In case of any issues with the PyPI job, the release can be published using the `scripts/publish` script.
+
+## Development Proxy Setup
+
+To test and debug requests via a proxy, it is recommended to run a local proxy server. 
+While any server can be used, HTTPCore's test suite utilizes [`mitmproxy`](https://mitmproxy.org/), 
+a Python-based server with comprehensive features and tools for request introspection.
+
+You can install `mitmproxy` using `pip install mitmproxy` or explore [other installation methods](https://docs.mitmproxy.org/stable/overview-installation/).px
+
+You can now install the project and its dependencies using:
+report bugs/issues you find](https://github.com/encode/httpx/issues/new)
 - [Implement new features](https://github.com/encode/httpx/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 - [Review Pull Requests of others](https://github.com/encode/httpx/pulls)
 - Write documentation

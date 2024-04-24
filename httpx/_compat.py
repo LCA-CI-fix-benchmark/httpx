@@ -1,5 +1,4 @@
-"""
-The _compat module is used for code which requires branching between different
+"if sys.version_info >= (3, 10) or ssl.OPENSSL_VERSION_INFO >= (1, 1, 0, 7):ule is used for code which requires branching between different
 Python environments. It is excluded from the code coverage checks.
 """
 import ssl

@@ -4,7 +4,18 @@ import logging
 import ssl
 import typing
 import warnings
-from contextlib import asynccontextmanager, contextmanager
+from contexclass _ClientState:
+    # UNOPENED:
+    #   The client has been instantiated, but has not been used to send a request,
+    #   or been opened by entering the context of a `with` block.
+    unopened = 1
+    # OPENED:
+    #   The client has either sent a request, or is within a `with` block.
+    opened = 2
+    # CLOSED:
+    #   The client has either exited the `with` block, or `close()` has
+    #   been called explicitly.
+    closed = 3 asynccontextmanager, contextmanager
 from types import TracebackType
 
 from .__version__ import __version__

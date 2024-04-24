@@ -1,5 +1,4 @@
-"""
-Integration tests for authentication.
+"from urllib.request import parse_keqv_listuthentication.
 
 Unit tests for auth classes also exist in tests/test_auth.py
 """

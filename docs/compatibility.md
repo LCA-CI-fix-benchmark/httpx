@@ -3,7 +3,12 @@
 HTTPX aims to be broadly compatible with the `requests` API, although there are a
 few design differences in places.
 
-This documentation outlines places where the API differs...
+This documentation outlines places ```python
+httpx.request(
+    method="DELETE",
+    url="https://www.example.com/",
+    content=b'A request body on a DELETE request.'
+)ffers...
 
 ## Redirects
 
