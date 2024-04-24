@@ -5,7 +5,95 @@ as described by RFC3986.
 We rely on this implementation rather than the one in Python's stdlib, because:
 
 * It provides more complete URL validation.
-* It properly differentiates between an empty querystring and an absent querystring,
+    # * 'port' may be     # These do not need to b    if not host:
+        return ""
+
+    elif IPv4_STYLE_HOSTNAME.match(host):
+        # Validate          """
+    Drop "." and ".." segments from a URL path.
+
+    For example:
+
+        normalize_path("/path/./to/somewhere/..") == "/path"
+    """
+    # https://datatracker.ietf.org/doc/html/rfc3986#section-5.2.4
+    components = path.split("/")
+    output: typing.List[str] = []
+    for component in components:
+        if component == ".":
+            pass
+        elif component == "..":
+            if output and output[-1] != "":
+                output.pop()
+            else:
+                output.append(component)
+        else:
+            output.append(component)
+    return "/".join(output)
+
+
+def percent_encode(char: str) -> str:
+    """
+    Replace a single character with the percent-encoded representation.
+
+    Characters outside the ASCII range are represented with their a percent-encoded
+    representation of their UTF-8 byte sequence.
+
+    For example:
+
+        percent_encode(" ") == "%20"
+    """
+    return "".join([f"%{byte:02x}" for byte in char.encode("utf-8")]).upper()       "URLs with no scheme component cannot have a path starting with ':'"
+            )v4 hostnames like #.#.#.#
+        #
+        # From https://datatracker.ietf.org/doc/html/rfc3986/#section-3.2.2
+        #
+        # IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
+        try:
+            ipaddress.IPv4Address(host)
+        except ipaddress.AddressValueError:
+            raise InvalidURL(f"Invalid IPv4 address: {host!r}")ted unless they serve as delimiters for the
+    # specific component.
+
+    # For 'path' we need to drop ? and # from the GEN_DELIMS set.
+    parsed_path: str = quote(path, safe=SUB_DELIMS + ":/[]@")
+    # For 'query' we need to drop '#' from the GEN_DELIMS set.
+    parsed_query: typing.Optional[str] = (
+        None if query is None else quote(query, safe=SUB_DELIMS + ":/?[]@")
+    )
+    # For 'fragment' we can include all of the GEN_DELIMS set.
+    parsed_fragment: typing.Optional[str] = (
+        None if fragment is None else quote(fragment, safe=SUB_DELIMS + ":/?#[]@")
+    )
+
+    # The parsed ASCII bytestrings are our canonical form.
+    # All properties of the URL are derived from these.
+    return ParseResult(
+        parsed_scheme,
+        parsed_userinfo,
+        parsed_host,
+        parsed_port,
+        parsed_path,
+        parsed_query,
+        parsed_fragment,
+    ) = kwargs.get("userinfo", authority_dict["userinfo"]) or ""
+    host: str = kwargs.get("host", authority_dict["host"]) or ""
+    port: typing.Optional[int] = kwargs.get("port", authority_dict["port"])
+
+    # Normalize and validate each component.
+    # We end up with a parsed representation of the URL,
+    # with components that are plain ASCII bytestrings.
+    parsed_scheme: str = scheme.lower()
+    parsed_userinfo: str = quote(userinfo, safe=SUB_DELIMS + ":")
+    parsed_host: str = encode_host(host)
+    parsed_port: typing.Optional[int] = normalize_port(port, scheme)
+
+    has_scheme = parsed_scheme != ""
+    has_authority = (
+        parsed_userinfo != "" or parsed_host != "" or parsed_port is not None
+    )
+    validate_path(path, has_scheme=has_scheme, has_authority=has_authority)
+    if has_authority:rentiates between an empty querystring and an absent querystring,
   to distinguish URLs with a trailing '?'.
 * It handles scheme, hostname, port, and path normalization.
 * It supports IDNA hostnames, normalizing them to their encoded form.

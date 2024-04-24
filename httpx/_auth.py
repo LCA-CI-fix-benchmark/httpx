@@ -8,13 +8,115 @@ from urllib.request import parse_http_list
 
 from ._exceptions import ProtocolError
 from ._models import Cookies, Request, Response
-from ._utils import to_bytes, to_str, unquote
+from ._utils import to_b            realm = header_dict.get("realm")
+            nonce = header_dict.get("nonce")
+            algorithm = header_dict.get("algorithm", "MD5")
+            opaque = header_dict.get("opaque")
+            qop = header_dict.get("qop")
+            if not realm or not nonce:
+                raise ProtocolError("Malformed Digest WWW-Authenticate header", request=request)
 
-if typing.TYPE_CHECKING:  # pragma: no cover
-    from hashlib import _Hash
+            return _DigestAuthChallenge(
+                realm=realm.encode(),
+                nonce=nonce.encode(),
+                algorithm=algorithm.encode(),
+                opaque=opaque.encode() if opaque else None,
+                qop=qop.encode() if qop else None
+            )
+        except KeyError as exc:
+            message = "Malformed Digest WWW-Authenticate header"
+            raise ProtocolError(message, request=request) from exc
+
+    def _build_auth_header(
+        self, request: Request, challenge: "_DigestAuthChallenge"
+    ) -> str:
+        hash_func = self._ALGORITHM_TO_HASH_FUNCTION[challenge.algorithm.upper()]
+
+        def digest(data: bytes) -> bytes:
+            return hash_func(data).hexdigest().encode()
+
+        A1 = b":".join((self._username.encode(), challenge.realm, self._password.encode()))
+
+        path = request.url.raw_path
+        A2 = b":".join((request.method.encode(), path))
+        HA2 = digest(A2)
+
+        nc_value = b"%08x" % self._nonce_count
+        cnonce = self._get_client_nonce(self._nonce_count, challenge.nonce)
+        self._nonce_count += 1
+
+        HA1 = digest(A1)
+        if challenge.algorithm.lower().endswith("-sess"):
+            HA1 = digest(b":".join((HA1, challenge.nonce, cnonce)))
+
+        qop = self._resolve_qop(challenge.qop, request=request)
+        if qop is None:
+            digest_data = [HA1, challenge.nonce, HA2]
+        else:
+            digest_data = [challenge.nonce, nc_value, cnonce, qop, HA2]
+        key_digest = b":".join(digest_data)
+
+        format_args = {
+            "username": self._username,
+            "realm": challenge.realm,
+            "nonce": challenge.nonce,
+            "uri": path,
+            "response": digest(b":".join((HA1, key_digest))),
+            "algorithm": challenge.algorithm.encode(),
+        }
+        if challenge.opaque:
+            format_args["opaque"] = challenge.opaque
+        if qop:
+            format_args["qop"] = b"auth"
+            format_args["nc"] = nc_value
+            format_args["cnonce"] = cnonce
+
+        return "Digest " + self._get_header_value(format_args)
+
+    def _get_client_nonce(self, nonce_count: int, nonce: bytes) -> bytes:
+        s = str(nonce_count).encode()
+        s += nonce
+        s += time.ctime().encode()
+        s += os.urandom(8)
+
+        return hashlib.sha1(s).hexdigest()[:16].encode()
+
+    def _get_header_value(self, header_fields: typing.Dict[str, bytes]) -> str:
+        NON_QUOTED_FIELDS = ("algorithm", "qop", "nc")
+        QUOTED_TEMPLATE = '{}="{}"'
+        NON_QUOTED_TEMPLATE = "{}={}"
+
+        header_value = ""
+        for i, (field, value) in enumerate(header_fields.items()):
+            if i > 0:
+                header_value += ", "
+            template = (
+                QUOTED_TEMPLATE
+                if field not in NON_QUOTED_FIELDS
+                else NON_QUOTED_TEMPLATE
+            )
+            header_value += template.format(field, to_str(value))
+
+        return header_value
+
+    def _resolve_qop(
+        self, qop: typing.Optional[bytes], request: Request
+    ) -> typing.Optional[bytes]:
+        if qop is None:
+            return None
+        qops = re.split(b", ?", qop)
+        if b"auth" in qops:
+            return b"auth"
+
+        if qops == [b"auth-int"]:
+            raise NotImplementedError("Digest auth-int support is not yet implemented")
+
+        message = f'Unexpected qop value "{qop!r}" in digest auth'
+        raise ProtocolError(message, request=request)
 
 
-class Auth:
+class _DigestAuthChallenge(typing.NamedTuple):
+    realm: bytesss Auth:
     """
     Base class for all authentication schemes.
 

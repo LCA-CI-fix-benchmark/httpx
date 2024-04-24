@@ -38,8 +38,32 @@ from ._types import (
     ProxiesTypes,
     ProxyTypes,
     QueryParamTypes,
-    RequestContent,
-    RequestData,
+    Requ            response = transport.handle_request(request)
+
+        try:
+            assert isinstance(response.stream, SyncByteStream)
+
+            response.request = request
+            response.stream = BoundSyncStream(
+                response.stream, response=response, timer=timer
+            )
+            if self._persistent_cookies:
+                self.cookies.extract_cookies(response)
+            response.default_encoding = self._default_encoding
+
+            logger.info(
+                'HTTP Request: %s %s HTTP/%s %d %s',
+                request.method,
+                request.url,
+                response.http_version,
+                response.status_code,
+                response.reason_phrase,
+            )
+
+            return response
+        except Exception as e:
+            logger.error(f"Error processing HTTP request: {e}")
+            return NonetData,
     RequestExtensions,
     RequestFiles,
     SyncByteStream,

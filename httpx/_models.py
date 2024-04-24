@@ -20,9 +20,71 @@ from ._decoders import (
 from ._exceptions import (
     CookieConflict,
     HTTPStatusError,
-    RequestNotRead,
-    ResponseNotRead,
-    StreamClosed,
+    RequestNo    def elapsed(self, elapsed: datetime.timedelta) -> None:
+        self._elapsed = elapsed
+
+    @property
+    def request(self) -> Request:
+        """
+        Returns the request instance associated to the current response.
+        """
+        if self._request is None:
+            raise RuntimeError(
+                "The request instance has not been set on this response."
+            )
+        return self._request
+
+    @request.setter
+    def request(self, value: Request) -> None:
+        self._request = value
+
+    @property
+    def http_version(self) -> str:
+        try:
+            http_version: bytes = self.exten        return self.set(name, value)
+
+    def __getitem__(self, name: str) -> Optional[str]:
+        value = self.get(name)
+        if value is None:
+            raise KeyError(name)
+        return value
+
+    def __delitem__(self, name: str) -> None:
+        return self.delete(name)
+
+    def __len__(self) -> int:
+        return len(self.jar)
+
+    def __iter__(self) -> typing.Iterator[str]:
+        return (cookie.name for cookie in self.jar)
+
+    def __bool__(self) -> bool:
+        for _ in self.jar:
+            return True
+        return False
+
+    def __repr__(self) -> str:
+        cookies_repr = ", ".join(
+            [
+                f"<Cookie {cookie.name}={cookie.value} for {cookie.domain} />"
+                for cookie in self.jar
+            ]
+        )
+
+        return f"<Cookies[{cookies_repr}]>"P/1.1")
+        except KeyError:
+            return "HTTP/1.1"
+        else:
+            return http_version.decode("ascii", errors="ignore")
+
+    @property
+    def reason_phrase(self) -> str:
+        try:
+            reason_phrase: bytes = self.extensions.get("reason_phrase")
+        except KeyError:
+            return codes.get_reason_phrase(self.status_code)
+        else:
+            return reason_phrase.decode("ascii", errors="ignore")amClosed,
     StreamConsumed,
     request_context,
 )
