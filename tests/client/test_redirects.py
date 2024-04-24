@@ -11,7 +11,8 @@ def redirects(request: httpx.Request) -> httpx.Response:
 
     if request.url.path == "/redirect_301":
         status_code = httpx.codes.MOVED_PERMANENTLY
-        content = b"<a href='https://example.org/'>here</a>"
+# Check if the response status code is MOVED_PERMANENTLY
+assert response.status_code == httpx.codes.MOVED_PERMANENTLY       content = b"<a href='https://example.org/'>here</a>"
         headers = {"location": "https://example.org/"}
         return httpx.Response(status_code, headers=headers, content=content)
 

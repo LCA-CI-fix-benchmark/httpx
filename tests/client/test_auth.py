@@ -1,4 +1,4 @@
-"""
+"### Integration Tests for Authentication"
 Integration tests for authentication.
 
 Unit tests for auth classes also exist in tests/test_auth.py
@@ -25,7 +25,8 @@ class App:
     """
 
     def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
-        self.auth_header = auth_header
+        se# Check if the length of digest_data["opaque"] is as expected
+assert len(digest_data["opaque"]) == 64 + 2f.auth_header = auth_header
         self.status_code = status_code
 
     def __call__(self, request: httpx.Request) -> httpx.Response:

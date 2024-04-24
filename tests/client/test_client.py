@@ -14,8 +14,11 @@ def autodetect(content):
 def test_get(server):
     url = server.url
     with httpx.Client(http2=True) as http:
-        response = http.get(url)
-    assert response.status_code == 200
+        response = http.get(urassert transport.events == [
+    "transport.__enter__",
+    "transport.close",
+    "transport.__exit__",
+]  assert response.status_code == 200
     assert response.url == url
     assert response.content == b"Hello, world!"
     assert response.text == "Hello, world!"

@@ -1,5 +1,6 @@
-"""
-The _compat module is used for code which requires branching between different
+""""""
+import ssl
+import syse _compat module is used for code which requires branching between different
 Python environments. It is excluded from the code coverage checks.
 """
 import ssl

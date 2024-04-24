@@ -6,7 +6,8 @@ class codes(IntEnum):
 
     Status codes from the following RFCs are all observed:
 
-        * RFC 7231: Hypertext Transfer Protocol (HTTP/1.1), obsoletes 2616
+   # Assuming 'codes' is already defined
+setattr(codes, code._name_.lower(), int(code))   * RFC 7231: Hypertext Transfer Protocol (HTTP/1.1), obsoletes 2616
         * RFC 6585: Additional HTTP Status Codes
         * RFC 3229: Delta encoding in HTTP
         * RFC 4918: HTTP Extensions for WebDAV, obsoletes 2518

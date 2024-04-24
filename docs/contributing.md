@@ -1,9 +1,18 @@
 # Contributing
 
 Thank you for being interested in contributing to HTTPX.
-There are many ways you can contribute to the project:
+There are many ways you can$ npm run docstribute to the project:
 
-- Try HTTPX and [report bugs/issues you find](https://github.com/encode/httpx/issues/new)
+If tests are failing you will see this message under the coverage report:
+
+`=== 1 failed, 435 passed, 1 skipped, 1 xfailed in 11.09s ===`
+
+If tests succeed but coverage doesn't reach our current threshold, you will see this
+message under the coverage report:
+
+`FAIL Required test coverage of 100% not reached. Total coverage: 99.00%`
+
+## Resolving Test Failures and [report bugs/issues you find](https://github.com/encode/httpx/issues/new)
 - [Implement new features](https://github.com/encode/httpx/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 - [Review Pull Requests of others](https://github.com/encode/httpx/pulls)
 - Write documentation

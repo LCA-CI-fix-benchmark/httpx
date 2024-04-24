@@ -1,9 +1,9 @@
 # Requests Compatibility Guide
 
-HTTPX aims to be broadly compatible with the `requests` API, although there are a
+HTTPX aims to be broadly compatible with the `requests` API, although# Content related to compatibility goes herethere are a
 few design differences in places.
 
-This documentation outlines places where the API differs...
+Th# # Add information about compatibility heredd content related to compatibility heres documentation outlines places where the API differs...
 
 ## Redirects
 

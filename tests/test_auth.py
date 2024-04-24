@@ -1,4 +1,4 @@
-"""
+"### Unit Tests for Authentication Classes"
 Unit tests for auth classes.
 
 Integration tests also exist in tests/client/test_auth.py
