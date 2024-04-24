@@ -3,8 +3,40 @@ import enum
 import logging
 import ssl
 import typing
-import warnings
-from contextlib import asynccontextmanager, contextmanager
+import warnimport logging
+import enum
+
+SUPPORTED_DECODERS = {
+    "gzip": "gzip",
+    "deflate": "deflate",
+    "br": "br",
+}
+
+USE_CLIENT_DEFAULT = UseClientDefault()
+
+logger = logging.getLogger("httpx")
+
+USER_AGENT = f"python-httpx/{__version__}"
+ACCEPT_ENCODING = ", ".join(
+    [key for key in SUPPORTED_DECODERS.keys() if key != "identity"]
+)
+
+class ClientState(enum.Enum):
+    """
+    Enum representing the state of the client.
+    
+    - UNOPENED:
+        The client has been instantiated, but has not been used to send a request,
+        or been opened by entering the context of a `with` block.
+    - OPENED:
+        The client has either sent a request, or is within a `with` block.
+    - CLOSED:
+        The client has either exited the `with` block, or `close()` has
+        been called explicitly.
+    """
+    UNOPENED = 1
+    OPENED = 2
+    CLOSED = 3 asynccontextmanager, contextmanager
 from types import TracebackType
 
 from .__version__ import __version__
@@ -24,7 +56,27 @@ from ._exceptions import (
     TooManyRedirects,
     request_context,
 )
-from ._models import Cookies, Headers, Request, Response
+from .import warnings
+
+try:
+    import h2  # noqa
+except ImportError:  # pragma: no cover
+    raise ImportError(
+        "Using http2=True, but the 'h2' package is not installed. "
+        "Make sure to install httpx using `pip install httpx[http2]`."
+    ) from None
+
+if proxies:
+    message = (
+        "The 'proxies' argument is now deprecated. "
+        "Use 'proxy' or 'mounts' instead."
+    )
+    warnings.warn(message, DeprecationWarning)
+    if proxy and proxies:
+        raise RuntimeError("Use either `proxy` or 'proxies', not both.")
+
+allow_env_proxies = trust_env and app is None and transport is None
+proxy_map = self._get_proxy_map(proxies or proxy, allow_env_proxies)ies, Headers, Request, Response
 from ._status_codes import codes
 from ._transports.asgi import ASGITransport
 from ._transports.base import AsyncBaseTransport, BaseTransport

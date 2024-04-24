@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+The format is based on [Keep a Changelog](https://keepac* Fix `URL.copy_with` for some oddly formed URL cases. (#2185)
+* Use case-insensitive comparison for determining algorithm in Digest authentication. (#2204)
+* Fix console markup escaping in the command line client. (#1866)
+* Ensure seeking to the start of files in multipart upload. (#2065)
+* Ensure `iter_bytes` never yields zero-length chunks. (#2068)
+* Preserve `Authorization` header for same-origin redirects with `http`-to-`https` upgrade. (#2074)
+* Improve handling of binary output in command line client. (#2076)
+* Correct display of `--proxies` argument in the command line client help. (#2125)
+* Close responses during task cancellations when stream reading. (#2156)om/en/1.0.0/).
 
 ## 0.26.0 (20th December, 2023)
 

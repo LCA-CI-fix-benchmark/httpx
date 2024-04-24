@@ -7,7 +7,32 @@ import httpx
 
 def redirects(request: httpx.Request) -> httpx.Response:
     if request.url.scheme not in ("http", "https"):
-        raise httpx.UnsupportedProtocol(f"Scheme {request.url.scheme!r} not supported.")
+        raise httpx.UnsupportedProtocoimport httpx
+import pytest
+
+redirects = {}  # Define or import the redirects variable for MockTransport setup
+
+def test_valid_redirect():
+    client = httpx.Client(transport=httpx.MockTransport(redirects))
+    response = client.get(
+        "http://example.org/malformed_redirect", follow_redirects=True
+    )
+    assert response.status_code == httpx.codes.OK
+    assert response.url == "https://example.org:443/"
+    assert len(response.history) == 1
+
+def test_invalid_redirect():
+    client = httpx.Client(transport=httpx.MockTransport(redirects))
+    with pytest.raises(httpx.RemoteProtocolError):
+        client.get("http://example.org/invalid_redirect", follow_redirects=True)
+
+def test_no_scheme_redirect():
+    client = httpx.Client(transport=httpx.MockTransport(redirects))
+    response = client.get(
+        "https://example.org/no_scheme_redirect", follow_redirects=True
+    )
+    assert response.status_code == httpx.codes.OK
+    assert response.url == "https://example.org/".scheme!r} not supported.")
 
     if request.url.path == "/redirect_301":
         status_code = httpx.codes.MOVED_PERMANENTLY

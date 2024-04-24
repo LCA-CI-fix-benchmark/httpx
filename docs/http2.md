@@ -1,6 +1,23 @@
 # HTTP/2
 
-HTTP/2 is a major new iteration of the HTTP protocol, that provides a far more
+HTTP/2 isWhen using the `httpx` client, HTTP/2 support is not enabled by default. The HTTP/1.1 implementation in `httpx` is mature and battle-hardened, making it the more robust option currently. However, future versions of `httpx` may enable HTTP/2 support by default.
+
+If you require HTTP/2 support for highly concurrent requests, you can enable it by following these steps:
+
+1. Ensure you have the optional HTTP/2 dependencies installed:
+   
+   ```shell
+   $ pip install httpx[http2]
+   ```
+
+2. Instantiate a client with HTTP/2 support enabled in your Python code:
+
+   ```python
+   import httpx
+
+   client = httpx.AsyncClient(http2=True)
+   # Continue with your HTTP/2 requests using the client
+   ```on of the HTTP protocol, that provides a far more
 efficient transport, with potential performance benefits. HTTP/2 does not change
 the core semantics of the request or response, but alters the way that data is
 sent to and from the server.

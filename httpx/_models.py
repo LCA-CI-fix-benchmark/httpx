@@ -2,8 +2,30 @@ import datetime
 import email.message
 import json as jsonlib
 import typing
-import urllib.request
-from collections.abc import Mapping
+import urllib.@property
+def encoding(self) -> str:
+    """
+    Header encoding is mandated as ascii, but we allow fallbacks to utf-8
+    or iso-8859-1.
+    """
+    if self._encoding is None:
+        for encoding in ["ascii", "utf-8", "iso-8859-1"]:
+            try_encoding = True
+            for key, value in self.raw:
+                try:
+                    key.decode(encoding)
+                    value.decode(encoding)
+                except UnicodeDecodeError:
+                    try_encoding = False
+                    break
+            if try_encoding:
+                # The else block runs if 'break' did not occur, meaning
+                # all values fitted the encoding.
+                self._encoding = encoding
+                break
+        else:
+            # Fallback to iso-8859-1 encoding if none of the encodings work.
+            self._encoding = "iso-8859-1".abc import Mapping
 from http.cookiejar import Cookie, CookieJar
 
 from ._content import ByteStream, UnattachedStream, encode_request, encode_response

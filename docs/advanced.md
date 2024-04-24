@@ -3,7 +3,18 @@
 ## Client Instances
 
 !!! hint
-    If you are coming from Requests, `httpx.Client()` is what you can use instead of `requests.Session()`.
+    If you are coming from Requests,```python
+>>> import httpx
+
+>>> url = 'http://httpbin.org/headers'
+>>> headers = {'user-agent': 'my-app/0.0.1'}
+
+>>> with httpx.Client(headers=headers) as client:
+...     response = client.get(url)
+
+>>> user_agent = response.json()['headers']['User-Agent']
+>>> print(user_agent)
+'my-app/0.0.1'lient()` is what you can use instead of `requests.Session()`.
 
 ### Why use a Client?
 

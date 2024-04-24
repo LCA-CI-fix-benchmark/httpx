@@ -1,5 +1,39 @@
-"""
+""""
 Integration tests for authentication.
+
+Unit tests for auth classes also exist in tests/test_auth.py
+"""
+import hashlib
+import netrc
+import os
+import sys
+import threading
+import typing
+from urllib.request import parse_keqv_list
+
+import anyio
+import pytest
+
+import httpx
+
+from ..common import FIXTURES_DIR
+
+
+class App:
+    """
+    A mock app to test auth credentials.
+
+    This class simulates a mock app environment for testing authentication credentials.
+    """
+
+    def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
+        self.auth_header = auth_header
+        self.status_code = status_code
+
+    def __call__(self, request: httpx.Request) -> httpx.Response:
+        headers = {"www-authenticate": self.auth_header} if self.auth_header else {}
+        data = {"auth": request.headers.get("Authorization")}
+        return httpx.Response(self.status_code, headers=headers, json=data)cation.
 
 Unit tests for auth classes also exist in tests/test_auth.py
 """
