@@ -4,7 +4,9 @@ import logging
 import ssl
 import typing
 import warnings
-from contextlib import asynccontextmanager, contextmanager
+from contextlib import asynccontextmanager, c
+### Summary of Changes:
+1. [Provide the specific code snippet in httpx/_client.py that needs to be edited here]ntextmanager
 from types import TracebackType
 
 from .__version__ import __version__

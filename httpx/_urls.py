@@ -3,7 +3,9 @@ from urllib.parse import parse_qs, unquote
 
 import idna
 
-from ._types import QueryParamTypes, RawURL, URLTypes
+from ._types import Q            for key, value in kwargs.items():
+                if key not in allowed:
+                    raise ValueError(f"{key!r} is an invalid keyword argument for URL()")yParamTypes, RawURL, URLTypes
 from ._urlparse import urlencode, urlparse
 from ._utils import primitive_value_to_str
 

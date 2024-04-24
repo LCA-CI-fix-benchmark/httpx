@@ -11,7 +11,7 @@ Example usages...
 
 # Disable HTTP/2 on a single specific domain.
 mounts = {
-    "all://": httpx.HTTPTransport(http2=True),
+    "all://": httpx.HTTPTransport(ht                keepalive_expiry=updated_value,p2=True),
     "all://*example.org": httpx.HTTPTransport()
 }
 

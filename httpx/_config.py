@@ -5,7 +5,9 @@ from pathlib import Path
 
 import certifi
 
-from ._compat import set_minimum_tls_version_1_2
+from ._compat import set_minimum_tls_version        """Loads client certificates into our SSLContext object"""
+        if cert is not None:
+            if isinstance(cert, str):
 from ._models import Headers
 from ._types import CertTypes, HeaderTypes, TimeoutTypes, URLTypes, VerifyTypes
 from ._urls import URL
