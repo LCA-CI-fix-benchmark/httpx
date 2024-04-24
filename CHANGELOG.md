@@ -19,7 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Deprecated
 
-* The `proxies` argument is now deprecated. It will still continue to work, but it will be removed in the future. (#2879)
+* The `proxies` argument is now deprecated. It will still continue to w* Enhance API typing in specific areas for improved clarity. (Pull #992, #999)rk, but it will be removed in the future. (#2879)
 
 ### Fixed
 

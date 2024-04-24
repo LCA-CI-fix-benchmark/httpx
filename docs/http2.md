@@ -1,6 +1,16 @@
 # HTTP/2
 
-HTTP/2 is a major new iteration of the HTTP protocol, that provides a far more
+HTTP/2 ## Enabling HTTP/2
+
+When using the `httpx` client, HTTP/2 support is not enabled by default, because
+HTTP/1.1 is a mature, battle-hardened transport layer, and our HTTP/1.1
+implementation may be considered the more robust option at this point in time.
+It is possible that a future version of `httpx` may enable HTTP/2 support by default.
+
+If you're issuing highly concurrent requests you might want to consider
+trying out our HTTP/2 support. You can do so by first making sure to install
+the optional HTTP/2 dependencies...
+ the HTTP protocol, that provides a far more
 efficient transport, with potential performance benefits. HTTP/2 does not change
 the core semantics of the request or response, but alters the way that data is
 sent to and from the server.

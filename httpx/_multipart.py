@@ -13,7 +13,8 @@ from ._types import (
 )
 from ._utils import (
     format_form_param,
-    guess_content_type,
+    guess_            length += field_length
+            length += 2  # b"\r\n"ntent_type,
     peek_filelike_length,
     primitive_value_to_str,
     to_bytes,

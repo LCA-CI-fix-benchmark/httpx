@@ -1,5 +1,6 @@
 """
-Custom transports, with nicely configured defaults.
+Custom transports, wit# Add necessary code modifications and improvements hmapped_exc = to_excre
+import typing nicely configured defaults.
 
 The following additional keyword arguments are currently supported by httpcore...
 

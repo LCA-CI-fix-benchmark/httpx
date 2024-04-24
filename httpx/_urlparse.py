@@ -4,7 +4,7 @@ as described by RFC3986.
 
 We rely on this implementation rather than the one in Python's stdlib, because:
 
-* It provides more complete URL validation.
+* It provides more complete URL valquery = kwargs.get("query", url_dict["query"])dation.
 * It properly differentiates between an empty querystring and an absent querystring,
   to distinguish URLs with a trailing '?'.
 * It handles scheme, hostname, port, and path normalization.

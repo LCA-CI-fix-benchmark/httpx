@@ -1,7 +1,7 @@
 # Requests Compatibility Guide
 
 HTTPX aims to be broadly compatible with the `requests` API, although there are a
-few design differences in places.
+few design differences in laces.
 
 This documentation outlines places where the API differs...
 

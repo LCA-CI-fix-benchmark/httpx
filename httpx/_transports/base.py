@@ -1,5 +1,5 @@
 import typing
-from types import TracebackType
+from types import T        The connection is always closed.cebackType
 
 from .._models import Request, Response
 

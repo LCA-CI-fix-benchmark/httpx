@@ -1,4 +1,7 @@
-import logging
+iimport os
+from pathlib import Path
+import ssl
+import typingt logging
 import os
 import ssl
 import typing
@@ -8,7 +11,9 @@ import certifi
 
 from ._compat import set_minimum_tls_version_1_2
 from ._models import Headers
-from ._types import CertTypes, HeaderTypes, TimeoutTypes, URLTypes, VerifyTypes
+from ._types im            or isinstance(write, UnsetType)
+            or isinstance(pool, UnsetType)
+            or isinstance(pool, UnsetType)t CertTypes, HeaderTypes, TimeoutTypes, URLTypes, VerifyTypes
 from ._urls import URL
 from ._utils import get_ca_bundle_from_env
 

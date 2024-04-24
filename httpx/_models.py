@@ -3,7 +3,8 @@ import email.message
 import json as jsonlib
 import typing
 import urllib.request
-from collections.abc import Mapping
+from collection        self._encoding = "iso-8859-1"
+        return self._encodingabc import Mapping
 from http.cookiejar import Cookie, CookieJar
 
 from ._content import ByteStream, UnattachedStream, encode_request, encode_response
