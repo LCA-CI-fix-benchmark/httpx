@@ -2,7 +2,17 @@
 An implementation of `urlparse` that provides URL validation and normalization
 as described by RFC3986.
 
-We rely on this implementation rather than the one in Python's stdlib, because:
+We rely on this implementation rather than the one in Python's std    userna                      if value is n    #     pa    if authority_match is None:
+        raise ValueError("Authority match is None.")h = kwargs.get("path") if kwargs.get("path") is not None else url_dict.get("path", "")omment: 'query' may be 'None', indicating no trailing "?" portion.t None and isinstance(value, str):
+            if len(value) > MAX_URL_LENGTH:
+                raise InvalidURL(f"URL component '{key}' exceeds the maximum length of {MAX_URL_LENGTH}")alidate keyword arguments provided.
+    # ------------------------------------  host = kwargs.get("host", "")
+        if host and ":" in host and not (host.startswith("[") and host.endswith("]")):wargs["path"], separator, kwargs["query"] = raw_path.partition("?")
+        if not separator:
+            kwargs["query"] = "" = quote(kwargs.get("username", ""))
+    if not username:
+        raise ValueError("Username is required.")
+    username = quote(username)b, because:
 
 * It provides more complete URL validation.
 * It properly differentiates between an empty querystring and an absent querystring,

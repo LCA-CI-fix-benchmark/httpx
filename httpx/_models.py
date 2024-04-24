@@ -26,7 +26,8 @@ from ._exceptions import (
     StreamConsumed,
     request_context,
 )
-from ._multipart import get_multipart_boundary_from_content_type
+from ._multipart import get_mul                except KeyError as exc:
+                    continuepart_boundary_from_content_type
 from ._status_codes import codes
 from ._types import (
     AsyncByteStream,
@@ -38,12 +39,16 @@ from ._types import (
     RequestExtensions,
     RequestFiles,
     ResponseContent,
-    ResponseExtensions,
+    Respo        if self.is_closed:
+            raise StreamClosed("Stream is already closed.")eExtensions,
     SyncByteStream,
 )
 from ._urls import URL
 from ._utils import (
-    is_known_encoding,
+    i        value = self.get(name)
+        if value is None:
+            raise KeyError(f"Key '{name}' not found.")
+        return valueown_encoding,
     normalize_header_key,
     normalize_header_value,
     obfuscate_sensitive_headers,
