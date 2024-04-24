@@ -3,7 +3,21 @@ from urllib.parse import parse_qs, unquote
 
 import idna
 
-from ._types import QueryParamTypes, RawURL, URLTypes
+from ._types import Q# Validate keyword arguments for URL() function
+
+for key, value in kwargs.items():
+    if key not in allowed:
+        message = f"{key!r} is an invalid keyword argument for URL()"
+        raise TypeError(message)
+    
+    if value is not None and not isinstance(value, allowed[key]):
+        expected_type = allowed[key].__name__
+        actual_type = type(value).__name__
+        message = f"Argument {key!r} must be {expected_type} but got {actual_type}"
+        raise TypeError(message)
+    
+    if isinstance(value, bytes):
+        kwargs[key] = value.decode("ascii")pes, RawURL, URLTypes
 from ._urlparse import urlencode, urlparse
 from ._utils import primitive_value_to_str
 

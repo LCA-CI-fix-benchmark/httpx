@@ -6,7 +6,22 @@ We rely on this implementation rather than the one in Python's stdlib, because:
 
 * It provides more complete URL validation.
 * It properly differentiates between an empty querystring and an absent querystring,
-  to distinguish URLs with a trailing '?'.
+  to    try:
+        port_as_int = int(port)
+  def quotedef percent_encoded(string: str, safe: str = "/") -> str:
+    """
+    Use percent-encoding to quote a string.
+
+    Parameters:
+    * `string`: The string to be percent-encoded.
+    * `safe`: A string containing characters that may be treated as safe and do not need to be escaped.
+      Unreserved characters are always treated as safe.
+      Reference: [RFC 3986 Section 2.3](https://www.rfc-editor.org/rfc/rfc3986#section-2.3)
+    """g: str, safe: str = "/") -> str:
+    """
+    Use percent-encoding to quote a string.
+    """
+    return percent_encoded(string, safe=safe)lue: {port!r}. Port must be a valid integer.") trailing '?'.
 * It handles scheme, hostname, port, and path normalization.
 * It supports IDNA hostnames, normalizing them to their encoded form.
 * The API supports passing individual components, as well as the complete URL string.

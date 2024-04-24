@@ -10,7 +10,9 @@ The following additional keyword arguments are currently supported by httpcore..
 Example usages...
 
 # Disable HTTP/2 on a single specific domain.
-mounts = {
+mounts         def __init__(self):
+            # Initialize the class with the necessary parameters
+            self, {
     "all://": httpx.HTTPTransport(http2=True),
     "all://*example.org": httpx.HTTPTransport()
 }

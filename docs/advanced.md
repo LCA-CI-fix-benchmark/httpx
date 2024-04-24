@@ -14,7 +14,11 @@
 
 When you make requests using the top-level API as documented in the [Quickstart](quickstart.md) guide, HTTPX has to establish a new connection _for every single request_ (connections are not reused). As the number of requests to a host increases, this quickly becomes inefficient.
 
-On the other hand, a `Client` instance uses [HTTP connection pooling](https://en.wikipedia.org/wiki/HTTP_persistent_connection). This means that when you make several requests to the same host, the `Client` will reuse the underlying TCP connection, instead of recreating one for every single request.
+On the other hand, a `Client` instance uses [HTTP connection pooling](https://en.wikipedia.org/wiki/HTTP_persistent_connection). This means that when you make several requests to the same host, the `Client` will reuse the underlying T## E### Chang## Using SSL Certificates for Verification
+he verification defaults
+
+Add information about how to customize or modify the default verification settings for better control over the verification process.or Handling for Sync Authentication with AsyncClient
+onnection, instead of recreating one for every single request.
 
 This can bring **significant performance improvements** compared to using the top-level API, including:
 

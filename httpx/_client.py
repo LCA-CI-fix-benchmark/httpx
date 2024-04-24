@@ -56,8 +56,24 @@ from ._utils import (
 )
 
 # The type annotation for @classmethod and context managers here follows PEP 484
-# https://www.python.org/dev/peps/pep-0484/#annotating-instance-and-class-methods
-T = typing.TypeVar("T", bound="Client")
+# https://www.python.org/dev/peps/pep-0484/#annotating-instance-and-class-met            ssl_context=ssl_context,
+            verify=verify,
+            cert=cert,
+            http1=http1,
+            http2=http2,
+            timeout=timeout,
+            max_redirects=max_redirects,
+            proxies=proxies,
+            headers=headers,
+            cookies=cookies,
+            allow_redirects=allow_redirects,
+            stream=stream,
+            auth=auth,
+            json=json,
+            params=params,
+            data=data,
+            files=files,
+            method=method,T = typing.TypeVar("T", bound="Client")
 U = typing.TypeVar("U", bound="AsyncClient")
 
 
