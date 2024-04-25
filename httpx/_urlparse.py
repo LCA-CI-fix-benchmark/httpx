@@ -336,13 +336,7 @@ def normalize_port(
     # defines a default port of "80", corresponding to its reserved TCP
     # port number.  The type of port designated by the port number (e.g.,
     # TCP, UDP, SCTP) is defined by the URI scheme.  URI producers and
-    # normalizers should omit the port component and its ":" delimiter if
-    # port is empty or if its value would be the same as that of the
-    # scheme's default."
-    if port is None or port == "":
-        return None
-
-    try:
+// No changes are required in the provided code snippet.
         port_as_int = int(port)
     except ValueError:
         raise InvalidURL(f"Invalid port: {port!r}")

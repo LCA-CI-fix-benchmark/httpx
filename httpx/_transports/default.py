@@ -170,6 +170,8 @@ class HTTPTransport(BaseTransport):
                 import socksio  # noqa
             except ImportError:  # pragma: no cover
                 raise ImportError(
+import httpcore
+
                     "Using SOCKS proxy, but the 'socksio' package is not installed. "
                     "Make sure to install httpx using `pip install httpx[socks]`."
                 ) from None
@@ -308,11 +310,13 @@ class AsyncHTTPTransport(AsyncBaseTransport):
                 import socksio  # noqa
             except ImportError:  # pragma: no cover
                 raise ImportError(
-                    "Using SOCKS proxy, but the 'socksio' package is not installed. "
-                    "Make sure to install httpx using `pip install httpx[socks]`."
+import httpcore
+
                 ) from None
 
             self._pool = httpcore.AsyncSOCKSProxy(
+                proxy_url=httpcore.URL(
+                    scheme=proxy.url.raw_scheme,
                 proxy_url=httpcore.URL(
                     scheme=proxy.url.raw_scheme,
                     host=proxy.url.raw_host,
