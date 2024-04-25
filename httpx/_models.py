@@ -424,18 +424,15 @@ class Request:
         return self._content
 
     def __repr__(self) -> str:
-        class_name = self.__class__.__name__
-        url = str(self.url)
-        return f"<{class_name}({self.method!r}, {url!r})>"
-
-    def __getstate__(self) -> typing.Dict[str, typing.Any]:
-        return {
-            name: value
-            for name, value in self.__dict__.items()
-            if name not in ["extensions", "stream"]
-        }
-
-    def __setstate__(self, state: typing.Dict[str, typing.Any]) -> None:
+    def __getitem__(self, name: str) -> str:
+        value = self.get(name)
+        try:
+            if value is None:
+                raise KeyError(name)
+            return value
+        except KeyError:
+            # Handle KeyError here, possibly with a default value or appropriate action
+            return None
         for name, value in state.items():
             setattr(self, name, value)
         self.extensions = {}
@@ -1077,44 +1074,15 @@ class Cookies(typing.MutableMapping[str, str]):
         self.jar.set_cookie(cookie)
 
     def get(  # type: ignore
-        self,
-        name: str,
-        default: typing.Optional[str] = None,
-        domain: typing.Optional[str] = None,
-        path: typing.Optional[str] = None,
-    ) -> typing.Optional[str]:
-        """
-        Get a cookie by name. May optionally include domain and path
-        in order to specify exactly which cookie to retrieve.
-        """
-        value = None
-        for cookie in self.jar:
-            if cookie.name == name:
-                if domain is None or cookie.domain == domain:
-                    if path is None or cookie.path == path:
-                        if value is not None:
-                            message = f"Multiple cookies exist with name={name}"
-                            raise CookieConflict(message)
-                        value = cookie.value
-
-        if value is None:
-            return default
-        return value
-
-    def delete(
-        self,
-        name: str,
-        domain: typing.Optional[str] = None,
-        path: typing.Optional[str] = None,
-    ) -> None:
-        """
-        Delete a cookie by name. May optionally include domain and path
-        in order to specify exactly which cookie to delete.
-        """
-        if domain is not None and path is not None:
-            return self.jar.clear(domain, path, name)
-
-        remove = [
+    def __getitem__(self, name: str) -> str:
+        value = self.get(name)
+        try:
+            if value is None:
+                raise KeyError(name)
+            return value
+        except KeyError:
+            # Handle KeyError here, possibly with a default value or appropriate action
+            return None
             cookie
             for cookie in self.jar
             if cookie.name == name
@@ -1141,20 +1109,15 @@ class Cookies(typing.MutableMapping[str, str]):
         self.jar.clear(*args)
 
     def update(self, cookies: typing.Optional[CookieTypes] = None) -> None:  # type: ignore
-        cookies = Cookies(cookies)
-        for cookie in cookies.jar:
-            self.jar.set_cookie(cookie)
-
-    def __setitem__(self, name: str, value: str) -> None:
-        return self.set(name, value)
-
     def __getitem__(self, name: str) -> str:
         value = self.get(name)
-        if value is None:
-            raise KeyError(name)
-        return value
-
-    def __delitem__(self, name: str) -> None:
+        try:
+            if value is None:
+                raise KeyError(name)
+            return value
+        except KeyError:
+            # Handle KeyError here, possibly with a default value or appropriate action
+            return None
         return self.delete(name)
 
     def __len__(self) -> int:
