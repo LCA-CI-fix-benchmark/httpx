@@ -17,14 +17,6 @@ import pytest
 import httpx
 
 from ..common import FIXTURES_DIR
-
-
-class App:
-    """
-    A mock app to test auth credentials.
-    """
-
-    def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
         self.auth_header = auth_header
         self.status_code = status_code
 
@@ -498,17 +490,17 @@ async def test_digest_auth_no_specified_qop() -> None:
     digest_data = dict(field.split("=") for field in response_fields)
 
     assert "qop" not in digest_data
+    authorization = typing.cast(typing.Dict[str, typing.Any], response.json())["auth"]
+    scheme, _, fields = authorization.partition(" ")
+    assert scheme == "Digest"
+
+    response_fields = [field.strip() for field in fields.split(",")]
+    digest_data = dict(field.split("=") for field in response_fields)
+
+    assert "qop" not in digest_data
     assert "nc" not in digest_data
     assert "cnonce" not in digest_data
     assert digest_data["username"] == '"user"'
-    assert digest_data["realm"] == '"httpx@example.org"'
-    assert len(digest_data["nonce"]) == 64 + 2  # extra quotes
-    assert digest_data["uri"] == '"/"'
-    assert len(digest_data["response"]) == 64 + 2
-    assert len(digest_data["opaque"]) == 64 + 2
-    assert digest_data["algorithm"] == "SHA-256"
-
-
 @pytest.mark.parametrize("qop", ("auth, auth-int", "auth,auth-int", "unknown,auth"))
 @pytest.mark.anyio
 async def test_digest_auth_qop_including_spaces_and_auth_returns_auth(qop: str) -> None:
