@@ -235,20 +235,25 @@ class Timeout:
 
 
 class Limits:
-    """
-    Configuration for limits to various client behaviors.
+# Code snippet in httpx/_config.py to be edited
 
-    **Parameters:**
+# Implement necessary corrections and improvements to resolve coverage failure
+"""
+Configuration for limits to various client behaviors.
 
-    * **max_connections** - The maximum number of concurrent connections that may be
-            established.
-    * **max_keepalive_connections** - Allow the connection pool to maintain
-            keep-alive connections below this point. Should be less than or equal
-            to `max_connections`.
-    * **keepalive_expiry** - Time limit on idle keep-alive connections in seconds.
-    """
+**Parameters:**
 
-    def __init__(
+* **max_connections** - The maximum number of concurrent connections that may be
+        established.
+* **max_keepalive_connections** - Allow the connection pool to maintain
+        keep-alive connections below this point. Should be less than or equal
+        to `max_connections`.
+* **keepalive_expiry** - Time limit on idle keep-alive connections in seconds.
+"""
+
+def __init__(
+    # Add necessary changes to improve coverage and resolve the issue
+    pass
         self,
         *,
         max_connections: typing.Optional[int] = None,

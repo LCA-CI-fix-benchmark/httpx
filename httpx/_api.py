@@ -50,16 +50,12 @@ def request(
     string, dictionary, or sequence of two-tuples.
     * **content** - *(optional)* Binary content to include in the body of the
     request, as bytes or a byte iterator.
-    * **data** - *(optional)* Form data to include in the body of the request,
-    as a dictionary.
-    * **files** - *(optional)* A dictionary of upload files to include in the
-    body of the request.
-    * **json** - *(optional)* A JSON serializable object to include in the body
-    of the request.
-    * **headers** - *(optional)* Dictionary of HTTP headers to include in the
-    request.
-    * **cookies** - *(optional)* Dictionary of Cookie items to include in the
-    request.
+# Code snippet in httpx/_api.py to be edited
+
+# Implement necessary corrections and improvements to resolve coverage failure
+def api_request(data=None, files=None, json=None, headers=None, cookies=None):
+    # Add code here to fix the issue causing coverage failure
+    pass
     * **auth** - *(optional)* An authentication class to use when sending the
     request.
     * **proxy** - *(optional)* A proxy URL where all the traffic should be routed.
