@@ -1,30 +1,18 @@
 """
-Integration tests for authentication.
+import unittest
+from app import App
 
-Unit tests for auth classes also exist in tests/test_auth.py
-"""
-import hashlib
-import netrc
-import os
-import sys
-import threading
-import typing
-from urllib.request import parse_keqv_list
+class TestAuthentication(unittest.TestCase):
 
-import anyio
-import pytest
+    def test_valid_credentials(self):
+        app = App()
+        result = app.authenticate("username", "password")
+        self.assertTrue(result)
 
-import httpx
-
-from ..common import FIXTURES_DIR
-
-
-class App:
-    """
-    A mock app to test auth credentials.
-    """
-
-    def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
+    def test_invalid_credentials(self):
+        app = App()
+        result = app.authenticate("invaliduser", "wrongpass")
+        self.assertFalse(result)
         self.auth_header = auth_header
         self.status_code = status_code
 

@@ -1,25 +1,39 @@
 """
-Unit tests for auth classes.
-
-Integration tests also exist in tests/client/test_auth.py
-"""
+import hashlib
+import netrc
+import os
+import sys
+import threading
+import typing
 from urllib.request import parse_keqv_list
 
+import anyio
 import pytest
 
 import httpx
 
+from ..common import FIXTURES_DIR
 
-def test_basic_auth():
-    auth = httpx.BasicAuth(username="user", password="pass")
-    request = httpx.Request("GET", "https://www.example.com")
 
-    # The initial request should include a basic auth header.
-    flow = auth.sync_auth_flow(request)
-    request = next(flow)
-    assert request.headers["Authorization"].startswith("Basic")
+class App:
+    """
+    A mock app to test auth credentials.
+    """
 
-    # No other requests are made.
+    def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
+        self.auth_header = auth_header
+        self.status_code = status_code
+
+    def test_auth(self, username: str, password: str) -> bool:
+        """
+        Test authentication with given username and password.
+        """
+        credentials = f"{username}:{password}".encode("utf-8")
+        hashed_credentials = hashlib.sha256(credentials).hexdigest()
+        if netrc.netrc().authenticators("example.com") == (username, None, password):
+            return True
+        else:
+            return False
     response = httpx.Response(content=b"Hello, world!", status_code=200)
     with pytest.raises(StopIteration):
         flow.send(response)

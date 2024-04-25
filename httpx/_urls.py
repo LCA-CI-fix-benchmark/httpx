@@ -90,15 +90,25 @@ class URL:
             }
 
             # Perform type checking for all supported keyword arguments.
-            for key, value in kwargs.items():
-                if key not in allowed:
-                    message = f"{key!r} is an invalid keyword argument for URL()"
-                    raise TypeError(message)
-                if value is not None and not isinstance(value, allowed[key]):
-                    expected = allowed[key].__name__
-                    seen = type(value).__name__
-                    message = f"Argument {key!r} must be {expected} but got {seen}"
-                    raise TypeError(message)
+import typing
+
+allowed["verify"] = typing.Union[bool, str]
+allowed["cert"] = typing.Optional[str]
+
+for key, value in kwargs.items():
+    if key not in allowed:
+        message = f"{key!r} is an invalid keyword argument for URL()"
+        raise TypeError(message)
+    if key == "verify" and not isinstance(value, allowed["verify"]):
+        expected = allowed["verify"].__name__
+        seen = type(value).__name__
+        message = f"Argument {key!r} must be {expected} but got {seen}"
+        raise TypeError(message)
+    if key == "cert" and not isinstance(value, allowed["cert"]):
+        expected = allowed["cert"].__name__
+        seen = type(value).__name__
+        message = f"Argument {key!r} must be {expected} but got {seen}"
+        raise TypeError(message)
                 if isinstance(value, bytes):
                     kwargs[key] = value.decode("ascii")
 

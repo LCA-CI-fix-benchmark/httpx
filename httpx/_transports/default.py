@@ -170,11 +170,20 @@ class HTTPTransport(BaseTransport):
                 import socksio  # noqa
             except ImportError:  # pragma: no cover
                 raise ImportError(
-                    "Using SOCKS proxy, but the 'socksio' package is not installed. "
-                    "Make sure to install httpx using `pip install httpx[socks]`."
-                ) from None
+import httpcore
 
-            self._pool = httpcore.SOCKSProxy(
+if self._proxy.scheme == "socks5":
+    proxy_class = httpcore.AsyncHTTPTransport
+elif self._proxy.scheme == "socks4":
+    proxy_class = httpcore.SyncHTTPTransport
+else:
+    raise ValueError("Unsupported SOCKS proxy scheme")
+
+self._pool = proxy_class(
+    proxy_url=self._proxy_url,
+    ssl_context=self._ssl_context,
+    proxy_headers=self._proxy_headers,
+)
                 proxy_url=httpcore.URL(
                     scheme=proxy.url.raw_scheme,
                     host=proxy.url.raw_host,
@@ -308,11 +317,15 @@ class AsyncHTTPTransport(AsyncBaseTransport):
                 import socksio  # noqa
             except ImportError:  # pragma: no cover
                 raise ImportError(
-                    "Using SOCKS proxy, but the 'socksio' package is not installed. "
-                    "Make sure to install httpx using `pip install httpx[socks]`."
-                ) from None
+proxy_url = proxy.url.raw_path
+proxy_auth = proxy.raw_auth
 
-            self._pool = httpcore.AsyncSOCKSProxy(
+self._pool = httpcore.AsyncHTTPTransport(
+    proxy_url=proxy_url,
+    proxy_auth=proxy_auth,
+    ssl_context=ssl_context,
+    max_connections=limits.max_connections,
+)
                 proxy_url=httpcore.URL(
                     scheme=proxy.url.raw_scheme,
                     host=proxy.url.raw_host,
