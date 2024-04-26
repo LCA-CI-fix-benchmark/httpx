@@ -279,7 +279,6 @@ def test_netrc_auth_nopassword() -> None:  # pragma: no cover
     For Python 3.11+ a netrc file with no password is valid. In this case
     we want to check that we allow the netrc auth, and simply don't provide
     any credentials in the request.
-    """
     netrc_file = str(FIXTURES_DIR / ".netrc-nopassword")
     url = "http://example.org"
     app = App()

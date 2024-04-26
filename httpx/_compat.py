@@ -1,4 +1,5 @@
 """
+"""
 The _compat module is used for code which requires branching between different
 Python environments. It is excluded from the code coverage checks.
 """
@@ -9,12 +10,12 @@ import sys
 # The C bindings in `brotli` are recommended for CPython.
 # The CFFI bindings in `brotlicffi` are recommended for PyPy and everything else.
 try:
-    import brotlicffi as brotli
-except ImportError:  # pragma: no cover
-    try:
+    if 'PyPy' in sys.version:
+        import brotlicffi as brotli
+    else:
         import brotli
-    except ImportError:
-        brotli = None
+except ImportError:  # pragma: no cover
+    brotli = None
 
 if sys.version_info >= (3, 10) or ssl.OPENSSL_VERSION_INFO >= (1, 1, 0, 7):
 
