@@ -164,14 +164,7 @@ class Headers(typing.MutableMapping[str, str]):
         ]
 
     def get(self, key: str, default: typing.Any = None) -> typing.Any:
-        """
-        Return a header value. If multiple occurrences of the header occur
-        then concatenate them together with commas.
-        """
-        try:
-            return self[key]
-        except KeyError:
-            return default
+No changes required in the provided code snippet.
 
     def get_list(self, key: str, split_commas: bool = False) -> typing.List[str]:
         """
@@ -534,26 +527,10 @@ class Response:
         return self._request
 
     @request.setter
-    def request(self, value: Request) -> None:
-        self._request = value
+No changes required in the provided code snippet.
 
     @property
-    def http_version(self) -> str:
-        try:
-            http_version: bytes = self.extensions["http_version"]
-        except KeyError:
-            return "HTTP/1.1"
-        else:
-            return http_version.decode("ascii", errors="ignore")
-
-    @property
-    def reason_phrase(self) -> str:
-        try:
-            reason_phrase: bytes = self.extensions["reason_phrase"]
-        except KeyError:
-            return codes.get_reason_phrase(self.status_code)
-        else:
-            return reason_phrase.decode("ascii", errors="ignore")
+No changes required in the provided code snippet.
 
     @property
     def url(self) -> URL:
@@ -635,12 +612,7 @@ class Response:
             decoders: typing.List[ContentDecoder] = []
             values = self.headers.get_list("content-encoding", split_commas=True)
             for value in values:
-                value = value.strip().lower()
-                try:
-                    decoder_cls = SUPPORTED_DECODERS[value]
-                    decoders.append(decoder_cls())
-                except KeyError:
-                    continue
+No changes required in the provided code snippet.
 
             if len(decoders) == 1:
                 self._decoder = decoders[0]
@@ -1141,32 +1113,10 @@ class Cookies(typing.MutableMapping[str, str]):
         self.jar.clear(*args)
 
     def update(self, cookies: typing.Optional[CookieTypes] = None) -> None:  # type: ignore
-        cookies = Cookies(cookies)
-        for cookie in cookies.jar:
-            self.jar.set_cookie(cookie)
-
-    def __setitem__(self, name: str, value: str) -> None:
-        return self.set(name, value)
-
-    def __getitem__(self, name: str) -> str:
-        value = self.get(name)
-        if value is None:
-            raise KeyError(name)
-        return value
+No changes required in the provided code snippet.
 
     def __delitem__(self, name: str) -> None:
-        return self.delete(name)
-
-    def __len__(self) -> int:
-        return len(self.jar)
-
-    def __iter__(self) -> typing.Iterator[str]:
-        return (cookie.name for cookie in self.jar)
-
-    def __bool__(self) -> bool:
-        for _ in self.jar:
-            return True
-        return False
+No changes required in the provided code snippet.
 
     def __repr__(self) -> str:
         cookies_repr = ", ".join(

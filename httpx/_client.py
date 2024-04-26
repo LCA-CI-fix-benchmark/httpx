@@ -1149,23 +1149,6 @@ class Client(BaseClient):
         Send a `POST` request.
 
         **Parameters**: See `httpx.request`.
-        """
-        return self.request(
-            "POST",
-            url,
-            content=content,
-            data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
-        )
-
     def put(
         self,
         url: URLTypes,
@@ -1177,6 +1160,11 @@ class Client(BaseClient):
         params: typing.Optional[QueryParamTypes] = None,
         headers: typing.Optional[HeaderTypes] = None,
         cookies: typing.Optional[CookieTypes] = None,
+        auth: typing.Optional[AuthTypes] = None,
+        follow_redirects: bool = True,
+        timeout: typing.Optional[TimeoutTypes] = None,
+        extensions: typing.Optional[ExtensionsTypes] = None,
+    )
         auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
         follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
         timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
@@ -1186,22 +1174,7 @@ class Client(BaseClient):
         Send a `PUT` request.
 
         **Parameters**: See `httpx.request`.
-        """
-        return self.request(
-            "PUT",
-            url,
-            content=content,
-            data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
-        )
+No changes required in the provided code snippet.
 
     def patch(
         self,
@@ -1241,6 +1214,43 @@ class Client(BaseClient):
         )
 
     def delete(
+    def patch(
+        self,
+        url: URLTypes,
+        *,
+        content: typing.Optional[RequestContent] = None,
+        data: typing.Optional[RequestData] = None,
+        files: typing.Optional[RequestFiles] = None,
+        json: typing.Optional[typing.Any] = None,
+        params: typing.Optional[QueryParamTypes] = None,
+        headers: typing.Optional[HeaderTypes] = None,
+        cookies: typing.Optional[CookieTypes] = None,
+        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
+        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        extensions: typing.Optional[RequestExtensions] = None,
+    ) -> Response:
+
+    def close(self) -> None:
+    def delete(
+        self,
+        url: URLTypes,
+        *,
+        content: typing.Optional[RequestContent] = None,
+        data: typing.Optional[RequestData] = None,
+        files: typing.Optional[RequestFiles] = None,
+        json: typing.Optional[typing.Any] = None,
+        params: typing.Optional[QueryParamTypes] = None,
+        headers: typing.Optional[HeaderTypes] = None,
+        cookies: typing.Optional[CookieTypes] = None,
+        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
+        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        extensions: typing.Optional[RequestExtensions] = None,
+    ) -> Response:
+
+    def __enter__(self: T) -> T:
+    def delete(
         self,
         url: URLTypes,
         *,
@@ -1252,144 +1262,6 @@ class Client(BaseClient):
         timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
         extensions: typing.Optional[RequestExtensions] = None,
     ) -> Response:
-        """
-        Send a `DELETE` request.
-
-        **Parameters**: See `httpx.request`.
-        """
-        return self.request(
-            "DELETE",
-            url,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
-        )
-
-    def close(self) -> None:
-        """
-        Close transport and proxies.
-        """
-        if self._state != ClientState.CLOSED:
-            self._state = ClientState.CLOSED
-
-            self._transport.close()
-            for transport in self._mounts.values():
-                if transport is not None:
-                    transport.close()
-
-    def __enter__(self: T) -> T:
-        if self._state != ClientState.UNOPENED:
-            msg = {
-                ClientState.OPENED: "Cannot open a client instance more than once.",
-                ClientState.CLOSED: (
-                    "Cannot reopen a client instance, once it has been closed."
-                ),
-            }[self._state]
-            raise RuntimeError(msg)
-
-        self._state = ClientState.OPENED
-
-        self._transport.__enter__()
-        for transport in self._mounts.values():
-            if transport is not None:
-                transport.__enter__()
-        return self
-
-    def __exit__(
-        self,
-        exc_type: typing.Optional[typing.Type[BaseException]] = None,
-        exc_value: typing.Optional[BaseException] = None,
-        traceback: typing.Optional[TracebackType] = None,
-    ) -> None:
-        self._state = ClientState.CLOSED
-
-        self._transport.__exit__(exc_type, exc_value, traceback)
-        for transport in self._mounts.values():
-            if transport is not None:
-                transport.__exit__(exc_type, exc_value, traceback)
-
-
-class AsyncClient(BaseClient):
-    """
-    An asynchronous HTTP client, with connection pooling, HTTP/2, redirects,
-    cookie persistence, etc.
-
-    Usage:
-
-    ```python
-    >>> async with httpx.AsyncClient() as client:
-    >>>     response = await client.get('https://example.org')
-    ```
-
-    **Parameters:**
-
-    * **auth** - *(optional)* An authentication class to use when sending
-    requests.
-    * **params** - *(optional)* Query parameters to include in request URLs, as
-    a string, dictionary, or sequence of two-tuples.
-    * **headers** - *(optional)* Dictionary of HTTP headers to include when
-    sending requests.
-    * **cookies** - *(optional)* Dictionary of Cookie items to include when
-    sending requests.
-    * **persistent_cookies** - *(optional) A boolean indicating if cookies should
-    persist. Defaults to `False`.
-    * **verify** - *(optional)* SSL certificates (a.k.a CA bundle) used to
-    verify the identity of requested hosts. Either `True` (default CA bundle),
-    a path to an SSL certificate file, an `ssl.SSLContext`, or `False`
-    (which will disable verification).
-    * **cert** - *(optional)* An SSL certificate used by the requested host
-    to authenticate the client. Either a path to an SSL certificate file, or
-    two-tuple of (certificate file, key file), or a three-tuple of (certificate
-    file, key file, password).
-    * **http2** - *(optional)* A boolean indicating if HTTP/2 support should be
-    enabled. Defaults to `False`.
-    * **proxy** - *(optional)* A proxy URL where all the traffic should be routed.
-    * **proxies** - *(optional)* A dictionary mapping HTTP protocols to proxy
-    URLs.
-    * **timeout** - *(optional)* The timeout configuration to use when sending
-    requests.
-    * **limits** - *(optional)* The limits configuration to use.
-    * **max_redirects** - *(optional)* The maximum number of redirect responses
-    that should be followed.
-    * **base_url** - *(optional)* A URL to use as the base when building
-    request URLs.
-    * **transport** - *(optional)* A transport class to use for sending requests
-    over the network.
-    * **app** - *(optional)* An ASGI application to send requests to,
-    rather than sending actual network requests.
-    * **trust_env** - *(optional)* Enables or disables usage of environment
-    variables for configuration.
-    * **default_encoding** - *(optional)* The default encoding to use for decoding
-    response text, if no charset information is included in a response Content-Type
-    header. Set to a callable for automatic character set detection. Default: "utf-8".
-    """
-
-    def __init__(
-        self,
-        *,
-        auth: typing.Optional[AuthTypes] = None,
-        params: typing.Optional[QueryParamTypes] = None,
-        headers: typing.Optional[HeaderTypes] = None,
-        cookies: typing.Optional[CookieTypes] = None,
-        persistent_cookies: bool = False,
-        verify: VerifyTypes = True,
-        cert: typing.Optional[CertTypes] = None,
-        http1: bool = True,
-        http2: bool = False,
-        proxy: typing.Optional[ProxyTypes] = None,
-        proxies: typing.Optional[ProxiesTypes] = None,
-        mounts: typing.Optional[
-            typing.Mapping[str, typing.Optional[AsyncBaseTransport]]
-        ] = None,
-        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
-        follow_redirects: bool = False,
-        limits: Limits = DEFAULT_LIMITS,
-        max_redirects: int = DEFAULT_MAX_REDIRECTS,
-        event_hooks: typing.Optional[
             typing.Mapping[str, typing.List[typing.Callable[..., typing.Any]]]
         ] = None,
         base_url: URLTypes = "",

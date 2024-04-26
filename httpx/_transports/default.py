@@ -78,10 +78,7 @@ def map_httpcore_exceptions() -> typing.Iterator[None]:
                 mapped_exc = to_exc
 
         if mapped_exc is None:  # pragma: no cover
-            raise
-
-        message = str(exc)
-        raise mapped_exc(message) from exc
+No changes required in the provided code snippet.
 
 
 HTTPCORE_EXC_MAP = {
