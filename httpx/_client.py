@@ -1386,13 +1386,12 @@ class AsyncClient(BaseClient):
 
         if proxies:
             message = (
-                "The 'proxies' argument is now deprecated."
-                " Use 'proxy' or 'mounts' instead."
+                "The 'proxies' argument is now deprecated. "
+                "Please use 'proxy' or 'mounts' instead."
             )
             warnings.warn(message, DeprecationWarning)
             if proxy:
-                raise RuntimeError("Use either `proxy` or 'proxies', not both.")
-
+                raise RuntimeError("Use either `proxy` or 'mounts', not both.")
         allow_env_proxies = trust_env and app is None and transport is None
         proxy_map = self._get_proxy_map(proxies or proxy, allow_env_proxies)
 

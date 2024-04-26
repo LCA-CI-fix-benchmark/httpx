@@ -13,12 +13,8 @@ from urllib.request import parse_keqv_list
 
 import anyio
 import pytest
-
 import httpx
-
-from ..common import FIXTURES_DIR
-
-
+from tests.common import FIXTURES_DIR
 class App:
     """
     A mock app to test auth credentials.

@@ -24,13 +24,13 @@ class BaseTransport:
         Send a single HTTP request and return a response.
 
         Developers shouldn't typically ever need to call into this API directly,
-        since the Client class provides all the higher level user-facing API
+        Since the Client class provides all the higher-level user-facing API
         niceties.
 
         In order to properly release any network resources, the response
         stream should *either* be consumed immediately, with a call to
         `response.stream.read()`, or else the `handle_request` call should
-        be followed with a try/finally block to ensuring the stream is
+        be followed with a try/finally block to ensure the stream is
         always closed.
 
         Example usage:
