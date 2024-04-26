@@ -476,8 +476,6 @@ async def test_digest_auth(
     assert digest_data["qop"] == "auth"
     assert digest_data["nc"] == "00000001"
     assert len(digest_data["cnonce"]) == 16 + 2
-
-
 @pytest.mark.anyio
 async def test_digest_auth_no_specified_qop() -> None:
     url = "https://example.org/"
@@ -498,6 +496,7 @@ async def test_digest_auth_no_specified_qop() -> None:
     digest_data = dict(field.split("=") for field in response_fields)
 
     assert "qop" not in digest_data
+    assert "qop" not in digest_data
     assert "nc" not in digest_data
     assert "cnonce" not in digest_data
     assert digest_data["username"] == '"user"'
@@ -507,8 +506,6 @@ async def test_digest_auth_no_specified_qop() -> None:
     assert len(digest_data["response"]) == 64 + 2
     assert len(digest_data["opaque"]) == 64 + 2
     assert digest_data["algorithm"] == "SHA-256"
-
-
 @pytest.mark.parametrize("qop", ("auth, auth-int", "auth,auth-int", "unknown,auth"))
 @pytest.mark.anyio
 async def test_digest_auth_qop_including_spaces_and_auth_returns_auth(qop: str) -> None:
@@ -594,15 +591,15 @@ async def test_digest_auth_resets_nonce_count_after_401() -> None:
         )["nc"]
 
         # with this we now force a 401 on a subsequent (but initial) request
+        )["nc"]
+
+        # with this we now force a 401 on a subsequent (but initial) request
         app.send_response_after_attempt = 2
 
         # we expect the client again to try to authenticate,
         # i.e. the history length must be 1
         response_2 = await client.get(url, auth=auth)
         assert response_2.status_code == 200
-        assert len(response_2.history) == 1
-
-        second_nonce = parse_keqv_list(
             response_2.request.headers["Authorization"].split(", ")
         )["nonce"]
         second_nc = parse_keqv_list(

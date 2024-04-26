@@ -91,8 +91,7 @@ USER_AGENT = f"python-httpx/{__version__}"
 ACCEPT_ENCODING = ", ".join(
     [key for key in SUPPORTED_DECODERS.keys() if key != "identity"]
 )
-
-
+class ClientState(enum.Enum):
 class ClientState(enum.Enum):
     # UNOPENED:
     #   The client has been instantiated, but has not been used to send a request,
@@ -105,8 +104,6 @@ class ClientState(enum.Enum):
     #   The client has either exited the `with` block, or `close()` has
     #   been called explicitly.
     CLOSED = 3
-
-
 class BoundSyncStream(SyncByteStream):
     """
     A byte stream that is bound to a given response instance, and that
