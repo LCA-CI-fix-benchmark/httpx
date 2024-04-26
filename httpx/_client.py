@@ -404,14 +404,15 @@ class BaseClient:
         return cookies
 
     def _merge_headers(
-        self, headers: typing.Optional[HeaderTypes] = None
-    ) -> typing.Optional[HeaderTypes]:
+    def merge_headers(
+        self, incoming_headers: typing.Optional[HeaderTypes] = None
+    ) -> Headers:
         """
-        Merge a headers argument together with any headers on the client,
+        Merge an incoming_headers argument together with any headers on the client,
         to create the headers used for the outgoing request.
         """
         merged_headers = Headers(self.headers)
-        merged_headers.update(headers)
+        merged_headers.update(incoming_headers)
         return merged_headers
 
     def _merge_queryparams(
@@ -1454,10 +1455,10 @@ class AsyncClient(BaseClient):
         limits: Limits = DEFAULT_LIMITS,
     ) -> AsyncBaseTransport:
         return AsyncHTTPTransport(
-            ssl_context=ssl_context,
             verify=verify,
             cert=cert,
             http1=http1,
+            http2=http2,
             http2=http2,
             limits=limits,
             proxy=proxy,
