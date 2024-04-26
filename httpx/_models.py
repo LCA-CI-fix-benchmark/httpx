@@ -99,7 +99,9 @@ class Headers(typing.MutableMapping[str, str]):
                     try:
                         key.decode(encoding)
                         value.decode(encoding)
-                    except UnicodeDecodeError:
+                    except UnicodeDecodeError as e:
+                        print(f"UnicodeDecodeError occurred: {e}")
+                        # Implement error handling or fallback mechanism here
                         break
                 else:
                     # The else block runs if 'break' did not occur, meaning
@@ -113,9 +115,6 @@ class Headers(typing.MutableMapping[str, str]):
         return self._encoding
 
     @encoding.setter
-    def encoding(self, value: str) -> None:
-        self._encoding = value
-
     @property
     def raw(self) -> typing.List[typing.Tuple[bytes, bytes]]:
         """
@@ -124,9 +123,15 @@ class Headers(typing.MutableMapping[str, str]):
         return [(raw_key, value) for raw_key, _, value in self._list]
 
     def keys(self) -> typing.KeysView[str]:
-        return {key.decode(self.encoding): None for _, key, value in self._list}.keys()
+        try:
+            return {key.decode(self.encoding): None for _, key, value in self._list}.keys()
+        except KeyError as e:
+            print(f"KeyError occurred: {e}")
+            # Handle KeyError appropriately
 
     def values(self) -> typing.ValuesView[str]:
+        values_dict: typing.Dict[str, str] = {}
+        for _, key, value in self._list:
         values_dict: typing.Dict[str, str] = {}
         for _, key, value in self._list:
             str_key = key.decode(self.encoding)
@@ -196,12 +201,6 @@ class Headers(typing.MutableMapping[str, str]):
         return split_values
 
     def update(self, headers: typing.Optional[HeaderTypes] = None) -> None:  # type: ignore
-        headers = Headers(headers)
-        for key in headers.keys():
-            if key in self:
-                self.pop(key)
-        self._list.extend(headers._list)
-
     def copy(self) -> "Headers":
         return Headers(self, encoding=self.encoding)
 
@@ -210,6 +209,15 @@ class Headers(typing.MutableMapping[str, str]):
         Return a single header value.
 
         If there are multiple headers with the same key, then we concatenate
+        them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
+        """
+        normalized_key = key.lower().encode(self.encoding)
+
+        try:
+            items = [
+        except KeyError as e:
+            print(f"KeyError occurred: {e}")
+            # Handle KeyError appropriately
         them with commas. See: https://tools.ietf.org/html/rfc7230#section-3.2.2
         """
         normalized_key = key.lower().encode(self.encoding)
@@ -275,22 +283,26 @@ class Headers(typing.MutableMapping[str, str]):
         return iter(self.keys())
 
     def __len__(self) -> int:
-        return len(self._list)
-
-    def __eq__(self, other: typing.Any) -> bool:
-        try:
-            other_headers = Headers(other)
-        except ValueError:
-            return False
-
         self_list = [(key, value) for _, key, value in self._list]
         other_list = [(key, value) for _, key, value in other_headers._list]
-        return sorted(self_list) == sorted(other_list)
+        try:
+            return sorted(self_list) == sorted(other_list)
+        except KeyError as e:
+            print(f"KeyError occurred: {e}")
+            # Handle KeyError appropriately
 
     def __repr__(self) -> str:
         class_name = self.__class__.__name__
 
         encoding_str = ""
+        if self.encoding != "ascii":
+            encoding_str = f", encoding={self.encoding!r}"
+
+        as_list = list(obfuscate_sensitive_headers(self.multi_items()))
+        as_dict = dict(as_list)
+
+        no_duplicate_keys = len(as_dict) == len(as_list)
+        if no_duplicate_keys:
         if self.encoding != "ascii":
             encoding_str = f", encoding={self.encoding!r}"
 
@@ -424,18 +436,22 @@ class Request:
         return self._content
 
     def __repr__(self) -> str:
-        class_name = self.__class__.__name__
-        url = str(self.url)
-        return f"<{class_name}({self.method!r}, {url!r})>"
+        for name, value in state.items():
+            try:
+                setattr(self, name, value)
+            except KeyError as e:
+                print(f"KeyError occurred: {e}")
+                # Handle KeyError appropriately
+        self.extensions = {}
+        self.stream = UnattachedStream()
 
-    def __getstate__(self) -> typing.Dict[str, typing.Any]:
-        return {
-            name: value
-            for name, value in self.__dict__.items()
-            if name not in ["extensions", "stream"]
-        }
 
-    def __setstate__(self, state: typing.Dict[str, typing.Any]) -> None:
+class Response:
+    def __init__(
+        self,
+        status_code: int,
+        *,
+        headers: typing.Optional[HeaderTypes] = None,
         for name, value in state.items():
             setattr(self, name, value)
         self.extensions = {}
@@ -534,19 +550,20 @@ class Response:
         return self._request
 
     @request.setter
-    def request(self, value: Request) -> None:
-        self._request = value
-
-    @property
-    def http_version(self) -> str:
         try:
-            http_version: bytes = self.extensions["http_version"]
-        except KeyError:
-            return "HTTP/1.1"
-        else:
-            return http_version.decode("ascii", errors="ignore")
+            except KeyError:
+                return codes.get_reason_phrase(self.status_code)
+            else:
+                return reason_phrase.decode("ascii", errors="ignore")
 
-    @property
+        @property
+        def url(self) -> URL:
+            """
+            Returns the URL for which the request was made.
+            """
+            return self.request.url
+
+        @property
     def reason_phrase(self) -> str:
         try:
             reason_phrase: bytes = self.extensions["reason_phrase"]
@@ -602,20 +619,24 @@ class Response:
         return self._encoding
 
     @encoding.setter
-    def encoding(self, value: str) -> None:
         """
-        Set the encoding to use for decoding the byte content into text.
+        content_type = self.headers.get("Content-Type")
+        try:
+            if content_type is None:
+                return None
+        except KeyError as e:
+            print(f"KeyError occurred: {e}")
+            # Handle KeyError appropriately
 
-        If the `text` attribute has been accessed, attempting to set the
-        encoding will throw a ValueError.
+        return parse_content_type_charset(content_type)
+
+    def _get_content_decoder(self) -> ContentDecoder:
         """
-        if hasattr(self, "_text"):
-            raise ValueError(
-                "Setting encoding after `text` has been accessed is not allowed."
-            )
-        self._encoding = value
-
-    @property
+        Returns a decoder instance which can be used to decode the raw byte
+        content, depending on the Content-Encoding used in the response.
+        """
+        if not hasattr(self, "_decoder"):
+            decoders: typing.List[ContentDecoder] = []
     def charset_encoding(self) -> typing.Optional[str]:
         """
         Return the encoding, as specified by the Content-Type header.
@@ -635,14 +656,18 @@ class Response:
             decoders: typing.List[ContentDecoder] = []
             values = self.headers.get_list("content-encoding", split_commas=True)
             for value in values:
-                value = value.strip().lower()
-                try:
-                    decoder_cls = SUPPORTED_DECODERS[value]
-                    decoders.append(decoder_cls())
-                except KeyError:
-                    continue
+        try:
+            return codes.is_informational(self.status_code)
+        except KeyError as e:
+            print(f"KeyError occurred: {e}")
+            # Handle KeyError appropriately
 
-            if len(decoders) == 1:
+    @property
+    def is_success(self) -> bool:
+        """
+        A property which is `True` for 2xx status codes, `False` otherwise.
+        """
+        return codes.is_success(self.status_code)
                 self._decoder = decoders[0]
             elif len(decoders) > 1:
                 self._decoder = MultiDecoder(children=decoders)
@@ -783,20 +808,24 @@ class Response:
         return ldict
 
     @property
-    def num_bytes_downloaded(self) -> int:
-        return self._num_bytes_downloaded
+            self._content = b"".join(self.iter_bytes())
+        try:
+            return self._content
+        except KeyError as e:
+            print(f"KeyError occurred: {e}")
+            # Handle KeyError appropriately
 
-    def __repr__(self) -> str:
-        return f"<Response [{self.status_code} {self.reason_phrase}]>"
-
-    def __getstate__(self) -> typing.Dict[str, typing.Any]:
-        return {
-            name: value
-            for name, value in self.__dict__.items()
-            if name not in ["extensions", "stream", "is_closed", "_decoder"]
-        }
-
-    def __setstate__(self, state: typing.Dict[str, typing.Any]) -> None:
+    def iter_bytes(
+        self, chunk_size: typing.Optional[int] = None
+    ) -> typing.Iterator[bytes]:
+        """
+        A byte-iterator over the decoded response content.
+        This allows us to handle gzip, deflate, and brotli encoded responses.
+        """
+        if hasattr(self, "_content"):
+            chunk_size = len(self._content) if chunk_size is None else chunk_size
+            for i in range(0, len(self._content), max(chunk_size, 1)):
+                yield self._content[i : i + chunk_size]
         for name, value in state.items():
             setattr(self, name, value)
         self.is_closed = True
@@ -1018,18 +1047,22 @@ class Cookies(typing.MutableMapping[str, str]):
     """
 
     def __init__(self, cookies: typing.Optional[CookieTypes] = None) -> None:
-        if cookies is None or isinstance(cookies, dict):
-            self.jar = CookieJar()
-            if isinstance(cookies, dict):
-                for key, value in cookies.items():
-                    self.set(key, value)
-        elif isinstance(cookies, list):
-            self.jar = CookieJar()
-            for key, value in cookies:
-                self.set(key, value)
-        elif isinstance(cookies, Cookies):
-            self.jar = CookieJar()
-            for cookie in cookies.jar:
+        urllib_request = self._CookieCompatRequest(request)
+        try:
+            self.jar.add_cookie_header(urllib_request)
+        except KeyError as e:
+            print(f"KeyError occurred: {e}")
+            # Handle KeyError appropriately
+
+    def set(self, name: str, value: str, domain: str = "", path: str = "/") -> None:
+        """
+        Set a cookie value by name. May optionally include domain and path.
+        """
+        kwargs = {
+            "version": 0,
+            "name": name,
+            "value": value,
+            "port": None,
                 self.jar.set_cookie(cookie)
         else:
             self.jar = cookies
@@ -1077,42 +1110,13 @@ class Cookies(typing.MutableMapping[str, str]):
         self.jar.set_cookie(cookie)
 
     def get(  # type: ignore
-        self,
-        name: str,
-        default: typing.Optional[str] = None,
-        domain: typing.Optional[str] = None,
-        path: typing.Optional[str] = None,
-    ) -> typing.Optional[str]:
-        """
-        Get a cookie by name. May optionally include domain and path
-        in order to specify exactly which cookie to retrieve.
-        """
-        value = None
-        for cookie in self.jar:
-            if cookie.name == name:
-                if domain is None or cookie.domain == domain:
-                    if path is None or cookie.path == path:
-                        if value is not None:
-                            message = f"Multiple cookies exist with name={name}"
-                            raise CookieConflict(message)
-                        value = cookie.value
-
-        if value is None:
-            return default
-        return value
-
-    def delete(
-        self,
-        name: str,
-        domain: typing.Optional[str] = None,
-        path: typing.Optional[str] = None,
-    ) -> None:
-        """
-        Delete a cookie by name. May optionally include domain and path
-        in order to specify exactly which cookie to delete.
         """
         if domain is not None and path is not None:
-            return self.jar.clear(domain, path, name)
+            try:
+                return self.jar.clear(domain, path, name)
+            except KeyError as e:
+                print(f"KeyError occurred: {e}")
+                # Handle KeyError appropriately
 
         remove = [
             cookie
@@ -1147,14 +1151,49 @@ class Cookies(typing.MutableMapping[str, str]):
 
     def __setitem__(self, name: str, value: str) -> None:
         return self.set(name, value)
+            cookie
+            for cookie in self.jar
+            if cookie.name == name
+            and (domain is None or cookie.domain == domain)
+            and (path is None or cookie.path == path)
+        ]
 
-    def __getitem__(self, name: str) -> str:
-        value = self.get(name)
-        if value is None:
-            raise KeyError(name)
-        return value
+        for cookie in remove:
+            self.jar.clear(cookie.domain, cookie.path, cookie.name)
 
-    def __delitem__(self, name: str) -> None:
+    def clear(
+        self, domain: typing.Optional[str] = None, path: typing.Optional[str] = None
+    ) -> None:
+        """
+        Delete all cookies. Optionally include a domain and path in
+        order to only delete a subset of all the cookies.
+        """
+        args = []
+        if domain is not None:
+            args.append(domain)
+        if path is not None:
+            assert domain is not None
+            args.append(path)
+        self.jar.clear(*args)
+
+    def update(self, cookies: typing.Optional[CookieTypes] = None) -> None:  # type: ignore
+    class _CookieCompatRequest(urllib.request.Request):
+        """
+        Wraps a `Request` instance up in a compatibility interface suitable
+        for use with `CookieJar` operations.
+        """
+
+        def __init__(self, request: Request) -> None:
+            try:
+                super().__init__(
+                    url=str(request.url),
+                    headers=dict(request.headers),
+                    method=request.method,
+                )
+            except KeyError as e:
+                print(f"KeyError occurred: {e}")
+                # Handle KeyError appropriately
+            self.request = request
         return self.delete(name)
 
     def __len__(self) -> int:

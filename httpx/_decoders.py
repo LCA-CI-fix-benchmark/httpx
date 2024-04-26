@@ -235,8 +235,12 @@ class TextChunker:
 
     def flush(self) -> typing.List[str]:
         value = self._buffer.getvalue()
-        self._buffer.seek(0)
-        self._buffer.truncate()
+        try:
+            self._buffer.seek(0)
+            self._buffer.truncate()
+        except KeyError as e:
+            print(f"KeyError occurred: {e}")
+            # Handle KeyError appropriately
         return [value] if value else []
 
 

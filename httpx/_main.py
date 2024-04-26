@@ -119,9 +119,10 @@ def format_request_headers(request: httpcore.Request, http2: bool = False) -> st
     lines = [f"{method} {target} {version}"] + [
         f"{name.decode('ascii')}: {value.decode('ascii')}" for name, value in headers
     ]
-    return "\n".join(lines)
-
-
+    try:
+        return "\n".join(lines)
+    except KeyError as e:
+        print(f"KeyError occurred: {e}")
 def format_response_headers(
     http_version: bytes,
     status: int,

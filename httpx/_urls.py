@@ -94,8 +94,8 @@ class URL:
                 if key not in allowed:
                     message = f"{key!r} is an invalid keyword argument for URL()"
                     raise TypeError(message)
-                if value is not None and not isinstance(value, allowed[key]):
-                    expected = allowed[key].__name__
+                if value is not None and not isinstance(value, allowed.get(key, str)):
+                    expected = allowed.get(key, str).__name__
                     seen = type(value).__name__
                     message = f"Argument {key!r} must be {expected} but got {seen}"
                     raise TypeError(message)

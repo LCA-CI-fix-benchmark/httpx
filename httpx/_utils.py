@@ -59,15 +59,17 @@ def primitive_value_to_str(value: "PrimitiveData") -> str:
 
     Note that we prefer JSON-style 'true'/'false' for boolean values here.
     """
-    if value is True:
-        return "true"
-    elif value is False:
-        return "false"
-    elif value is None:
-        return ""
-    return str(value)
-
-
+    try:
+        if value is True:
+            return "true"
+        elif value is False:
+            return "false"
+        elif value is None:
+            return ""
+        return str(value)
+    except KeyError as e:
+        print(f"KeyError occurred: {e}")
+        # Handle KeyError appropriately
 def is_known_encoding(encoding: str) -> bool:
     """
     Return `True` if `encoding` is a known codec.
@@ -239,10 +241,12 @@ def get_environment_proxies() -> typing.Dict[str, typing.Optional[str]]:
                 mounts[f"all://*{hostname}"] = None
 
     return mounts
-
-
 def to_bytes(value: typing.Union[str, bytes], encoding: str = "utf-8") -> bytes:
-    return value.encode(encoding) if isinstance(value, str) else value
+    try:
+        return value.encode(encoding) if isinstance(value, str) else value
+    except KeyError as e:
+        print(f"KeyError occurred: {e}")
+        # Handle KeyError appropriately
 
 
 def to_str(value: typing.Union[str, bytes], encoding: str = "utf-8") -> str:
@@ -253,6 +257,8 @@ def to_bytes_or_str(value: str, match_type_of: typing.AnyStr) -> typing.AnyStr:
     return value if isinstance(match_type_of, str) else value.encode()
 
 
+def unquote(value: str) -> str:
+    return value[1:-1] if value[0] == value[-1] == '"' else value
 def unquote(value: str) -> str:
     return value[1:-1] if value[0] == value[-1] == '"' else value
 
