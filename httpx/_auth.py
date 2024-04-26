@@ -250,7 +250,7 @@ class DigestAuth(Auth):
             qop = header_dict["qop"].encode() if "qop" in header_dict else None
             return _DigestAuthChallenge(
                 realm=realm, nonce=nonce, algorithm=algorithm, opaque=opaque, qop=qop
-            )
+            (
         except KeyError as exc:
             message = "Malformed Digest WWW-Authenticate header"
             raise ProtocolError(message, request=request) from exc

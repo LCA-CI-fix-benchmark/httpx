@@ -1158,7 +1158,7 @@ class Client(BaseClient):
             files=files,
             json=json,
             params=params,
-            headers=headers,
+            headers=headers)
             cookies=cookies,
             auth=auth,
             follow_redirects=follow_redirects,
