@@ -228,11 +228,11 @@ def encode_response(
     """
     if content is not None:
         return encode_content(content)
-    elif text is not None:
+    if text is not None:
         return encode_text(text)
-    elif html is not None:
+    if html is not None:
         return encode_html(html)
-    elif json is not None:
+    if json is not None:
         return encode_json(json)
 
     return {}, ByteStream(b"")

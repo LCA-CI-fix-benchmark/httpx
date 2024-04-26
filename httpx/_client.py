@@ -404,16 +404,6 @@ class BaseClient:
         return cookies
 
     def _merge_headers(
-        self, headers: typing.Optional[HeaderTypes] = None
-    ) -> typing.Optional[HeaderTypes]:
-        """
-        Merge a headers argument together with any headers on the client,
-        to create the headers used for the outgoing request.
-        """
-        merged_headers = Headers(self.headers)
-        merged_headers.update(headers)
-        return merged_headers
-
     def _merge_queryparams(
         self, params: typing.Optional[QueryParamTypes] = None
     ) -> typing.Optional[QueryParamTypes]:
@@ -421,7 +411,7 @@ class BaseClient:
         Merge a queryparams argument together with any queryparams on the client,
         to create the queryparams used for the outgoing request.
         """
-        if params or self.params:
+        if params is not None or self.params is not None:
             merged_queryparams = QueryParams(self.params)
             return merged_queryparams.merge(params)
         return params
