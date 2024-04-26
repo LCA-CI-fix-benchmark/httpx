@@ -90,8 +90,6 @@ USER_AGENT = f"python-httpx/{__version__}"
 ACCEPT_ENCODING = ", ".join(
     [key for key in SUPPORTED_DECODERS.keys() if key != "identity"]
 )
-
-
 class ClientState(enum.Enum):
     # UNOPENED:
     #   The client has been instantiated, but has not been used to send a request,

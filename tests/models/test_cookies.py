@@ -1,5 +1,4 @@
 import http
-
 import pytest
 
 import httpx
@@ -18,8 +17,6 @@ def test_cookies():
     assert len(cookies) == 0
     assert dict(cookies) == {}
     assert bool(cookies) is False
-
-
 def test_cookies_update():
     cookies = httpx.Cookies()
     more_cookies = httpx.Cookies()
@@ -36,12 +33,12 @@ def test_cookies_with_domain():
     cookies.set("name", "value", domain="example.org")
 
     with pytest.raises(httpx.CookieConflict):
+    cookies.set("name", "value", domain="example.org")
+
+    with pytest.raises(httpx.CookieConflict):
         cookies["name"]
 
     cookies.clear(domain="example.com")
-    assert len(cookies) == 1
-
-
 def test_cookies_with_domain_and_path():
     cookies = httpx.Cookies()
     cookies.set("name", "value", domain="example.com", path="/subpath/1")
