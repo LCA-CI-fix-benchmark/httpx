@@ -9,7 +9,7 @@ import os
 import sys
 import threading
 import typing
-from urllib.request import parse_keqv_list
+from http.client import parse_keqv_list
 
 import anyio
 import pytest

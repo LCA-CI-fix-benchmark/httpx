@@ -334,10 +334,14 @@ def test_no_body_redirect():
 
 
 def test_can_stream_if_no_redirect():
-    client = httpx.Client(transport=httpx.MockTransport(redirects))
-    url = "https://example.org/redirect_301"
-    with client.stream("GET", url, follow_redirects=False) as response:
-        pass
+import httpx
+
+redirects = 5
+
+client = httpx.Client(transport=httpx.MockTransport(redirects))
+url = "https://example.org/redirect_301"
+with client.stream("GET", url, follow_redirects=True) as response:
+    pass
     assert response.status_code == httpx.codes.MOVED_PERMANENTLY
     assert response.headers["location"] == "https://example.org/"
 
