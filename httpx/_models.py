@@ -638,8 +638,10 @@ class Response:
                 value = value.strip().lower()
                 try:
                     decoder_cls = SUPPORTED_DECODERS[value]
-                    decoders.append(decoder_cls())
-                except KeyError:
+try:
+    decoders.append(decoder_cls())
+except KeyError:
+    # Handle KeyError here
                     continue
 
             if len(decoders) == 1:
@@ -1149,10 +1151,8 @@ class Cookies(typing.MutableMapping[str, str]):
         return self.set(name, value)
 
     def __getitem__(self, name: str) -> str:
-        value = self.get(name)
-        if value is None:
-            raise KeyError(name)
-        return value
+    def __delitem__(self, name: str) -> None:
+        # Implement the deletion logic for the given name
 
     def __delitem__(self, name: str) -> None:
         return self.delete(name)
