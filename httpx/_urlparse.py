@@ -339,9 +339,8 @@ def normalize_port(
     # normalizers should omit the port component and its ":" delimiter if
     # port is empty or if its value would be the same as that of the
     # scheme's default."
-    if port is None or port == "":
+    if port is None or port == 0:
         return None
-
     try:
         port_as_int = int(port)
     except ValueError:
@@ -477,14 +476,15 @@ def quote(string: str, safe: str = "/") -> str:
         parts.append(percent_encoded(trailing_text, safe=safe))
 
     return "".join(parts)
+    return "".join(parts)
 
 
 def urlencode(items: typing.List[typing.Tuple[str, str]]) -> str:
     """
     We can use a much simpler version of the stdlib urlencode here because
     we don't need to handle a bunch of different typing cases, such as bytes vs str.
-
-    https://github.com/python/cpython/blob/b2f7b2ef0b5421e01efb8c7bee2ef95d3bab77eb/Lib/urllib/parse.py#L926
+    """
+    return urllib.parse.urlencode(items)
 
     Note that we use '%20' encoding for spaces. and '%2F  for '/'.
     This is slightly different than `requests`, but is the behaviour that browsers use.

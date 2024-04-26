@@ -340,7 +340,6 @@ class BaseClient:
         * The `url` argument is merged with any `base_url` set on the client.
 
         See also: [Request instances][0]
-
         [0]: /advanced/#request-instances
         """
         url = self._merge_url(url)
@@ -369,22 +368,23 @@ class BaseClient:
         )
 
     def _merge_url(self, url: URLTypes) -> URL:
-        """
-        Merge a URL argument together with any 'base_url' on the client,
-        to create the URL used for the outgoing request.
-        """
         merge_url = URL(url)
         if merge_url.is_relative_url:
             # To merge URLs we always append to the base URL. To get this
             # behaviour correct we always ensure the base URL ends in a '/'
             # separator, and strip any leading '/' from the merge URL.
             #
-            # So, eg...
             #
             # >>> client = Client(base_url="https://www.example.com/subpath")
             # >>> client.base_url
             # URL('https://www.example.com/subpath/')
             # >>> client.build_request("GET", "/path").url
+            # URL('https://www.example.com/subpath/path')
+            merge_raw_path = self.base_url.raw_path + merge_url.raw_path.lstrip(b"/")
+            return self.base_url.copy_with(raw_path=merge_raw_path)
+        return merge_url
+
+    def _merge_cookies(
             # URL('https://www.example.com/subpath/path')
             merge_raw_path = self.base_url.raw_path + merge_url.raw_path.lstrip(b"/")
             return self.base_url.copy_with(raw_path=merge_raw_path)
@@ -397,7 +397,7 @@ class BaseClient:
         Merge a cookies argument together with any cookies on the client,
         to create the cookies used for the outgoing request.
         """
-        if cookies or self.cookies:
+    def _merge_headers(
             merged_cookies = Cookies(self.cookies)
             merged_cookies.update(cookies)
             return merged_cookies
@@ -421,11 +421,6 @@ class BaseClient:
         Merge a queryparams argument together with any queryparams on the client,
         to create the queryparams used for the outgoing request.
         """
-        if params or self.params:
-            merged_queryparams = QueryParams(self.params)
-            return merged_queryparams.merge(params)
-        return params
-
     def _build_auth(self, auth: typing.Optional[AuthTypes]) -> typing.Optional[Auth]:
         if auth is None:
             return None
@@ -821,123 +816,13 @@ class Client(BaseClient):
         headers: typing.Optional[HeaderTypes] = None,
         cookies: typing.Optional[CookieTypes] = None,
         auth: typing.Union[AuthTypes, UseClientDefault, None] = USE_CLIENT_DEFAULT,
-        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
-        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        extensions: typing.Optional[RequestExtensions] = None,
-    ) -> typing.Iterator[Response]:
-        """
-        Alternative to `httpx.request()` that streams the response body
-        instead of loading it into memory at once.
-
-        **Parameters**: See `httpx.request`.
-
-        See also: [Streaming Responses][0]
-
-        [0]: /quickstart#streaming-responses
-        """
-        request = self.build_request(
-            method=method,
-            url=url,
-            content=content,
-            data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            timeout=timeout,
-            extensions=extensions,
-        )
-        response = self.send(
-            request=request,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            stream=True,
-        )
-        try:
-            yield response
-        finally:
-            response.close()
-
-    def send(
-        self,
-        request: Request,
-        *,
-        stream: bool = False,
-        auth: typing.Union[AuthTypes, UseClientDefault, None] = USE_CLIENT_DEFAULT,
-        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
-    ) -> Response:
-        """
-        Send a request.
-
-        The request is sent as-is, unmodified.
-
-        Typically you'll want to build one with `Client.build_request()`
-        so that any client-level configuration is merged into the request,
-        but passing an explicit `httpx.Request()` is supported as well.
-
-        See also: [Request instances][0]
-
-        [0]: /advanced/#request-instances
-        """
-        if self._state == ClientState.CLOSED:
-            raise RuntimeError("Cannot send a request, as the client has been closed.")
-
-        self._state = ClientState.OPENED
         follow_redirects = (
             self.follow_redirects
             if isinstance(follow_redirects, UseClientDefault)
             else follow_redirects
         )
-
-        auth = self._build_request_auth(request, auth)
-
-        response = self._send_handling_auth(
             request,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            history=[],
-        )
-        try:
-            if not stream:
-                response.read()
-
-            return response
-
-        except BaseException as exc:
-            response.close()
-            raise exc
-
-    def _send_handling_auth(
-        self,
-        request: Request,
-        auth: Auth,
-        follow_redirects: bool,
-        history: typing.List[Response],
-    ) -> Response:
-        auth_flow = auth.sync_auth_flow(request)
-        try:
-            request = next(auth_flow)
-
-            while True:
-                response = self._send_handling_redirects(
-                    request,
-                    follow_redirects=follow_redirects,
-                    history=history,
-                )
-                try:
-                    try:
-                        next_request = auth_flow.send(response)
-                    except StopIteration:
-                        return response
-
-                    response.history = list(history)
-                    response.read()
-                    request = next_request
-                    history.append(response)
-
-                except BaseException as exc:
-                    response.close()
+        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
                     raise exc
         finally:
             auth_flow.close()
@@ -1122,59 +1007,9 @@ class Client(BaseClient):
         Send a `POST` request.
 
         **Parameters**: See `httpx.request`.
-        """
-        return self.request(
-            "POST",
-            url,
-            content=content,
-            data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
         )
 
-    def put(
-        self,
-        url: URLTypes,
-        *,
-        content: typing.Optional[RequestContent] = None,
-        data: typing.Optional[RequestData] = None,
-        files: typing.Optional[RequestFiles] = None,
-        json: typing.Optional[typing.Any] = None,
-        params: typing.Optional[QueryParamTypes] = None,
-        headers: typing.Optional[HeaderTypes] = None,
-        cookies: typing.Optional[CookieTypes] = None,
-        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
-        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        extensions: typing.Optional[RequestExtensions] = None,
-    ) -> Response:
-        """
-        Send a `PUT` request.
-
-        **Parameters**: See `httpx.request`.
-        """
-        return self.request(
-            "PUT",
-            url,
-            content=content,
-            data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
-        )
+        return response
 
     def patch(
         self,
@@ -1385,17 +1220,7 @@ class AsyncClient(BaseClient):
                 ) from None
 
         if proxies:
-            message = (
-                "The 'proxies' argument is now deprecated."
-                " Use 'proxy' or 'mounts' instead."
-            )
-            warnings.warn(message, DeprecationWarning)
-            if proxy:
-                raise RuntimeError("Use either `proxy` or 'proxies', not both.")
-
-        allow_env_proxies = trust_env and app is None and transport is None
-        proxy_map = self._get_proxy_map(proxies or proxy, allow_env_proxies)
-
+        )
         self._transport = self._init_transport(
             ssl_context=ssl_context,
             http1=http1,
@@ -1436,14 +1261,8 @@ class AsyncClient(BaseClient):
             return transport
 
         if app is not None:
-            return ASGITransport(app=app)
-
-        return AsyncHTTPTransport(
-            ssl_context=ssl_context,
-            http1=http1,
-            http2=http2,
-            limits=limits,
-        )
+        for transport in self._mounts.values():
+            if transport is not None:
 
     def _init_proxy_transport(
         self,
@@ -1454,10 +1273,10 @@ class AsyncClient(BaseClient):
         limits: Limits = DEFAULT_LIMITS,
     ) -> AsyncBaseTransport:
         return AsyncHTTPTransport(
-            ssl_context=ssl_context,
-            verify=verify,
-            cert=cert,
-            http1=http1,
+        self,
+        exc_type: typing.Optional[typing.Type[BaseException]] = None,
+        exc_value: typing.Optional[BaseException] = None,
+        traceback: typing.Optional[TracebackType] = None,
             http2=http2,
             limits=limits,
             proxy=proxy,

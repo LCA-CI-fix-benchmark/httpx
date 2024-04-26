@@ -127,9 +127,7 @@ class SSLContext(ssl.SSLContext):
         Loads client certificates into our SSLContext object
         """
         if cert is not None:
-            if isinstance(cert, str):
-                self.load_cert_chain(certfile=cert)
-            elif isinstance(cert, tuple) and len(cert) == 2:
+            if isinstance(cert, tuple) and len(cert) == 2:
                 self.load_cert_chain(certfile=cert[0], keyfile=cert[1])
             elif isinstance(cert, tuple) and len(cert) == 3:
                 self.load_cert_chain(

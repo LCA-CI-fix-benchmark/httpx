@@ -822,15 +822,15 @@ class Response:
             chunk_size = len(self._content) if chunk_size is None else chunk_size
             for i in range(0, len(self._content), max(chunk_size, 1)):
                 yield self._content[i : i + chunk_size]
-        else:
-            decoder = self._get_content_decoder()
-            chunker = ByteChunker(chunk_size=chunk_size)
-            with request_context(request=self._request):
-                for raw_bytes in self.iter_raw():
-                    decoded = decoder.decode(raw_bytes)
-                    for chunk in chunker.decode(decoded):
-                        yield chunk
-                decoded = decoder.flush()
+            else:
+                decoder = self._get_content_decoder()
+                chunker = ByteChunker(chunk_size=chunk_size)
+                with request_context(request=self._request):
+                    for raw_bytes in self.iter_raw():
+                        decoded = decoder.decode(raw_bytes)
+                        for chunk in chunker.decode(decoded):
+                            yield chunk
+                    decoded = decoder.flush()
                 for chunk in chunker.decode(decoded):
                     yield chunk  # pragma: no cover
                 for chunk in chunker.flush():
@@ -892,12 +892,11 @@ class Response:
         for chunk in chunker.flush():
             yield chunk
 
-        self.close()
-
     def close(self) -> None:
         """
         Close the response and release the connection.
         Automatically called if the response body is read to completion.
+        """
         """
         if not isinstance(self.stream, SyncByteStream):
             raise RuntimeError("Attempted to call an sync close on an async stream.")
@@ -933,13 +932,13 @@ class Response:
                 async for raw_bytes in self.aiter_raw():
                     decoded = decoder.decode(raw_bytes)
                     for chunk in chunker.decode(decoded):
+                    for chunk in chunker.decode(decoded):
                         yield chunk
                 decoded = decoder.flush()
                 for chunk in chunker.decode(decoded):
                     yield chunk  # pragma: no cover
                 for chunk in chunker.flush():
                     yield chunk
-
     async def aiter_text(
         self, chunk_size: typing.Optional[int] = None
     ) -> typing.AsyncIterator[str]:
@@ -1206,6 +1205,10 @@ class Cookies(typing.MutableMapping[str, str]):
             self.response = response
 
         def info(self) -> email.message.Message:
+        def info(self) -> email.message.Message:
+            """
+            Get the information from the response headers.
+            """
             info = email.message.Message()
             for key, value in self.response.headers.multi_items():
                 # Note that setting `info[key]` here is an "append" operation,
