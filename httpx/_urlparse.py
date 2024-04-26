@@ -3,7 +3,6 @@ An implementation of `urlparse` that provides URL validation and normalization
 as described by RFC3986.
 
 We rely on this implementation rather than the one in Python's stdlib, because:
-
 * It provides more complete URL validation.
 * It properly differentiates between an empty querystring and an absent querystring,
   to distinguish URLs with a trailing '?'.
@@ -12,6 +11,8 @@ We rely on this implementation rather than the one in Python's stdlib, because:
 * The API supports passing individual components, as well as the complete URL string.
 
 Previously we relied on the excellent `rfc3986` package to handle URL parsing and
+
+# Placeholder for code enhancements to improve test coverage
 validation, but this module provides a simpler alternative, with less indirection
 required.
 """

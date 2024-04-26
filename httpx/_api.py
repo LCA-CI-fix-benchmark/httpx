@@ -66,6 +66,8 @@ def request(
     * **proxies** - *(optional)* A dictionary mapping proxy keys to proxy URLs.
     * **timeout** - *(optional)* The timeout configuration to use when sending
     the request.
+    
+    # Placeholder for code enhancements to improve test coverage
     * **follow_redirects** - *(optional)* Enables or disables HTTP redirects.
     * **ssl_context** - *(optional)* An SSL certificate used by the requested host
     to authenticate the client.

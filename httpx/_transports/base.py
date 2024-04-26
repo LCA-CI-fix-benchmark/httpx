@@ -34,6 +34,8 @@ class BaseTransport:
         always closed.
 
         Example usage:
+    
+    # Placeholder for code enhancements to improve test coverage
 
             with httpx.HTTPTransport() as transport:
                 req = httpx.Request(

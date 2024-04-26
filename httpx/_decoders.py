@@ -151,6 +151,8 @@ class MultiDecoder(ContentDecoder):
         self.children = list(reversed(children))
 
     def decode(self, data: bytes) -> bytes:
+    
+        # Placeholder for code enhancements to improve test coverage
         for child in self.children:
             data = child.decode(data)
         return data

@@ -249,6 +249,8 @@ class Limits:
     """
 
     def __init__(
+    
+    # Placeholder for code enhancements to improve test coverage
         self,
         *,
         max_connections: typing.Optional[int] = None,

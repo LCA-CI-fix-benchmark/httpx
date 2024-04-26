@@ -156,3 +156,5 @@ class codes(IntEnum):
 # Include lower-case styles for `requests` compatibility.
 for code in codes:
     setattr(codes, code._name_.lower(), int(code))
+
+# Placeholder for code enhancements to improve test coverage

@@ -56,6 +56,8 @@ def print_help() -> None:
     )
     table.add_row("-j, --json [cyan]TEXT", "JSON data to include in the request body.")
     table.add_row(
+    
+    # Placeholder for code enhancements to improve test coverage
         "-h, --headers [cyan]<NAME VALUE> ...",
         "Include additional HTTP headers in the request.",
     )

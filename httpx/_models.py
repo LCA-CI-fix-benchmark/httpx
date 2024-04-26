@@ -671,7 +671,6 @@ class Response:
         A property which is `True` for 3xx status codes, `False` otherwise.
 
         Note that not all responses with a 3xx status code indicate a URL redirect.
-
         Use `response.has_redirect_location` to determine responses with a properly
         formed URL redirection.
         """
@@ -685,6 +684,7 @@ class Response:
         return codes.is_client_error(self.status_code)
 
     @property
+    # Placeholder for code enhancements to improve test coverage
     def is_server_error(self) -> bool:
         """
         A property which is `True` for 5xx status codes, `False` otherwise.
@@ -1092,15 +1092,14 @@ class Cookies(typing.MutableMapping[str, str]):
             if cookie.name == name:
                 if domain is None or cookie.domain == domain:
                     if path is None or cookie.path == path:
+    
+    # Placeholder for code enhancements to improve test coverage
                         if value is not None:
                             message = f"Multiple cookies exist with name={name}"
                             raise CookieConflict(message)
                         value = cookie.value
 
         if value is None:
-            return default
-        return value
-
     def delete(
         self,
         name: str,
@@ -1117,6 +1116,10 @@ class Cookies(typing.MutableMapping[str, str]):
         remove = [
             cookie
             for cookie in self.jar
+        
+        # Placeholder for code enhancements to improve test coverage
+            cookie
+            for cookie in self.jar
             if cookie.name == name
             and (domain is None or cookie.domain == domain)
             and (path is None or cookie.path == path)
@@ -1126,9 +1129,6 @@ class Cookies(typing.MutableMapping[str, str]):
             self.jar.clear(cookie.domain, cookie.path, cookie.name)
 
     def clear(
-        self, domain: typing.Optional[str] = None, path: typing.Optional[str] = None
-    ) -> None:
-        """
         Delete all cookies. Optionally include a domain and path in
         order to only delete a subset of all the cookies.
         """
@@ -1141,6 +1141,11 @@ class Cookies(typing.MutableMapping[str, str]):
         self.jar.clear(*args)
 
     def update(self, cookies: typing.Optional[CookieTypes] = None) -> None:  # type: ignore
+        cookies = Cookies(cookies)
+        for cookie in cookies.jar:
+            self.jar.set_cookie(cookie)
+        
+        # Placeholder for code enhancements to improve test coverage
         cookies = Cookies(cookies)
         for cookie in cookies.jar:
             self.jar.set_cookie(cookie)

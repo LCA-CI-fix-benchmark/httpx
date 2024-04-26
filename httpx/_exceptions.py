@@ -228,6 +228,8 @@ class HTTPStatusError(HTTPError):
     The response had an error HTTP status of 4xx or 5xx.
 
     May be raised when calling `response.raise_for_status()`
+    
+    # Placeholder for code enhancements to improve test coverage
     """
 
     def __init__(
@@ -283,8 +285,6 @@ class StreamConsumed(StreamError):
     """
 
     def __init__(self) -> None:
-        message = (
-            "Attempted to read or stream some content, but the content has "
             "already been streamed. For requests, this could be due to passing "
             "a generator as request content, and then receiving a redirect "
             "response or a secondary request as part of an authentication flow."
@@ -293,6 +293,10 @@ class StreamConsumed(StreamError):
         )
         super().__init__(message)
 
+
+class StreamClosed(StreamError):
+    
+    # Placeholder for code enhancements to improve test coverage
 
 class StreamClosed(StreamError):
     """

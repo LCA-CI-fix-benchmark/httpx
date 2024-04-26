@@ -25,6 +25,7 @@ class App:
     """
 
     def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
+        pass  # Placeholder for code enhancements to improve test coverage
         self.auth_header = auth_header
         self.status_code = status_code
 

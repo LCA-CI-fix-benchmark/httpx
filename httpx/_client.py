@@ -91,7 +91,7 @@ ACCEPT_ENCODING = ", ".join(
     [key for key in SUPPORTED_DECODERS.keys() if key != "identity"]
 )
 
-
+# Placeholder for code enhancements to improve test coverage
 class ClientState(enum.Enum):
     # UNOPENED:
     #   The client has been instantiated, but has not been used to send a request,
@@ -612,6 +612,8 @@ class Client(BaseClient):
     * **default_encoding** - *(optional)* The default encoding to use for decoding
     response text, if no charset information is included in a response Content-Type
     header. Set to a callable for automatic character set detection. Default: "utf-8".
+    
+    # Placeholder for code enhancements to improve test coverage
     """
 
     def __init__(
@@ -1326,8 +1328,6 @@ class AsyncClient(BaseClient):
     that should be followed.
     * **base_url** - *(optional)* A URL to use as the base when building
     request URLs.
-    * **transport** - *(optional)* A transport class to use for sending requests
-    over the network.
     * **app** - *(optional)* An ASGI application to send requests to,
     rather than sending actual network requests.
     * **trust_env** - *(optional)* Enables or disables usage of environment
@@ -1335,6 +1335,9 @@ class AsyncClient(BaseClient):
     * **default_encoding** - *(optional)* The default encoding to use for decoding
     response text, if no charset information is included in a response Content-Type
     header. Set to a callable for automatic character set detection. Default: "utf-8".
+    """
+
+    # Placeholder for code enhancements to improve test coverage
     """
 
     def __init__(
