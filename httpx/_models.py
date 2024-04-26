@@ -1106,6 +1106,8 @@ class Cookies(typing.MutableMapping[str, str]):
         name: str,
         domain: typing.Optional[str] = None,
         path: typing.Optional[str] = None,
+        verify: bool = True,  # Define the "verify" keyword argument
+        cert: typing.Optional[str] = None,  # Define the "cert" keyword argument
     ) -> None:
         """
         Delete a cookie by name. May optionally include domain and path
@@ -1126,8 +1128,6 @@ class Cookies(typing.MutableMapping[str, str]):
             self.jar.clear(cookie.domain, cookie.path, cookie.name)
 
     def clear(
-        self, domain: typing.Optional[str] = None, path: typing.Optional[str] = None
-    ) -> None:
         """
         Delete all cookies. Optionally include a domain and path in
         order to only delete a subset of all the cookies.
@@ -1140,7 +1140,9 @@ class Cookies(typing.MutableMapping[str, str]):
             args.append(path)
         self.jar.clear(*args)
 
-    def update(self, cookies: typing.Optional[CookieTypes] = None) -> None:  # type: ignore
+    def update(self, cookies: typing.Optional[CookieTypes] = None, verify: bool = True, cert: typing.Optional[str] = None) -> None:  # type: ignore  # Define the "verify" and "cert" keyword arguments
+        cookies = Cookies(cookies)
+        for cookie in cookies.jar:
         cookies = Cookies(cookies)
         for cookie in cookies.jar:
             self.jar.set_cookie(cookie)
@@ -1206,8 +1208,6 @@ class Cookies(typing.MutableMapping[str, str]):
             self.response = response
 
         def info(self) -> email.message.Message:
-            info = email.message.Message()
-            for key, value in self.response.headers.multi_items():
                 # Note that setting `info[key]` here is an "append" operation,
                 # not a "replace" operation.
                 # https://docs.python.org/3/library/email.compat32-message.html#email.message.Message.__setitem__

@@ -1385,6 +1385,7 @@ class AsyncClient(BaseClient):
                 ) from None
 
         if proxies:
+            # Add appropriate handling for "verify" and "cert" keyword arguments here
             message = (
                 "The 'proxies' argument is now deprecated."
                 " Use 'proxy' or 'mounts' instead."

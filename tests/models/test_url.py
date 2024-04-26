@@ -349,14 +349,10 @@ def test_url_with_components():
     assert url.fragment == ""
 
     assert str(url) == "https://www.example.com/"
-
-
 def test_urlparse_with_invalid_component():
     with pytest.raises(TypeError) as exc:
         httpx.URL(scheme="https", host="www.example.com", incorrect="/")
     assert str(exc.value) == "'incorrect' is an invalid keyword argument for URL()"
-
-
 def test_urlparse_with_invalid_scheme():
     with pytest.raises(httpx.InvalidURL) as exc:
         httpx.URL(scheme="~", host="www.example.com", path="/")
@@ -427,6 +423,10 @@ def test_url_invalid_type():
         pass
 
     with pytest.raises(TypeError):
+    class ExternalURLClass:  # representing external URL class
+        pass
+
+    with pytest.raises(TypeError):
         httpx.URL(ExternalURLClass())  # type: ignore
 
 
@@ -434,11 +434,6 @@ def test_url_with_invalid_component():
     with pytest.raises(TypeError) as exc:
         httpx.URL(scheme="https", host="www.example.com", incorrect="/")
     assert str(exc.value) == "'incorrect' is an invalid keyword argument for URL()"
-
-
-# Tests for `URL.join()`.
-
-
 def test_url_join():
     """
     Some basic URL joining tests.

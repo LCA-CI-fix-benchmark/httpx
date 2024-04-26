@@ -24,7 +24,7 @@ class App:
     A mock app to test auth credentials.
     """
 
-    def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
+    def __init__(self, auth_header: str = "", status_code: int = 200, verify: bool = True, cert: str = "") -> None:
         self.auth_header = auth_header
         self.status_code = status_code
 
@@ -507,8 +507,6 @@ async def test_digest_auth_no_specified_qop() -> None:
     assert len(digest_data["response"]) == 64 + 2
     assert len(digest_data["opaque"]) == 64 + 2
     assert digest_data["algorithm"] == "SHA-256"
-
-
 @pytest.mark.parametrize("qop", ("auth, auth-int", "auth,auth-int", "unknown,auth"))
 @pytest.mark.anyio
 async def test_digest_auth_qop_including_spaces_and_auth_returns_auth(qop: str) -> None:

@@ -431,8 +431,6 @@ def is_safe(string: str, safe: str = "/") -> bool:
             return False
 
     return True
-
-
 def percent_encoded(string: str, safe: str = "/") -> str:
     """
     Use percent-encoding to quote a string.

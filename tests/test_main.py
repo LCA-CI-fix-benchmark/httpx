@@ -12,8 +12,6 @@ def splitlines(output: str) -> typing.Iterable[str]:
 
 def remove_date_header(lines: typing.Iterable[str]) -> typing.Iterable[str]:
     return [line for line in lines if not line.startswith("date:")]
-
-
 def test_help():
     runner = CliRunner()
     result = runner.invoke(httpx.main, ["--help"])

@@ -11,8 +11,6 @@ def url_to_origin(url: str) -> httpcore.URL:
     """
     u = httpx.URL(url)
     return httpcore.URL(scheme=u.raw_scheme, host=u.raw_host, port=u.port, target="/")
-
-
 @pytest.mark.parametrize(
     ["proxies", "expected_proxies"],
     [

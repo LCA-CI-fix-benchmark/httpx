@@ -110,8 +110,8 @@ class WSGITransport(BaseTransport):
             if key not in ("CONTENT_TYPE", "CONTENT_LENGTH"):
                 key = "HTTP_" + key
             environ[key] = header_value.decode("ascii")
-
-        seen_status = None
+        
+        # Add appropriate handling for "verify" and "cert" keyword arguments here
         seen_response_headers = None
         seen_exc_info = None
 
