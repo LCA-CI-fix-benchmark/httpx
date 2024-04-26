@@ -331,7 +331,8 @@ class Request:
         self.extensions = {} if extensions is None else extensions
 
         if cookies:
-            Cookies(cookies).set_cookie_header(self)
+cookies_instance = Cookies(cookies)
+cookies_instance.set_cookie_header(self)
 
         if stream is None:
             content_type: typing.Optional[str] = self.headers.get("content-type")

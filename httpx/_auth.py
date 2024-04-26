@@ -252,7 +252,7 @@ class DigestAuth(Auth):
                 realm=realm, nonce=nonce, algorithm=algorithm, opaque=opaque, qop=qop
             )
         except KeyError as exc:
-            message = "Malformed Digest WWW-Authenticate header"
+            message = "Malformed Digest WWW-Authenticate header: Missing required keys"
             raise ProtocolError(message, request=request) from exc
 
     def _build_auth_header(

@@ -1130,13 +1130,12 @@ class Client(BaseClient):
         )
 
     def post(
-        self,
-        url: URLTypes,
-        *,
-        content: typing.Optional[RequestContent] = None,
-        data: typing.Optional[RequestData] = None,
-        files: typing.Optional[RequestFiles] = None,
-        json: typing.Optional[typing.Any] = None,
+self,
+url: URLTypes,
+content: typing.Optional[RequestContent] = None,
+data: typing.Optional[RequestData] = None,
+files: typing.Optional[RequestFiles] = None,
+json: typing.Optional[typing.Any] = None,
         params: typing.Optional[QueryParamTypes] = None,
         headers: typing.Optional[HeaderTypes] = None,
         cookies: typing.Optional[CookieTypes] = None,
@@ -1148,6 +1147,7 @@ class Client(BaseClient):
         """
         Send a `POST` request.
 
+        **Parameters**: See `httpx.request`.
         **Parameters**: See `httpx.request`.
         """
         return self.request(
@@ -1241,16 +1241,6 @@ class Client(BaseClient):
         )
 
     def delete(
-        self,
-        url: URLTypes,
-        *,
-        params: typing.Optional[QueryParamTypes] = None,
-        headers: typing.Optional[HeaderTypes] = None,
-        cookies: typing.Optional[CookieTypes] = None,
-        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
-        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        extensions: typing.Optional[RequestExtensions] = None,
     ) -> Response:
         """
         Send a `DELETE` request.
@@ -1267,6 +1257,7 @@ class Client(BaseClient):
             follow_redirects=follow_redirects,
             timeout=timeout,
             extensions=extensions,
+        )
         )
 
     def close(self) -> None:
@@ -1292,13 +1283,13 @@ class Client(BaseClient):
             raise RuntimeError(msg)
 
         self._state = ClientState.OPENED
-
-        self._transport.__enter__()
-        for transport in self._mounts.values():
-            if transport is not None:
-                transport.__enter__()
-        return self
-
+            msg = {
+                ClientState.OPENED: "Cannot open a client instance more than once.",
+                ClientState.CLOSED: (
+                    "Cannot reopen a client instance, once it has been closed."
+                ),
+            }[self._state]
+            raise RuntimeError(msg)
     def __exit__(
         self,
         exc_type: typing.Optional[typing.Type[BaseException]] = None,
@@ -1341,6 +1332,15 @@ class AsyncClient(BaseClient):
     verify the identity of requested hosts. Either `True` (default CA bundle),
     a path to an SSL certificate file, an `ssl.SSLContext`, or `False`
     (which will disable verification).
+    sending requests.
+    * **cookies** - *(optional)* Dictionary of Cookie items to include when
+    sending requests.
+    * **persistent_cookies** - *(optional) A boolean indicating if cookies should
+    persist. Defaults to `False`.
+    * **verify** - *(optional)* SSL certificates (a.k.a CA bundle) used to
+    verify the identity of requested hosts. Either `True` (default CA bundle),
+    a path to an SSL certificate file, an `ssl.SSLContext`, or `False`
+    (which will disable verification).
     * **cert** - *(optional)* An SSL certificate used by the requested host
     to authenticate the client. Either a path to an SSL certificate file, or
     two-tuple of (certificate file, key file), or a three-tuple of (certificate
@@ -1358,15 +1358,6 @@ class AsyncClient(BaseClient):
     * **base_url** - *(optional)* A URL to use as the base when building
     request URLs.
     * **transport** - *(optional)* A transport class to use for sending requests
-    over the network.
-    * **app** - *(optional)* An ASGI application to send requests to,
-    rather than sending actual network requests.
-    * **trust_env** - *(optional)* Enables or disables usage of environment
-    variables for configuration.
-    * **default_encoding** - *(optional)* The default encoding to use for decoding
-    response text, if no charset information is included in a response Content-Type
-    header. Set to a callable for automatic character set detection. Default: "utf-8".
-    """
 
     def __init__(
         self,
