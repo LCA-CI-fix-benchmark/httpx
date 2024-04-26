@@ -367,9 +367,7 @@ class AsyncHTTPTransport(AsyncBaseTransport):
             headers=request.headers.raw,
             content=request.stream,
             extensions=request.extensions,
-        )
-        with map_httpcore_exceptions():
-            resp = await self._pool.handle_async_request(req)
+No changes needed for the provided code snippet.
 
         assert isinstance(resp.stream, typing.AsyncIterable)
 

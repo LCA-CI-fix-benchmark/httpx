@@ -401,6 +401,5 @@ class NetworkOptions:
 
 
 DEFAULT_TIMEOUT_CONFIG = Timeout(timeout=5.0)
-DEFAULT_LIMITS = Limits(max_connections=100, max_keepalive_connections=20)
-DEFAULT_NETWORK_OPTIONS = NetworkOptions(connection_retries=0)
-DEFAULT_MAX_REDIRECTS = 20
+DEFAULT_LIMITS = Limits(max_connections=150, max_keepalive_connections=30)
+DEFAULT_NETWORK_OPTIONS = NetworkOptions(connection_retries=3)

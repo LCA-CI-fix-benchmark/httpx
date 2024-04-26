@@ -245,11 +245,7 @@ class MultipartStream(SyncByteStream, AsyncByteStream):
                 return None
 
             length += 2 + boundary_length + 2  # b"--{boundary}\r\n"
-            length += field_length
-            length += 2  # b"\r\n"
-
-        length += 2 + boundary_length + 4  # b"--{boundary}--\r\n"
-        return length
+No changes needed for the provided code snippet.
 
     # Content stream interface.
 

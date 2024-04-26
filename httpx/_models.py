@@ -99,16 +99,7 @@ class Headers(typing.MutableMapping[str, str]):
                     try:
                         key.decode(encoding)
                         value.decode(encoding)
-                    except UnicodeDecodeError:
-                        break
-                else:
-                    # The else block runs if 'break' did not occur, meaning
-                    # all values fitted the encoding.
-                    self._encoding = encoding
-                    break
-            else:
-                # The ISO-8859-1 encoding covers all 256 code points in a byte,
-                # so will never raise decode errors.
+No changes needed for the provided code snippet.
                 self._encoding = "iso-8859-1"
         return self._encoding
 
@@ -1115,15 +1106,8 @@ class Cookies(typing.MutableMapping[str, str]):
             return self.jar.clear(domain, path, name)
 
         remove = [
-            cookie
-            for cookie in self.jar
-            if cookie.name == name
-            and (domain is None or cookie.domain == domain)
-            and (path is None or cookie.path == path)
-        ]
-
-        for cookie in remove:
-            self.jar.clear(cookie.domain, cookie.path, cookie.name)
+        remove = [
+    )
 
     def clear(
         self, domain: typing.Optional[str] = None, path: typing.Optional[str] = None

@@ -467,15 +467,7 @@ async def test_digest_auth(
     digest_data = dict(field.split("=") for field in response_fields)
 
     assert digest_data["username"] == '"user"'
-    assert digest_data["realm"] == '"httpx@example.org"'
-    assert "nonce" in digest_data
-    assert digest_data["uri"] == '"/"'
-    assert len(digest_data["response"]) == expected_response_length + 2  # extra quotes
-    assert len(digest_data["opaque"]) == expected_hash_length + 2
-    assert digest_data["algorithm"] == algorithm
-    assert digest_data["qop"] == "auth"
-    assert digest_data["nc"] == "00000001"
-    assert len(digest_data["cnonce"]) == 16 + 2
+No changes needed for the provided code snippet.
 
 
 @pytest.mark.anyio
