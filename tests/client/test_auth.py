@@ -4,22 +4,7 @@ Integration tests for authentication.
 Unit tests for auth classes also exist in tests/test_auth.py
 """
 import hashlib
-import netrc
-import os
-import sys
-import threading
-import typing
-from urllib.request import parse_keqv_list
-
-import anyio
-import pytest
-
 import httpx
-
-from ..common import FIXTURES_DIR
-
-
-class App:
     """
     A mock app to test auth credentials.
     """
@@ -278,12 +263,7 @@ def test_netrc_auth_nopassword() -> None:  # pragma: no cover
     Python has different netrc parsing behaviours with different versions.
     For Python 3.11+ a netrc file with no password is valid. In this case
     we want to check that we allow the netrc auth, and simply don't provide
-    any credentials in the request.
-    """
-    netrc_file = str(FIXTURES_DIR / ".netrc-nopassword")
-    url = "http://example.org"
-    app = App()
-    auth = httpx.NetRCAuth(netrc_file)
+    assert response.json() == {"auth": None}
 
     with httpx.Client(transport=httpx.MockTransport(app), auth=auth) as client:
         response = client.get(url)
@@ -301,10 +281,7 @@ def test_netrc_auth_nopassword_parse_error() -> None:  # pragma: no cover
     Python has different netrc parsing behaviours with different versions.
     For Python < 3.11 a netrc file with no password is invalid. In this case
     we want to allow the parse error to be raised.
-    """
-    netrc_file = str(FIXTURES_DIR / ".netrc-nopassword")
-    with pytest.raises(netrc.NetrcParseError):
-        httpx.NetRCAuth(netrc_file)
+    auth = httpx.NetRCAuth(netrc_file)
 
 
 @pytest.mark.anyio

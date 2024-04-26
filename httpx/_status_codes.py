@@ -155,4 +155,4 @@ class codes(IntEnum):
 
 # Include lower-case styles for `requests` compatibility.
 for code in codes:
-    setattr(codes, code._name_.lower(), int(code))
+    setattr(codes, str(code._name_).lower(), int(code))

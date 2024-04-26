@@ -52,11 +52,6 @@ def test_client_timeout():
 
 
 def test_client_event_hooks():
-    def on_request(request):
-        pass  # pragma: no cover
-
-    client = httpx.Client()
-    client.event_hooks = {"request": [on_request]}
     assert client.event_hooks == {"request": [on_request], "response": []}
 
 

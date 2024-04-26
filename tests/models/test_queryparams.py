@@ -1,6 +1,5 @@
 import pytest
-
-import httpx
+from httpx import QueryParams
 
 
 @pytest.mark.parametrize(

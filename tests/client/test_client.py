@@ -272,16 +272,21 @@ def test_context_managed_transport_and_mount():
             self.events.append(f"{self.name}.close")
 
         def __enter__(self):
-            super().__enter__()
-            self.events.append(f"{self.name}.__enter__")
+class Transport:
+    def __init__(self, name):
+        self.name = name
+        self.events = []
 
-        def __exit__(self, *args):
-            super().__exit__(*args)
-            self.events.append(f"{self.name}.__exit__")
+    def __enter__(self):
+        self.events.append(f"{self.name}.__enter__")
 
-    transport = Transport(name="transport")
-    mounted = Transport(name="mounted")
-    with httpx.Client(transport=transport, mounts={"http://www.example.org": mounted}):
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.events.append(f"{self.name}.__exit__")
+
+transport = Transport(name="transport")
+mounted = Transport(name="mounted")
+with httpx.Client(transport=transport, mounts={"http://www.example.org": mounted}):
+    pass
         pass
 
     assert transport.events == [

@@ -1,18 +1,5 @@
 import json
-
-import pytest
-
-import httpx
-from httpx import ASGITransport
-
-
-async def hello_world(scope, receive, send):
-    status = 200
-    output = b"Hello, World!"
-    headers = [(b"content-type", "text/plain"), (b"content-length", str(len(output)))]
-
-    await send({"type": "http.response.start", "status": status, "headers": headers})
-    await send({"type": "http.response.body", "body": output})
+    headers = [(b"content-type", b"text/plain"), (b"content-length", str(len(output)).encode())]
 
 
 async def echo_path(scope, receive, send):

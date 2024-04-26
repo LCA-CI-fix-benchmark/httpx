@@ -671,18 +671,12 @@ class Response:
         A property which is `True` for 3xx status codes, `False` otherwise.
 
         Note that not all responses with a 3xx status code indicate a URL redirect.
-
-        Use `response.has_redirect_location` to determine responses with a properly
-        formed URL redirection.
-        """
-        return codes.is_redirect(self.status_code)
-
     @property
-    def is_client_error(self) -> bool:
+    def is_server_error(self) -> bool:
         """
-        A property which is `True` for 4xx status codes, `False` otherwise.
+        A property which is `True` for 5xx status codes, `False` otherwise.
         """
-        return codes.is_client_error(self.status_code)
+        return codes.is_server_error(self.status_code)
 
     @property
     def is_server_error(self) -> bool:

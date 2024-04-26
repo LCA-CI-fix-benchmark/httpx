@@ -14,9 +14,6 @@ import rich.syntax
 import rich.table
 
 from ._client import Client
-from ._config import SSLContext
-from ._exceptions import RequestError
-from ._models import Response
 from ._status_codes import codes
 
 

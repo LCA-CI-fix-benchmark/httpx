@@ -1122,21 +1122,8 @@ class Client(BaseClient):
         Send a `POST` request.
 
         **Parameters**: See `httpx.request`.
-        """
-        return self.request(
-            "POST",
-            url,
-            content=content,
-            data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
             extensions=extensions,
+        )
         )
 
     def put(
