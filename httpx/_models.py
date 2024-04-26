@@ -671,7 +671,6 @@ class Response:
         A property which is `True` for 3xx status codes, `False` otherwise.
 
         Note that not all responses with a 3xx status code indicate a URL redirect.
-
         Use `response.has_redirect_location` to determine responses with a properly
         formed URL redirection.
         """
@@ -1115,6 +1114,7 @@ class Cookies(typing.MutableMapping[str, str]):
             return self.jar.clear(domain, path, name)
 
         remove = [
+        remove = [
             cookie
             for cookie in self.jar
             if cookie.name == name
@@ -1123,7 +1123,6 @@ class Cookies(typing.MutableMapping[str, str]):
         ]
 
         for cookie in remove:
-            self.jar.clear(cookie.domain, cookie.path, cookie.name)
 
     def clear(
         self, domain: typing.Optional[str] = None, path: typing.Optional[str] = None

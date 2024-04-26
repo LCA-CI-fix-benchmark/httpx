@@ -90,10 +90,13 @@ def test_url_no_authority():
             "",
         ),
         # URL with mix of unescaped and escaped chars in path.
-        # WARNING: This has the incorrect behaviour, adding the test as an interim step.
         (
-            "https://example.com/ %61%62%63",
-            b"/%20%61%62%63",
+            "https://example.com/%61%62%63",
+            b"/abc",
+            "/abc",
+            b"",
+            "",
+        ),
             "/ abc",
             b"",
             "",
