@@ -830,11 +830,11 @@ class Response:
                     decoded = decoder.decode(raw_bytes)
                     for chunk in chunker.decode(decoded):
                         yield chunk
-                decoded = decoder.flush()
-                for chunk in chunker.decode(decoded):
-                    yield chunk  # pragma: no cover
-                for chunk in chunker.flush():
-                    yield chunk
+                    decoded = decoder.flush()
+                    for chunk in chunker.decode(decoded):
+                        yield chunk
+                    for chunk in chunker.flush():
+                        yield chunk
 
     def iter_text(
         self, chunk_size: typing.Optional[int] = None
@@ -851,11 +851,11 @@ class Response:
                 text_content = decoder.decode(byte_content)
                 for chunk in chunker.decode(text_content):
                     yield chunk
-            text_content = decoder.flush()
-            for chunk in chunker.decode(text_content):
-                yield chunk  # pragma: no cover
-            for chunk in chunker.flush():
-                yield chunk
+                text_content = decoder.flush()
+                for chunk in chunker.decode(text_content):
+                    yield chunk
+                for chunk in chunker.flush():
+                    yield chunk
 
     def iter_lines(self) -> typing.Iterator[str]:
         decoder = LineDecoder()
@@ -863,8 +863,8 @@ class Response:
             for text in self.iter_text():
                 for line in decoder.decode(text):
                     yield line
-            for line in decoder.flush():
-                yield line
+                for line in decoder.flush():
+                    yield line
 
     def iter_raw(
         self, chunk_size: typing.Optional[int] = None
@@ -934,11 +934,11 @@ class Response:
                     decoded = decoder.decode(raw_bytes)
                     for chunk in chunker.decode(decoded):
                         yield chunk
-                decoded = decoder.flush()
-                for chunk in chunker.decode(decoded):
-                    yield chunk  # pragma: no cover
-                for chunk in chunker.flush():
-                    yield chunk
+                    decoded = decoder.flush()
+                    for chunk in chunker.decode(decoded):
+                        yield chunk
+                    for chunk in chunker.flush():
+                        yield chunk
 
     async def aiter_text(
         self, chunk_size: typing.Optional[int] = None
@@ -955,10 +955,11 @@ class Response:
                 text_content = decoder.decode(byte_content)
                 for chunk in chunker.decode(text_content):
                     yield chunk
-            text_content = decoder.flush()
-            for chunk in chunker.decode(text_content):
-                yield chunk  # pragma: no cover
-            for chunk in chunker.flush():
+                text_content = decoder.flush()
+                for chunk in chunker.decode(text_content):
+                    yield chunk
+                for chunk in chunker.flush():
+                    yield chunk
                 yield chunk
 
     async def aiter_lines(self) -> typing.AsyncIterator[str]:
