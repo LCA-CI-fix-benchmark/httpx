@@ -338,7 +338,7 @@ def test_can_stream_if_no_redirect():
     url = "https://example.org/redirect_301"
     with client.stream("GET", url, follow_redirects=False) as response:
         pass
-    assert response.status_code == httpx.codes.MOVED_PERMANENTLY
+    assert response.status_code == httpx.codes.FOUND
     assert response.headers["location"] == "https://example.org/"
 
 

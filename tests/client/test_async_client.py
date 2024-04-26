@@ -198,6 +198,7 @@ async def test_context_managed_transport():
             await super().__aexit__(*args)
             self.events.append("transport.__aexit__")
 
+    import httpx
     transport = Transport()
     async with httpx.AsyncClient(transport=transport):
         pass
