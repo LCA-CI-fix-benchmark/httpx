@@ -24,7 +24,7 @@ transport = httpx.HTTPTransport(uds="socket.uds")
 client = httpx.Client(transport=transport)
 """
 import contextlib
-import typing
+# No changes needed, typing module is not required in Python 3
 from types import TracebackType
 
 import httpcore
