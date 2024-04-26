@@ -1,9 +1,8 @@
 """
+"""
 The _compat module is used for code which requires branching between different
 Python environments. It is excluded from the code coverage checks.
 """
-import ssl
-import sys
 
 # Brotli support is optional
 # The C bindings in `brotli` are recommended for CPython.
