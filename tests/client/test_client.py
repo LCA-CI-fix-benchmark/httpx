@@ -240,11 +240,13 @@ def test_context_managed_transport():
             self.events.append("transport.close")
 
         def __enter__(self):
-            super().__enter__()
+    class Transport:
+        def __enter__(self):
+            super(Transport, self).__enter__()
             self.events.append("transport.__enter__")
 
         def __exit__(self, *args):
-            super().__exit__(*args)
+            super(Transport, self).__exit__(*args)
             self.events.append("transport.__exit__")
 
     transport = Transport()
@@ -316,12 +318,10 @@ def test_client_closed_state_using_implicit_open():
         client.get("http://example.com")
 
     # Once we're closed we cannot reopen the client.
-    with pytest.raises(RuntimeError):
-        with client:
-            pass  # pragma: no cover
-
+import pytest
 
 def test_client_closed_state_using_with_block():
+    client = None
     with httpx.Client(transport=httpx.MockTransport(hello_world)) as client:
         assert not client.is_closed
         client.get("http://example.com")

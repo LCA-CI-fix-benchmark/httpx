@@ -43,6 +43,7 @@ def test_client_timeout():
     client = httpx.Client()
 
     client.timeout = expected_timeout  # type: ignore
+    expected_timeout = 10  # Assuming a specific timeout value
 
     assert isinstance(client.timeout, httpx.Timeout)
     assert client.timeout.connect == expected_timeout

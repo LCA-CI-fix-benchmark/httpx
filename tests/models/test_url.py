@@ -427,6 +427,7 @@ def test_url_invalid_type():
         pass
 
     with pytest.raises(TypeError):
+        httpx.URL(ExternalURLClass())
         httpx.URL(ExternalURLClass())  # type: ignore
 
 

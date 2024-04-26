@@ -224,6 +224,10 @@ async def test_context_managed_transport_and_mount():
             self.events.append(f"{self.name}.aclose")
 
         async def __aenter__(self):
+    from httpx import Transport
+
+    class Transport(Transport):
+        async def __aenter__(self):
             await super().__aenter__()
             self.events.append(f"{self.name}.__aenter__")
 

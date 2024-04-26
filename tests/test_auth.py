@@ -15,8 +15,8 @@ def test_basic_auth():
     request = httpx.Request("GET", "https://www.example.com")
 
     # The initial request should include a basic auth header.
-    flow = auth.sync_auth_flow(request)
-    request = next(flow)
+    flow = auth.async_auth_flow(request)
+    request = await flow.__anext__()
     assert request.headers["Authorization"].startswith("Basic")
 
     # No other requests are made.

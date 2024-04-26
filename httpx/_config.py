@@ -11,22 +11,20 @@ from ._types import CertTypes, HeaderTypes, TimeoutTypes, URLTypes, VerifyTypes
 from ._urls import URL
 
 DEFAULT_CIPHERS = ":".join(
-    [
-        "ECDHE+AESGCM",
-        "ECDHE+CHACHA20",
-        "DHE+AESGCM",
-        "DHE+CHACHA20",
-        "ECDH+AESGCM",
-        "DH+AESGCM",
-        "ECDH+AES",
-        "DH+AES",
-        "RSA+AESGCM",
-        "RSA+AES",
-        "!aNULL",
-        "!eNULL",
-        "!MD5",
-        "!DSS",
-    ]
+[
+    "ECDHE+AESGCM",
+    "ECDHE+CHACHA20",
+    "DHE+AESGCM",
+    "DHE+CHACHA20",
+    "ECDH+AESGCM",
+    "DH+AESGCM",
+    "ECDH+AES",
+    "DH+AES",
+    "!aNULL",
+    "!eNULL",
+    "!MD5",
+    "!DSS",
+]
 )
 
 
@@ -102,11 +100,9 @@ class SSLContext(ssl.SSLContext):
             pass
 
         # Disable using 'commonName' for SSLContext.check_hostname
+        # Disable using 'commonName' for SSLContext.check_hostname
         # when the 'subjectAltName' extension isn't available.
-        try:
-            self.hostname_checks_common_name = False
-        except AttributeError:  # pragma: no cover
-            pass
+        self.hostname_checks_common_name = False
 
         if ca_bundle_path.is_file():
             cafile = str(ca_bundle_path)

@@ -127,7 +127,6 @@ class AsyncByteStream:
         raise NotImplementedError(
             "The '__aiter__' method must be implemented."
         )  # pragma: no cover
-        yield b""  # pragma: no cover
 
     async def aclose(self) -> None:
         pass

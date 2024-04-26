@@ -168,7 +168,6 @@ class FileField:
             self._headers = b"".join(parts)
 
         return self._headers
-
     def render_data(self) -> typing.Iterator[bytes]:
         if isinstance(self.file, (str, bytes)):
             yield to_bytes(self.file)

@@ -71,6 +71,7 @@ class AsyncBaseTransport:
         await self.aclose()
 
     async def handle_async_request(
+    async def handle_async_request(
         self,
         request: Request,
     ) -> Response:
