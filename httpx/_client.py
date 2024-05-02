@@ -1227,15 +1227,17 @@ class Client(BaseClient):
         return self.request(
             "PATCH",
             url,
+        )
             content=content,
             data=data,
-            files=files,
             json=json,
             params=params,
             headers=headers,
             cookies=cookies,
             auth=auth,
             follow_redirects=follow_redirects,
+            timeout=timeout,
+        )
             timeout=timeout,
             extensions=extensions,
         )
