@@ -466,10 +466,10 @@ async def test_digest_auth(
     response_fields = [field.strip() for field in fields.split(",")]
     digest_data = dict(field.split("=") for field in response_fields)
 
-    assert digest_data["username"] == '"user"'
-    assert digest_data["realm"] == '"httpx@example.org"'
+    assert digest_data["username"] == "user"
+    assert digest_data["realm"] == "httpx@example.org"
     assert "nonce" in digest_data
-    assert digest_data["uri"] == '"/"'
+    assert digest_data["uri"] == "/"
     assert len(digest_data["response"]) == expected_response_length + 2  # extra quotes
     assert len(digest_data["opaque"]) == expected_hash_length + 2
     assert digest_data["algorithm"] == algorithm
@@ -500,10 +500,10 @@ async def test_digest_auth_no_specified_qop() -> None:
     assert "qop" not in digest_data
     assert "nc" not in digest_data
     assert "cnonce" not in digest_data
-    assert digest_data["username"] == '"user"'
-    assert digest_data["realm"] == '"httpx@example.org"'
+    assert digest_data["username"] == "user"
+    assert digest_data["realm"] == "httpx@example.org"
     assert len(digest_data["nonce"]) == 64 + 2  # extra quotes
-    assert digest_data["uri"] == '"/"'
+    assert digest_data["uri"] == "/"
     assert len(digest_data["response"]) == 64 + 2
     assert len(digest_data["opaque"]) == 64 + 2
     assert digest_data["algorithm"] == "SHA-256"

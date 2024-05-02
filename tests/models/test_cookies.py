@@ -83,7 +83,7 @@ def test_cookies_can_be_a_list_of_tuples():
     cookies = httpx.Cookies(cookies_val)
 
     assert len(cookies.items()) == 2
-    for k, v in cookies_val:
+    for k, v in cookies.items():
         assert cookies[k] == v
 
 

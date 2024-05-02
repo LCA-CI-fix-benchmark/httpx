@@ -1114,6 +1114,7 @@ class Cookies(typing.MutableMapping[str, str]):
         if domain is not None and path is not None:
             return self.jar.clear(domain, path, name)
 
+        # Filter cookies to remove based on name, domain, and path criteria
         remove = [
             cookie
             for cookie in self.jar
@@ -1122,6 +1123,7 @@ class Cookies(typing.MutableMapping[str, str]):
             and (path is None or cookie.path == path)
         ]
 
+        # Iterate over the cookies to be removed
         for cookie in remove:
             self.jar.clear(cookie.domain, cookie.path, cookie.name)
 

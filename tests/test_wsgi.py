@@ -138,6 +138,8 @@ def test_wsgi_generator_empty():
     assert response.text == ""
 
 
+from io import StringIO
+
 def test_logging():
     buffer = StringIO()
     transport = httpx.WSGITransport(app=log_to_wsgi_log_buffer, wsgi_errors=buffer)

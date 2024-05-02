@@ -244,11 +244,13 @@ class MultipartStream(SyncByteStream, AsyncByteStream):
             if field_length is None:
                 return None
 
-            length += 2 + boundary_length + 2  # b"--{boundary}\r\n"
+            # Calculate the total length for the multipart body
+            length += 2 + boundary_length + 2  # Add length for "--{boundary}\r\n"
             length += field_length
-            length += 2  # b"\r\n"
+            length += 2  # Add length for "\r\n"
 
-        length += 2 + boundary_length + 4  # b"--{boundary}--\r\n"
+        length += 2 + boundary_length + 4  # Add length for "--{boundary}--\r\n (closing boundary)"
+        # Return the total length of the multipart body
         return length
 
     # Content stream interface.

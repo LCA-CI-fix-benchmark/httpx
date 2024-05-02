@@ -6,8 +6,9 @@ import pytest
 
 import httpx
 
-
-def autodetect(content):
+def autodetect(content: bytes) -> typing.Optional[str]:
+    # Add implementation for autodetect function here
+    pass
     return chardet.detect(content).get("encoding")
 
 
