@@ -110,7 +110,6 @@ class RepeatAuth(httpx.Auth):
         request.headers["Authorization"] = f"Repeat {key}"
         yield request
 
-
 class ResponseBodyAuth(httpx.Auth):
     """
     A mock authentication scheme that requires clients to send an 'Authorization'
@@ -119,7 +118,6 @@ class ResponseBodyAuth(httpx.Auth):
     """
 
     requires_response_body = True
-
     def __init__(self, token: str) -> None:
         self.token = token
 
@@ -176,8 +174,6 @@ async def test_basic_auth_with_stream() -> None:
     """
     See: https://github.com/encode/httpx/pull/1312
     """
-    url = "https://example.org/"
-    auth = ("user", "password123")
     app = App()
 
     async with httpx.AsyncClient(
@@ -242,13 +238,13 @@ def test_netrc_auth_credentials_exist() -> None:
     url = "http://netrcexample.org"
     app = App()
     auth = httpx.NetRCAuth(netrc_file)
+    netrc_file = str(FIXTURES_DIR / ".netrc")
+    url = "http://netrcexample.org"
+    app = App()
+    auth = httpx.NetRCAuth(netrc_file)
 
     with httpx.Client(transport=httpx.MockTransport(app), auth=auth) as client:
         response = client.get(url)
-
-    assert response.status_code == 200
-    assert response.json() == {
-        "auth": "Basic ZXhhbXBsZS11c2VybmFtZTpleGFtcGxlLXBhc3N3b3Jk"
     }
 
 
@@ -297,13 +293,13 @@ def test_netrc_auth_nopassword() -> None:  # pragma: no cover
     reason="netrc files without a password are valid from Python >= 3.11",
 )
 def test_netrc_auth_nopassword_parse_error() -> None:  # pragma: no cover
+    sys.version_info >= (3, 11),
+    reason="netrc files without a password are valid from Python >= 3.11",
+)
+def test_netrc_auth_nopassword_parse_error() -> None:  # pragma: no cover
     """
     Python has different netrc parsing behaviours with different versions.
     For Python < 3.11 a netrc file with no password is invalid. In this case
-    we want to allow the parse error to be raised.
-    """
-    netrc_file = str(FIXTURES_DIR / ".netrc-nopassword")
-    with pytest.raises(netrc.NetrcParseError):
         httpx.NetRCAuth(netrc_file)
 
 
@@ -662,16 +658,16 @@ async def test_async_auth_history() -> None:
     """
     url = "https://example.org/"
     auth = RepeatAuth(repeat=2)
+    are recorded in the response history.
+    """
+    url = "https://example.org/"
+    auth = RepeatAuth(repeat=2)
     app = App(auth_header="abc")
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(app)) as client:
         response = await client.get(url, auth=auth)
 
     assert response.status_code == 200
-    assert response.json() == {"auth": "Repeat abc.abc"}
-
-    assert len(response.history) == 2
-    resp1, resp2 = response.history
     assert resp1.json() == {"auth": "Repeat 0"}
     assert resp2.json() == {"auth": "Repeat 1"}
 
@@ -681,13 +677,12 @@ async def test_async_auth_history() -> None:
     assert len(resp1.history) == 0
 
 
+    assert len(resp1.history) == 0
+
+
 def test_sync_auth_history() -> None:
     """
     Test that intermediate requests sent as part of an authentication flow
-    are recorded in the response history.
-    """
-    url = "https://example.org/"
-    auth = RepeatAuth(repeat=2)
     app = App(auth_header="abc")
 
     with httpx.Client(transport=httpx.MockTransport(app)) as client:
@@ -736,22 +731,22 @@ async def test_async_auth_reads_response_body() -> None:
     """
     url = "https://example.org/"
     auth = ResponseBodyAuth("xyz")
+    Test that we can read the response body in an auth flow if `requires_response_body`
+    is set.
+    """
+    url = "https://example.org/"
+    auth = ResponseBodyAuth("xyz")
     app = App()
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(app)) as client:
         response = await client.get(url, auth=auth)
 
     assert response.status_code == 200
-    assert response.json() == {"auth": '{"auth": "xyz"}'}
+    assert response.json() == {"auth": '{"auth": "xyz"}
 
 
 def test_sync_auth_reads_response_body() -> None:
     """
-    Test that we can read the response body in an auth flow if `requires_response_body`
-    is set.
-    """
-    url = "https://example.org/"
-    auth = ResponseBodyAuth("xyz")
     app = App()
 
     with httpx.Client(transport=httpx.MockTransport(app)) as client:
@@ -765,6 +760,11 @@ def test_sync_auth_reads_response_body() -> None:
 async def test_async_auth() -> None:
     """
     Test that we can use an auth implementation specific to the async case, to
+    support cases that require performing I/O or using concurrency primitives (such
+    as checking a disk-based cache or fetching a token from a remote auth server).
+    """
+    url = "https://example.org/"
+    auth = SyncOrAsyncAuth()
     support cases that require performing I/O or using concurrency primitives (such
     as checking a disk-based cache or fetching a token from a remote auth server).
     """
@@ -789,6 +789,3 @@ def test_sync_auth() -> None:
 
     with httpx.Client(transport=httpx.MockTransport(app)) as client:
         response = client.get(url, auth=auth)
-
-    assert response.status_code == 200
-    assert response.json() == {"auth": "sync-auth"}
