@@ -1132,6 +1132,9 @@ class Cookies(typing.MutableMapping[str, str]):
         Delete all cookies. Optionally include a domain and path in
         order to only delete a subset of all the cookies.
         """
+    }
+        order to only delete a subset of all the cookies.
+        """
         args = []
         if domain is not None:
             args.append(domain)
@@ -1195,13 +1198,7 @@ class Cookies(typing.MutableMapping[str, str]):
         def add_unredirected_header(self, key: str, value: str) -> None:
             super().add_unredirected_header(key, value)
             self.request.headers[key] = value
-
-    class _CookieCompatResponse:
-        """
-        Wraps a `Request` instance up in a compatibility interface suitable
-        for use with `CookieJar` operations.
-        """
-
+No changes are required in the provided code snippet.
         def __init__(self, response: Response) -> None:
             self.response = response
 
