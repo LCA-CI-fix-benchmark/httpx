@@ -1203,108 +1203,16 @@ class Client(BaseClient):
             extensions=extensions,
         )
 
-    def patch(
-        self,
-        url: URLTypes,
-        *,
-        content: typing.Optional[RequestContent] = None,
-        data: typing.Optional[RequestData] = None,
-        files: typing.Optional[RequestFiles] = None,
-        json: typing.Optional[typing.Any] = None,
-        params: typing.Optional[QueryParamTypes] = None,
-        headers: typing.Optional[HeaderTypes] = None,
-        cookies: typing.Optional[CookieTypes] = None,
-        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
-        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        extensions: typing.Optional[RequestExtensions] = None,
-    ) -> Response:
-        """
-        Send a `PATCH` request.
-
-        **Parameters**: See `httpx.request`.
-        """
-        return self.request(
-            "PATCH",
-            url,
-            content=content,
-            data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
-        )
-
-    def delete(
-        self,
-        url: URLTypes,
-        *,
-        params: typing.Optional[QueryParamTypes] = None,
-        headers: typing.Optional[HeaderTypes] = None,
-        cookies: typing.Optional[CookieTypes] = None,
-        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
-        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        extensions: typing.Optional[RequestExtensions] = None,
-    ) -> Response:
-        """
-        Send a `DELETE` request.
-
-        **Parameters**: See `httpx.request`.
-        """
-        return self.request(
-            "DELETE",
-            url,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
-        )
-
-    def close(self) -> None:
-        """
-        Close transport and proxies.
-        """
-        if self._state != ClientState.CLOSED:
-            self._state = ClientState.CLOSED
-
-            self._transport.close()
-            for transport in self._mounts.values():
-                if transport is not None:
-                    transport.close()
-
-    def __enter__(self: T) -> T:
-        if self._state != ClientState.UNOPENED:
-            msg = {
-                ClientState.OPENED: "Cannot open a client instance more than once.",
-                ClientState.CLOSED: (
-                    "Cannot reopen a client instance, once it has been closed."
-                ),
-            }[self._state]
-            raise RuntimeError(msg)
-
-        self._state = ClientState.OPENED
-
-        self._transport.__enter__()
-        for transport in self._mounts.values():
-            if transport is not None:
-                transport.__enter__()
-        return self
-
     def __exit__(
         self,
         exc_type: typing.Optional[typing.Type[BaseException]] = None,
         exc_value: typing.Optional[BaseException] = None,
         traceback: typing.Optional[TracebackType] = None,
     ) -> None:
+        self._transport.__exit__(exc_type, exc_value, traceback)
+        for transport in self._mounts.values():
+            if transport is not None:
+                transport.__exit__(exc_type, exc_value, traceback)
         self._state = ClientState.CLOSED
 
         self._transport.__exit__(exc_type, exc_value, traceback)

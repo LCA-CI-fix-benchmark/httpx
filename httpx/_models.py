@@ -533,27 +533,27 @@ class Response:
             )
         return self._request
 
+    from typing import Dict, Union
+    
     @request.setter
     def request(self, value: Request) -> None:
         self._request = value
-
+    
     @property
     def http_version(self) -> str:
-        try:
-            http_version: bytes = self.extensions["http_version"]
-        except KeyError:
-            return "HTTP/1.1"
-        else:
+        extensions: Dict[str, Union[bytes, str]] = self.extensions
+        http_version = extensions.get("http_version", b"HTTP/1.1")
+        if isinstance(http_version, bytes):
             return http_version.decode("ascii", errors="ignore")
-
+        return str(http_version)
+    
     @property
     def reason_phrase(self) -> str:
-        try:
-            reason_phrase: bytes = self.extensions["reason_phrase"]
-        except KeyError:
-            return codes.get_reason_phrase(self.status_code)
-        else:
+        extensions: Dict[str, Union[bytes, str]] = self.extensions
+        reason_phrase = extensions.get("reason_phrase", codes.get_reason_phrase(self.status_code))
+        if isinstance(reason_phrase, bytes):
             return reason_phrase.decode("ascii", errors="ignore")
+        return str(reason_phrase)
 
     @property
     def url(self) -> URL:
