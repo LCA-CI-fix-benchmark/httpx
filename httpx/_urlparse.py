@@ -404,7 +404,6 @@ def normalize_path(path: str) -> str:
             output.append(component)
     return "/".join(output)
 
-
 def percent_encode(char: str) -> str:
     """
     Replace a single character with the percent-encoded representation.
@@ -424,7 +423,6 @@ def is_safe(string: str, safe: str = "/") -> bool:
     Determine if a given string is already quote-safe.
     """
     NON_ESCAPED_CHARS = UNRESERVED_CHARACTERS + safe + "%"
-
     # All characters must already be non-escaping or '%'
     for char in string:
         if char not in NON_ESCAPED_CHARS:
@@ -439,14 +437,13 @@ def percent_encoded(string: str, safe: str = "/") -> str:
     """
     if is_safe(string, safe=safe):
         return string
+    if is_safe(string, safe=safe):
+        return string
 
     NON_ESCAPED_CHARS = UNRESERVED_CHARACTERS + safe
     return "".join(
         [char if char in NON_ESCAPED_CHARS else percent_encode(char) for char in string]
     )
-
-
-def quote(string: str, safe: str = "/") -> str:
     """
     Use percent-encoding to quote a string, omitting existing '%xx' escape sequences.
 
