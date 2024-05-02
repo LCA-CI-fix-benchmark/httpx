@@ -1,23 +1,19 @@
-"""
-Unit tests for auth classes.
-
-Integration tests also exist in tests/client/test_auth.py
-"""
-from urllib.request import parse_keqv_list
-
 import pytest
-
 import httpx
 
+class TestBasicAuth:
+    """
+    Test case for basic authentication.
+    """
 
-def test_basic_auth():
-    auth = httpx.BasicAuth(username="user", password="pass")
-    request = httpx.Request("GET", "https://www.example.com")
+    def test_basic_auth(self):
+        auth = httpx.BasicAuth(username="user", password="pass")
+        request = httpx.Request("GET", "https://www.example.com")
 
-    # The initial request should include a basic auth header.
-    flow = auth.sync_auth_flow(request)
-    request = next(flow)
-    assert request.headers["Authorization"].startswith("Basic")
+        # The initial request should include a basic auth header.
+        flow = auth.sync_auth_flow(request)
+        request = next(flow)
+        assert request.headers["Authorization"].startswith("Basic"), "Authorization header does not start with 'Basic'"
 
     # No other requests are made.
     response = httpx.Response(content=b"Hello, world!", status_code=200)

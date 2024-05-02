@@ -1,18 +1,11 @@
-import codecs
-import email.message
-import ipaddress
-import mimetypes
-import os
-import re
-import time
-import typing
 from urllib.request import getproxies
 
-import sniffio
+import typing
 
 from ._types import PrimitiveData
 
 if typing.TYPE_CHECKING:  # pragma: no cover
+    # Add relevant code here
     from ._urls import URL
 
 

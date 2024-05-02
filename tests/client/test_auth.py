@@ -1,23 +1,10 @@
-"""
-Integration tests for authentication.
-
-Unit tests for auth classes also exist in tests/test_auth.py
-"""
-import hashlib
-import netrc
-import os
-import sys
-import threading
-import typing
-from urllib.request import parse_keqv_list
-
-import anyio
 import pytest
+
+from urllib.parse import parse_keqv_list
 
 import httpx
 
 from ..common import FIXTURES_DIR
-
 
 class App:
     """
