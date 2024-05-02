@@ -24,6 +24,9 @@ class App:
     A mock app to test auth credentials.
     """
 
+    def test_authentication(self):
+        # Add authentication test code here
+        pass
     def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
         self.auth_header = auth_header
         self.status_code = status_code

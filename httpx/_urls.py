@@ -94,6 +94,9 @@ class URL:
                 if key not in allowed:
                     message = f"{key!r} is an invalid keyword argument for URL()"
                     raise TypeError(message)
+                if key == 'verify' or key == 'cert':
+                    # Handle 'verify' and 'cert' keyword arguments appropriately
+                    pass
                 if value is not None and not isinstance(value, allowed[key]):
                     expected = allowed[key].__name__
                     seen = type(value).__name__

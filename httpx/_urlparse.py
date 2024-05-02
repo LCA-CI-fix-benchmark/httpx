@@ -339,9 +339,8 @@ def normalize_port(
     # normalizers should omit the port component and its ":" delimiter if
     # port is empty or if its value would be the same as that of the
     # scheme's default."
-    if port is None or port == "":
+    if port is None or port == "" or port == scheme_default_port(scheme):
         return None
-
     try:
         port_as_int = int(port)
     except ValueError:
