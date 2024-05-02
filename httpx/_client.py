@@ -1261,22 +1261,6 @@ class Client(BaseClient):
                 ClientState.CLOSED: (
                     "Cannot reopen a client instance, once it has been closed."
                 ),
-            }[self._state]
-            raise RuntimeError(msg)
-
-        self._state = ClientState.OPENED
-
-        self._transport.__enter__()
-        for transport in self._mounts.values():
-            if transport is not None:
-                transport.__enter__()
-        return self
-
-    def __exit__(
-        self,
-        exc_type: typing.Optional[typing.Type[BaseException]] = None,
-        exc_value: typing.Optional[BaseException] = None,
-        traceback: typing.Optional[TracebackType] = None,
     ) -> None:
         self._state = ClientState.CLOSED
 
@@ -1284,32 +1268,6 @@ class Client(BaseClient):
         for transport in self._mounts.values():
             if transport is not None:
                 transport.__exit__(exc_type, exc_value, traceback)
-
-
-class AsyncClient(BaseClient):
-    """
-    An asynchronous HTTP client, with connection pooling, HTTP/2, redirects,
-    cookie persistence, etc.
-
-    Usage:
-
-    ```python
-    >>> async with httpx.AsyncClient() as client:
-    >>>     response = await client.get('https://example.org')
-    ```
-
-    **Parameters:**
-
-    * **auth** - *(optional)* An authentication class to use when sending
-    requests.
-    * **params** - *(optional)* Query parameters to include in request URLs, as
-    a string, dictionary, or sequence of two-tuples.
-    * **headers** - *(optional)* Dictionary of HTTP headers to include when
-    sending requests.
-    * **cookies** - *(optional)* Dictionary of Cookie items to include when
-    sending requests.
-    * **ssl_context** - *(optional)* An SSL certificate used by the requested host
-    to authenticate the client.
     * **http2** - *(optional)* A boolean indicating if HTTP/2 support should be
     enabled. Defaults to `False`.
     * **proxy** - *(optional)* A proxy URL where all the traffic should be routed.
@@ -1438,14 +1396,14 @@ class AsyncClient(BaseClient):
         if app is not None:
             return ASGITransport(app=app)
 
-        return AsyncHTTPTransport(
+        self._transport = self._init_transport(
             ssl_context=ssl_context,
             http1=http1,
             http2=http2,
             limits=limits,
+            transport=transport,
+            app=app,
         )
-
-    def _init_proxy_transport(
         self,
         proxy: Proxy,
         ssl_context: typing.Optional[ssl.SSLContext] = None,
@@ -1465,26 +1423,11 @@ class AsyncClient(BaseClient):
 
     def _transport_for_url(self, url: URL) -> AsyncBaseTransport:
         """
-        Returns the transport instance that should be used for a given URL.
-        This will either be the standard connection pool, or a proxy.
-        """
-        for pattern, transport in self._mounts.items():
-            if pattern.matches(url):
-                return self._transport if transport is None else transport
-
-        return self._transport
-
-    async def request(
-        self,
-        method: str,
-        url: URLTypes,
-        *,
-        content: typing.Optional[RequestContent] = None,
-        data: typing.Optional[RequestData] = None,
-        files: typing.Optional[RequestFiles] = None,
-        json: typing.Optional[typing.Any] = None,
-        params: typing.Optional[QueryParamTypes] = None,
-        headers: typing.Optional[HeaderTypes] = None,
+            ssl_context=ssl_context,
+            http1=http1,
+            http2=http2,
+            limits=limits,
+        )
         cookies: typing.Optional[CookieTypes] = None,
         auth: typing.Union[AuthTypes, UseClientDefault, None] = USE_CLIENT_DEFAULT,
         follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
@@ -1514,19 +1457,11 @@ class AsyncClient(BaseClient):
             data=data,
             files=files,
             json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            timeout=timeout,
-            extensions=extensions,
+            http1=http1,
+            http2=http2,
+            limits=limits,
+            proxy=proxy,
         )
-        return await self.send(request, auth=auth, follow_redirects=follow_redirects)
-
-    @asynccontextmanager
-    async def stream(
-        self,
-        method: str,
-        url: URLTypes,
         *,
         content: typing.Optional[RequestContent] = None,
         data: typing.Optional[RequestData] = None,
@@ -1555,23 +1490,24 @@ class AsyncClient(BaseClient):
             url=url,
             content=content,
             data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            timeout=timeout,
-            extensions=extensions,
-        )
-        response = await self.send(
-            request=request,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            stream=True,
-        )
-        try:
-            yield response
-        finally:
+    def send(
+        ) -> Response:
+        """
+        Build and send a request.
+
+        Equivalent to:
+
+        ```python
+        request = client.build_request(...)
+        response = await client.send(request, ...)
+        ```
+
+        See `AsyncClient.build_request()`, `AsyncClient.send()`
+        and [Merging of configuration][0] for how the various parameters
+        are merged with client-level configuration.
+
+        [0]: /advanced/#merging-of-configuration
+        """
             await response.aclose()
 
     async def send(
@@ -1669,13 +1605,10 @@ class AsyncClient(BaseClient):
                     "Exceeded maximum allowed redirects.", request=request
                 )
 
-            for hook in self._event_hooks["request"]:
-                await hook(request)
-
-            response = await self._send_single_request(request)
-            try:
-                for hook in self._event_hooks["response"]:
-                    await hook(response)
+            request,
+            auth=auth,
+            follow_redirects=follow_redirects,
+            history=[],
 
                 response.history = list(history)
 
@@ -1715,15 +1648,14 @@ class AsyncClient(BaseClient):
         response.request = request
         response.stream = BoundAsyncStream(
             response.stream, response=response, timer=timer
-        )
-        self.cookies.extract_cookies(response)
-        response.default_encoding = self._default_encoding
+                    request = next_request
+                    history.append(response)
 
-        logger.info(
-            'HTTP Request: %s %s "%s %d %s"',
-            request.method,
-            request.url,
-            response.http_version,
+                except BaseException as exc:
+                    await response.aclose()
+                    raise exc
+        finally:
+            await auth_flow.aclose()
             response.status_code,
             response.reason_phrase,
         )
@@ -1744,15 +1676,13 @@ class AsyncClient(BaseClient):
     ) -> Response:
         """
         Send a `GET` request.
+                response.history = list(history)
 
-        **Parameters**: See `httpx.request`.
-        """
-        return await self.request(
-            "GET",
-            url,
-            params=params,
-            headers=headers,
-            cookies=cookies,
+                if not response.has_redirect_location:
+                    return response
+
+                request = self._build_redirect_request(request, response)
+                history = history + [response]
             auth=auth,
             follow_redirects=follow_redirects,
             timeout=timeout,
@@ -1773,15 +1703,15 @@ class AsyncClient(BaseClient):
     ) -> Response:
         """
         Send an `OPTIONS` request.
+        if not isinstance(request.stream, AsyncByteStream):
+            raise RuntimeError(
+                "Attempted to send an sync request with an AsyncClient instance."
+            )
 
-        **Parameters**: See `httpx.request`.
-        """
-        return await self.request(
-            "OPTIONS",
-            url,
-            params=params,
-            headers=headers,
-            cookies=cookies,
+        with request_context(request=request):
+            response = await transport.handle_async_request(request)
+
+        assert isinstance(response.stream, AsyncByteStream)
             auth=auth,
             follow_redirects=follow_redirects,
             timeout=timeout,
@@ -1806,15 +1736,14 @@ class AsyncClient(BaseClient):
         **Parameters**: See `httpx.request`.
         """
         return await self.request(
-            "HEAD",
-            url,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
+        cookies: typing.Optional[CookieTypes] = None,
+        auth: typing.Union[AuthTypes, UseClientDefault, None] = USE_CLIENT_DEFAULT,
+        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
+        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        extensions: typing.Optional[RequestExtensions] = None,
+    ) -> Response:
+        """
+        Send a `GET` request.
         )
 
     async def post(
@@ -1843,6 +1772,77 @@ class AsyncClient(BaseClient):
             url,
             content=content,
             data=data,
+        return await self.request(
+            "OPTIONS",
+            url,
+            params=params,
+            headers=headers,
+        )
+        )
+
+    async def put(
+        self,
+        url: URLTypes,
+        *,
+        content: typing.Optional[RequestContent] = None,
+        data: typing.Optional[RequestData] = None,
+        files: typing.Optional[RequestFiles] = None,
+        json: typing.Optional[typing.Any] = None,
+        params: typing.Optional[QueryParamTypes] = None,
+        headers: typing.Optional[HeaderTypes] = None,
+        cookies: typing.Optional[CookieTypes] = None,
+        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
+        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        extensions: typing.Optional[RequestExtensions] = None,
+    ) -> Response:
+        """
+        Send a `PUT` request.
+
+        **Parameters**: See `httpx.request`.
+        """
+        return await self.request(
+            "PUT",
+            url,
+            content=content,
+            data=data,
+            "HEAD",
+            url,
+            params=params,
+            headers=headers,
+            cookies=cookies,
+            auth=auth,
+            follow_redirects=follow_redirects,
+            timeout=timeout,
+            extensions=extensions,
+        )
+
+    async def patch(
+        self,
+        url: URLTypes,
+        *,
+        content: typing.Optional[RequestContent] = None,
+        data: typing.Optional[RequestData] = None,
+        files: typing.Optional[RequestFiles] = None,
+        json: typing.Optional[typing.Any] = None,
+        params: typing.Optional[QueryParamTypes] = None,
+        headers: typing.Optional[HeaderTypes] = None,
+        cookies: typing.Optional[CookieTypes] = None,
+        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
+        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
+        extensions: typing.Optional[RequestExtensions] = None,
+    ) -> Response:
+        """
+        Send a `PATCH` request.
+
+        **Parameters**: See `httpx.request`.
+        """
+        return await self.request(
+            "POST",
+            url,
+            content=content,
+            data=data,
             files=files,
             json=json,
             params=params,
@@ -1854,7 +1854,7 @@ class AsyncClient(BaseClient):
             extensions=extensions,
         )
 
-    async def put(
+    async def delete(
         self,
         url: URLTypes,
         *,
@@ -1904,80 +1904,6 @@ class AsyncClient(BaseClient):
         cookies: typing.Optional[CookieTypes] = None,
         auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
         follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
-        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        extensions: typing.Optional[RequestExtensions] = None,
-    ) -> Response:
-        """
-        Send a `PATCH` request.
-
-        **Parameters**: See `httpx.request`.
-        """
-        return await self.request(
-            "PATCH",
-            url,
-            content=content,
-            data=data,
-            files=files,
-            json=json,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
-        )
-
-    async def delete(
-        self,
-        url: URLTypes,
-        *,
-        params: typing.Optional[QueryParamTypes] = None,
-        headers: typing.Optional[HeaderTypes] = None,
-        cookies: typing.Optional[CookieTypes] = None,
-        auth: typing.Union[AuthTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        follow_redirects: typing.Union[bool, UseClientDefault] = USE_CLIENT_DEFAULT,
-        timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
-        extensions: typing.Optional[RequestExtensions] = None,
-    ) -> Response:
-        """
-        Send a `DELETE` request.
-
-        **Parameters**: See `httpx.request`.
-        """
-        return await self.request(
-            "DELETE",
-            url,
-            params=params,
-            headers=headers,
-            cookies=cookies,
-            auth=auth,
-            follow_redirects=follow_redirects,
-            timeout=timeout,
-            extensions=extensions,
-        )
-
-    async def aclose(self) -> None:
-        """
-        Close transport and proxies.
-        """
-        if self._state != ClientState.CLOSED:
-            self._state = ClientState.CLOSED
-
-            await self._transport.aclose()
-            for proxy in self._mounts.values():
-                if proxy is not None:
-                    await proxy.aclose()
-
-    async def __aenter__(self: U) -> U:
-        if self._state != ClientState.UNOPENED:
-            msg = {
-                ClientState.OPENED: "Cannot open a client instance more than once.",
-                ClientState.CLOSED: (
-                    "Cannot reopen a client instance, once it has been closed."
-                ),
-            }[self._state]
-            raise RuntimeError(msg)
 
         self._state = ClientState.OPENED
 
