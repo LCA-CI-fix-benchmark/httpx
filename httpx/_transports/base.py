@@ -32,7 +32,6 @@ class BaseTransport:
         `response.stream.read()`, or else the `handle_request` call should
         be followed with a try/finally block to ensuring the stream is
         always closed.
-
         Example usage:
 
             with httpx.HTTPTransport() as transport:

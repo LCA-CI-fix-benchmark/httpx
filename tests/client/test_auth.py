@@ -586,13 +586,9 @@ async def test_digest_auth_resets_nonce_count_after_401() -> None:
         assert response_1.status_code == 200
         assert len(response_1.history) == 1
 
-        first_nonce = parse_keqv_list(
-            response_1.request.headers["Authorization"].split(", ")
-        )["nonce"]
-        first_nc = parse_keqv_list(
-            response_1.request.headers["Authorization"].split(", ")
-        )["nc"]
-
+        auth_header = response_1.request.headers["Authorization"]
+        first_nonce = parse_keqv_list(auth_header)["nonce"]
+        first_nc = parse_keqv_list(auth_header)["nc"]
         # with this we now force a 401 on a subsequent (but initial) request
         app.send_response_after_attempt = 2
 
