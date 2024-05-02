@@ -1115,7 +1115,7 @@ class Cookies(typing.MutableMapping[str, str]):
             return self.jar.clear(domain, path, name)
 
         remove = [
-            cookie
+            cookie for cookie in self.jar
             for cookie in self.jar
             if cookie.name == name
             and (domain is None or cookie.domain == domain)

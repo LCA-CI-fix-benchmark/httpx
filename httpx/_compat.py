@@ -14,6 +14,7 @@ except ImportError:  # pragma: no cover
     try:
         import brotli
     except ImportError:
+        pass
         brotli = None
 
 if sys.version_info >= (3, 10) or ssl.OPENSSL_VERSION_INFO >= (1, 1, 0, 7):

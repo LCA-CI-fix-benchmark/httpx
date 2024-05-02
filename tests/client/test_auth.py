@@ -677,13 +677,14 @@ async def test_async_auth_history() -> None:
 
     assert len(resp2.history) == 1
     assert resp2.history == [resp1]
-
     assert len(resp1.history) == 0
 
 
 def test_sync_auth_history() -> None:
     """
     Test that intermediate requests sent as part of an authentication flow
+    are recorded in the response history.
+    """
     are recorded in the response history.
     """
     url = "https://example.org/"
@@ -736,13 +737,11 @@ async def test_async_auth_reads_response_body() -> None:
     """
     url = "https://example.org/"
     auth = ResponseBodyAuth("xyz")
-    app = App()
-
     async with httpx.AsyncClient(transport=httpx.MockTransport(app)) as client:
         response = await client.get(url, auth=auth)
 
     assert response.status_code == 200
-    assert response.json() == {"auth": '{"auth": "xyz"}'}
+    assert response.json() == {"auth": "xyz"}
 
 
 def test_sync_auth_reads_response_body() -> None:
