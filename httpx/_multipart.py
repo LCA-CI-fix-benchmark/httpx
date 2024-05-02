@@ -252,7 +252,6 @@ class MultipartStream(SyncByteStream, AsyncByteStream):
         return length
 
     # Content stream interface.
-
     def get_headers(self) -> typing.Dict[str, str]:
         content_length = self.get_content_length()
         content_type = self.content_type

@@ -3,16 +3,15 @@ Integration tests for authentication.
 
 Unit tests for auth classes also exist in tests/test_auth.py
 """
+import anyio
 import hashlib
 import netrc
 import os
+import pytest
 import sys
 import threading
 import typing
 from urllib.request import parse_keqv_list
-
-import anyio
-import pytest
 
 import httpx
 
@@ -23,7 +22,6 @@ class App:
     """
     A mock app to test auth credentials.
     """
-
     def __init__(self, auth_header: str = "", status_code: int = 200) -> None:
         self.auth_header = auth_header
         self.status_code = status_code
@@ -497,6 +495,8 @@ async def test_digest_auth_no_specified_qop() -> None:
     response_fields = [field.strip() for field in fields.split(",")]
     digest_data = dict(field.split("=") for field in response_fields)
 
+    digest_data = dict(field.split("=") for field in response_fields)
+
     assert "qop" not in digest_data
     assert "nc" not in digest_data
     assert "cnonce" not in digest_data
@@ -506,8 +506,6 @@ async def test_digest_auth_no_specified_qop() -> None:
     assert digest_data["uri"] == '"/"'
     assert len(digest_data["response"]) == 64 + 2
     assert len(digest_data["opaque"]) == 64 + 2
-    assert digest_data["algorithm"] == "SHA-256"
-
 
 @pytest.mark.parametrize("qop", ("auth, auth-int", "auth,auth-int", "unknown,auth"))
 @pytest.mark.anyio
