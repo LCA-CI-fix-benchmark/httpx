@@ -204,24 +204,19 @@ class RemoteProtocolError(ProtocolError):
     For example, returning malformed HTTP.
     """
 
-
 # Other request exceptions...
-
 
 class DecodingError(RequestError):
     """
     Decoding of the response failed, due to a malformed encoding.
     """
 
-
 class TooManyRedirects(RequestError):
     """
     Too many redirects.
     """
 
-
 # Client errors
-
 
 class HTTPStatusError(HTTPError):
     """
@@ -282,14 +277,15 @@ class StreamConsumed(StreamError):
     been streamed.
     """
 
+class StreamConsumed(RequestError):
+    """
+    Attempted to read or stream content, but the content has already
+    been streamed.
+    """
+
     def __init__(self) -> None:
         message = (
             "Attempted to read or stream some content, but the content has "
-            "already been streamed. For requests, this could be due to passing "
-            "a generator as request content, and then receiving a redirect "
-            "response or a secondary request as part of an authentication flow."
-            "For responses, this could be due to attempting to stream the response "
-            "content more than once."
         )
         super().__init__(message)
 
