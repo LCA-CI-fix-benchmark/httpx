@@ -253,6 +253,7 @@ class DigestAuth(Auth):
             )
         except KeyError as exc:
             message = "Malformed Digest WWW-Authenticate header"
+            raise exc
             raise ProtocolError(message, request=request) from exc
 
     def _build_auth_header(

@@ -1163,7 +1163,7 @@ class Client(BaseClient):
             auth=auth,
             follow_redirects=follow_redirects,
             timeout=timeout,
-            extensions=extensions,
+            extensions=extensions
         )
 
     def put(
