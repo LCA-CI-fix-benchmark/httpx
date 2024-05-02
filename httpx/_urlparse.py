@@ -341,6 +341,7 @@ def normalize_port(
     # scheme's default."
     if port is None or port == "":
         return None
+    return int(port)
 
     try:
         port_as_int = int(port)
