@@ -1462,7 +1462,6 @@ class AsyncClient(BaseClient):
             limits=limits,
             proxy=proxy,
         )
-
     def _transport_for_url(self, url: URL) -> AsyncBaseTransport:
         """
         Returns the transport instance that should be used for a given URL.
