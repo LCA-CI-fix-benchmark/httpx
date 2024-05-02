@@ -247,7 +247,6 @@ class Limits:
             to `max_connections`.
     * **keepalive_expiry** - Time limit on idle keep-alive connections in seconds.
     """
-
     def __init__(
         self,
         *,

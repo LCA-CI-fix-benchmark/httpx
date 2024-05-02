@@ -59,6 +59,7 @@ def request(
     * **headers** - *(optional)* Dictionary of HTTP headers to include in the
     request.
     * **cookies** - *(optional)* Dictionary of Cookie items to include in the
+    request. Cookies can be used to store stateful information and are typically used for authentication, session management, personalization, etc.
     request.
     * **auth** - *(optional)* An authentication class to use when sending the
     request.

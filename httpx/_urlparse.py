@@ -10,7 +10,6 @@ We rely on this implementation rather than the one in Python's stdlib, because:
 * It handles scheme, hostname, port, and path normalization.
 * It supports IDNA hostnames, normalizing them to their encoded form.
 * The API supports passing individual components, as well as the complete URL string.
-
 Previously we relied on the excellent `rfc3986` package to handle URL parsing and
 validation, but this module provides a simpler alternative, with less indirection
 required.
