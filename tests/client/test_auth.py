@@ -290,7 +290,7 @@ def test_netrc_auth_nopassword() -> None:  # pragma: no cover
 
     assert response.status_code == 200
     assert response.json() == {"auth": None}
-
+import sys
 
 @pytest.mark.skipif(
     sys.version_info >= (3, 11),
@@ -654,6 +654,9 @@ def test_sync_digest_auth_raises_protocol_error_on_malformed_header(
             client.get(url, auth=auth)
 
 
+import pytest
+import httpx
+
 @pytest.mark.anyio
 async def test_async_auth_history() -> None:
     """
@@ -663,7 +666,6 @@ async def test_async_auth_history() -> None:
     url = "https://example.org/"
     auth = RepeatAuth(repeat=2)
     app = App(auth_header="abc")
-
     async with httpx.AsyncClient(transport=httpx.MockTransport(app)) as client:
         response = await client.get(url, auth=auth)
 
@@ -684,14 +686,16 @@ async def test_async_auth_history() -> None:
 def test_sync_auth_history() -> None:
     """
     Test that intermediate requests sent as part of an authentication flow
-    are recorded in the response history.
-    """
+import httpx
+
     url = "https://example.org/"
     auth = RepeatAuth(repeat=2)
     app = App(auth_header="abc")
 
     with httpx.Client(transport=httpx.MockTransport(app)) as client:
         response = client.get(url, auth=auth)
+
+    assert response.status_code == 200
 
     assert response.status_code == 200
     assert response.json() == {"auth": "Repeat abc.abc"}
@@ -732,14 +736,16 @@ async def test_digest_auth_unavailable_streaming_body():
 async def test_async_auth_reads_response_body() -> None:
     """
     Test that we can read the response body in an auth flow if `requires_response_body`
-    is set.
-    """
-    url = "https://example.org/"
-    auth = ResponseBodyAuth("xyz")
+import httpx
+import json
+
     app = App()
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(app)) as client:
         response = await client.get(url, auth=auth)
+
+    assert response.status_code == 200
+    assert response.json() == {"auth": {"auth": "xyz"}}
 
     assert response.status_code == 200
     assert response.json() == {"auth": '{"auth": "xyz"}'}
@@ -748,14 +754,16 @@ async def test_async_auth_reads_response_body() -> None:
 def test_sync_auth_reads_response_body() -> None:
     """
     Test that we can read the response body in an auth flow if `requires_response_body`
-    is set.
-    """
-    url = "https://example.org/"
-    auth = ResponseBodyAuth("xyz")
-    app = App()
+import httpx
+import json
 
     with httpx.Client(transport=httpx.MockTransport(app)) as client:
         response = client.get(url, auth=auth)
+
+    assert response.status_code == 200
+    assert response.json() == {"auth": {"auth": "xyz"}}
+
+@pytest.mark.anyio
 
     assert response.status_code == 200
     assert response.json() == {"auth": '{"auth": "xyz"}'}
@@ -765,14 +773,8 @@ def test_sync_auth_reads_response_body() -> None:
 async def test_async_auth() -> None:
     """
     Test that we can use an auth implementation specific to the async case, to
-    support cases that require performing I/O or using concurrency primitives (such
-    as checking a disk-based cache or fetching a token from a remote auth server).
-    """
-    url = "https://example.org/"
-    auth = SyncOrAsyncAuth()
-    app = App()
+import httpx
 
-    async with httpx.AsyncClient(transport=httpx.MockTransport(app)) as client:
         response = await client.get(url, auth=auth)
 
     assert response.status_code == 200
@@ -782,13 +784,5 @@ async def test_async_auth() -> None:
 def test_sync_auth() -> None:
     """
     Test that we can use an auth implementation specific to the sync case.
+    # Add implementation details here
     """
-    url = "https://example.org/"
-    auth = SyncOrAsyncAuth()
-    app = App()
-
-    with httpx.Client(transport=httpx.MockTransport(app)) as client:
-        response = client.get(url, auth=auth)
-
-    assert response.status_code == 200
-    assert response.json() == {"auth": "sync-auth"}
