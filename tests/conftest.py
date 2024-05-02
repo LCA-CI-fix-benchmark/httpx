@@ -31,8 +31,10 @@ ENVIRONMENT_VARIABLES = {
 }
 
 
+import os
+
 @pytest.fixture(scope="function", autouse=True)
-def clean_environ():
+def clean_environ(ENVIRONMENT_VARIABLES):
     """Keeps os.environ clean for every test without having to mock os.environ"""
     original_environ = os.environ.copy()
     os.environ.clear()
