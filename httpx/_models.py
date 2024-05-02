@@ -1100,7 +1100,6 @@ class Cookies(typing.MutableMapping[str, str]):
         if value is None:
             return default
         return value
-
     def delete(
         self,
         name: str,
@@ -1135,13 +1134,7 @@ class Cookies(typing.MutableMapping[str, str]):
         args = []
         if domain is not None:
             args.append(domain)
-        if path is not None:
-            assert domain is not None
-            args.append(path)
-        self.jar.clear(*args)
 
-    def update(self, cookies: typing.Optional[CookieTypes] = None) -> None:  # type: ignore
-        cookies = Cookies(cookies)
         for cookie in cookies.jar:
             self.jar.set_cookie(cookie)
 

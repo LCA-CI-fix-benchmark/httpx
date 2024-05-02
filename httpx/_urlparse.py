@@ -195,10 +195,9 @@ def urlparse(url: str = "", **kwargs: typing.Optional[str]) -> ParseResult:
     # -------------------------------------------------------------
 
     for key, value in kwargs.items():
-        if value is not None:
+        if value is not None and isinstance(value, str):
             if len(value) > MAX_URL_LENGTH:
                 raise InvalidURL(f"URL component '{key}' too long")
-
             # If a component includes any ASCII control characters including \t, \r, \n,
             # then treat it as invalid.
             if any(char.isascii() and not char.isprintable() for char in value):
