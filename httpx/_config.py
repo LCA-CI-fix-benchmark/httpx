@@ -47,6 +47,7 @@ class SSLContext(ssl.SSLContext):
         self,
         verify: VerifyTypes = True,
         cert: typing.Optional[CertTypes] = None,
+        **kwargs: typing.Any,
     ) -> None:
         self.verify = verify
         set_minimum_tls_version_1_2(self)
@@ -58,6 +59,8 @@ class SSLContext(ssl.SSLContext):
             verify,
             cert,
         )
+
+        super().__init__(**kwargs)
 
         if verify:
             self.load_ssl_context_verify(cert, verify)
@@ -144,7 +147,7 @@ class SSLContext(ssl.SSLContext):
         *args: typing.Any,
         **kwargs: typing.Any,
     ) -> "SSLContext":
-        return super().__new__(cls, protocol, *args, **kwargs)
+        return super().__new__(cls, protocol)
 
 
 class Timeout:
