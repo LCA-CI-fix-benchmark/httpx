@@ -22,6 +22,9 @@ def test_load_ssl_config_verify_existing_file():
     context = httpx.SSLContext(verify=certifi.where())
     assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
     assert context.check_hostname is True
+def test_load_ssl_config_invalid_verify_path_raises_ioerror():
+    with pytest.raises(IOError):
+        httpx.SSLContext(verify="/invalid/path/to/certificate")
 
 
 def test_load_ssl_config_verify_directory():
