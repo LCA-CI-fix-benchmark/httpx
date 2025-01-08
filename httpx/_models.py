@@ -1151,8 +1151,14 @@ class Cookies(typing.MutableMapping[str, str]):
     def __getitem__(self, name: str) -> str:
         value = self.get(name)
         if value is None:
-            raise KeyError(name)
+            raise KeyError(f"Cookie '{name}' not found in the client cookies.")
         return value
+    def update_from_response(self, response_cookies: "Cookies") -> None:
+        """
+        Update the client's cookies with cookies from a response.
+        Useful for handling persistent cookies between requests.
+        """
+        self.update(response_cookies)
 
     def __delitem__(self, name: str) -> None:
         return self.delete(name)
