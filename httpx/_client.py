@@ -183,6 +183,9 @@ class BaseClient:
         self._params = QueryParams(params)
         self.headers = Headers(headers)
         self._cookies = Cookies(cookies)
+        # Ensure the state is properly configured for persistent cookies
+        if self._persistent_cookies:
+            self._cookies.jar.clear_session_cookies()
         self._persistent_cookies = persistent_cookies
         self._timeout = Timeout(timeout)
         self.follow_redirects = follow_redirects
@@ -469,6 +472,9 @@ class BaseClient:
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
         cookies = Cookies(self.cookies)
+        # Persist any cookies from the response to the client if `persistent_cookies` is enabled
+        if self._persistent_cookies:
+            cookies.extract_cookies(response)
         return Request(
             method=method,
             url=url,
