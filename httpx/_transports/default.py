@@ -29,6 +29,8 @@ from types import TracebackType
 
 import httpcore
 
+import httpcore
+
 from .._config import (
     DEFAULT_LIMITS,
     DEFAULT_NETWORK_OPTIONS,
@@ -45,7 +47,6 @@ from .._exceptions import (
     PoolTimeout,
     ProtocolError,
     ProxyError,
-    ReadError,
     ReadTimeout,
     RemoteProtocolError,
     TimeoutException,
@@ -53,8 +54,15 @@ from .._exceptions import (
     WriteError,
     WriteTimeout,
 )
+
 from .._models import Request, Response
-from .._types import AsyncByteStream, CertTypes, ProxyTypes, SyncByteStream, VerifyTypes
+from .._types import (
+    AsyncByteStream,
+    CertTypes,
+    ProxyTypes,
+    SyncByteStream,
+    VerifyTypes,
+)
 from .._urls import URL
 from .base import AsyncBaseTransport, BaseTransport
 
