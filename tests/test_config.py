@@ -16,6 +16,9 @@ def test_load_ssl_config():
 def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
+def test_load_ssl_config_invalid_verify_value():
+    with pytest.raises(IOError, match="Could not find a suitable TLS CA certificate bundle"):
+        httpx.SSLContext(verify="invalid/path/to/ca-bundle")
 
 
 def test_load_ssl_config_verify_existing_file():
