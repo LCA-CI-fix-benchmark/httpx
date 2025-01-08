@@ -60,8 +60,8 @@ except ImportError:  # pragma: no cover
 
 
 __all__ = [
-    "__description__",
     "__title__",
+    "__description__",
     "__version__",
     "ASGITransport",
     "AsyncBaseTransport",
