@@ -54,7 +54,13 @@ from .._exceptions import (
     WriteTimeout,
 )
 from .._models import Request, Response
-from .._types import AsyncByteStream, CertTypes, ProxyTypes, SyncByteStream, VerifyTypes
+from .._types import (
+    AsyncByteStream,
+    CertTypes,
+    ProxyTypes,
+    SyncByteStream,
+    VerifyTypes,
+)
 from .._urls import URL
 from .base import AsyncBaseTransport, BaseTransport
 
