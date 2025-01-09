@@ -34,7 +34,7 @@ logger = logging.getLogger("httpx")
 
 
 class UnsetType:
-    pass  # pragma: no cover
+    pass
 
 
 UNSET = UnsetType()
