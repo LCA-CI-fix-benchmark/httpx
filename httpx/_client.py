@@ -184,6 +184,9 @@ class BaseClient:
         self.headers = Headers(headers)
         self._cookies = Cookies(cookies)
         self._persistent_cookies = persistent_cookies
+        if self._persistent_cookies:
+            # Ensure cookies persist if persistent_cookies=True
+            self._cookies = Cookies(cookies)
         self._timeout = Timeout(timeout)
         self.follow_redirects = follow_redirects
         self.max_redirects = max_redirects
