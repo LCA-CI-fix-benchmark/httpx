@@ -468,7 +468,15 @@ class BaseClient:
         url = self._redirect_url(request, response)
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
-        cookies = Cookies(self.cookies)
+        
+        # Update client cookie store with any cookies from the response
+        if self._persistent_cookies:
+            self._cookies.update(response.cookies)
+            cookies = Cookies(self.cookies)
+        else:
+            cookies = Cookies(request.cookies)
+            cookies.update(response.cookies)
+            
         return Request(
             method=method,
             url=url,
@@ -794,6 +802,27 @@ class Client(BaseClient):
         timeout: typing.Union[TimeoutTypes, UseClientDefault] = USE_CLIENT_DEFAULT,
         extensions: typing.Optional[RequestExtensions] = None,
     ) -> Response:
+        # Update client cookie store after receiving response if persistence is enabled
+        response = super().request(
+            method,
+            url,
+            content=content,
+            data=data,
+            files=files,
+            json=json,
+            params=params,
+            headers=headers,
+            cookies=cookies,
+            auth=auth,
+            follow_redirects=follow_redirects,
+            timeout=timeout,
+            extensions=extensions,
+        )
+        
+        if self._persistent_cookies:
+            self._cookies.update(response.cookies)
+            
+        return response
         """
         Build and send a request.
 
