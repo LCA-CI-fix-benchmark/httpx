@@ -85,7 +85,7 @@ class SSLContext(ssl.SSLContext):
             ca_bundle_path = self.DEFAULT_CA_BUNDLE_PATH
         elif Path(verify).exists():
             ca_bundle_path = Path(verify)
-        else:
+        elif not isinstance(verify, bool): # only raise error if path is given but invalid
             raise IOError(
                 "Could not find a suitable TLS CA certificate bundle, "
                 "invalid path: {}".format(verify)
