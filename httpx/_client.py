@@ -501,6 +501,7 @@ class BaseClient:
 
         return method
 
+
     def _redirect_url(self, request: Request, response: Response) -> URL:
         """
         Return the URL for the redirect to follow.
@@ -776,6 +777,15 @@ class Client(BaseClient):
                 return self._transport if transport is None else transport
 
         return self._transport
+
+    def _set_cookies(self, cookies: typing.Optional[CookieTypes]=None):
+        if cookies:
+            client_cookies = Cookies(self.cookies)
+            client_cookies.update(cookies)
+            self._cookies = client_cookies
+
+        return self._cookies
+
 
     def request(
         self,
