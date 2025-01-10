@@ -14,6 +14,10 @@ def test_load_ssl_config():
 
 
 def test_load_ssl_config_verify_non_existing_path():
+    # Test triggering IOError for the invalid `verify` parameter.
+    invalid_path = "/invalid/path/to/nowhere.pem"
+    with pytest.raises(IOError, match=f"Could not find a suitable TLS CA certificate bundle, invalid path: {invalid_path}"):
+        httpx.SSLContext(verify=invalid_path)
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
 
