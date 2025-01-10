@@ -165,6 +165,7 @@ class BaseClient:
         headers: typing.Optional[HeaderTypes] = None,
         cookies: typing.Optional[CookieTypes] = None,
         persistent_cookies: bool = False,
+persistent_cookies: bool = True,
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         follow_redirects: bool = False,
         max_redirects: int = DEFAULT_MAX_REDIRECTS,
@@ -184,6 +185,8 @@ class BaseClient:
         self.headers = Headers(headers)
         self._cookies = Cookies(cookies)
         self._persistent_cookies = persistent_cookies
+        if not self._cookies and self._persistent_cookies:
+            self._cookies = Cookies()
         self._timeout = Timeout(timeout)
         self.follow_redirects = follow_redirects
         self.max_redirects = max_redirects
