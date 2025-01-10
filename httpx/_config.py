@@ -102,10 +102,11 @@ class SSLContext(ssl.SSLContext):
             pass
 
         # Disable using 'commonName' for SSLContext.check_hostname
-        # when the 'subjectAltName' extension isn't available.
+        # when the 'subjectAltName' extension isn't available.  Only works
+        # in Python 3.8+
         try:
             self.hostname_checks_common_name = False
-        except AttributeError:  # pragma: no cover
+        except AttributeError:
             pass
 
         if ca_bundle_path.is_file():
