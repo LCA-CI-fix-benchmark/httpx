@@ -1,37 +1,17 @@
 from .__version__ import __description__, __title__, __version__
-from ._api import delete, get, head, options, patch, post, put, request, stream
+from ._api import delete, get, head, options, patch, post, put, request, \
+    stream
 from ._auth import Auth, BasicAuth, DigestAuth, NetRCAuth
 from ._client import USE_CLIENT_DEFAULT, AsyncClient, Client
-from ._config import Limits, Proxy, Timeout, SSLContext
+from ._config import Limits, Proxy, SSLContext, Timeout
 from ._content import ByteStream
 from ._exceptions import (
-    CloseError,
-    ConnectError,
-    ConnectTimeout,
-    CookieConflict,
-    DecodingError,
-    HTTPError,
-    HTTPStatusError,
-    InvalidURL,
-    LocalProtocolError,
-    NetworkError,
-    PoolTimeout,
-    ProtocolError,
-    ProxyError,
-    ReadError,
-    ReadTimeout,
-    RemoteProtocolError,
-    RequestError,
-    RequestNotRead,
-    ResponseNotRead,
-    StreamClosed,
-    StreamConsumed,
-    StreamError,
-    TimeoutException,
-    TooManyRedirects,
-    TransportError,
-    UnsupportedProtocol,
-    WriteError,
+    CloseError, ConnectError, ConnectTimeout, CookieConflict, DecodingError,
+    HTTPError, HTTPStatusError, InvalidURL, LocalProtocolError, NetworkError,
+    PoolTimeout, ProtocolError, ProxyError, ReadError, ReadTimeout,
+    RemoteProtocolError, RequestError, RequestNotRead, ResponseNotRead,
+    StreamClosed, StreamConsumed, StreamError, TimeoutException,
+    TooManyRedirects, TransportError, UnsupportedProtocol, WriteError,
     WriteTimeout,
 )
 from ._models import Cookies, Headers, Request, Response
@@ -41,7 +21,7 @@ from ._transports.base import AsyncBaseTransport, BaseTransport
 from ._transports.default import AsyncHTTPTransport, HTTPTransport
 from ._transports.mock import MockTransport
 from ._transports.wsgi import WSGITransport
-from ._types import AsyncByteStream, SyncByteStream
+from ._types import AsyncByteStream, SyncByteStream  # ordering preserved
 from ._urls import URL, QueryParams
 
 try:
