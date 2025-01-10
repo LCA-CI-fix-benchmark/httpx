@@ -1,13 +1,13 @@
 """
 Custom transports, with nicely configured defaults.
 
-The following additional keyword arguments are currently supported by httpcore...
+The following additional keyword arguments are currently supported by httpcore:
 
 * uds: str
 * local_address: str
 * retries: int
 
-Example usages...
+Example usages:
 
 # Disable HTTP/2 on a single specific domain.
 mounts = {
