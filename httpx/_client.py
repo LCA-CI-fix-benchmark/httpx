@@ -535,6 +535,7 @@ class BaseClient:
         Return the headers that should be used for the redirect request.
         """
         headers = Headers(request.headers)
+        headers.update(self.cookies)
 
         if not same_origin(url, request.url):
             if not is_https_redirect(request.url, url):
