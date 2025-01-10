@@ -41,12 +41,33 @@ UNSET = UnsetType()
 
 
 class SSLContext(ssl.SSLContext):
+    MAX_RETRY_ATTEMPTS = 3
+
     DEFAULT_CA_BUNDLE_PATH = Path(certifi.where())
 
     def __init__(
         self,
         verify: VerifyTypes = True,
         cert: typing.Optional[CertTypes] = None,
+    ) -> None:
+        super().__init__()
+        self.verify = verify
+        set_minimum_tls_version_1_2(self)
+        self.options |= ssl.OP_NO_COMPRESSION
+        self.set_ciphers(DEFAULT_CIPHERS)
+
+        logger.debug(
+            "load_ssl_context verify=%r cert=%r",
+            verify,
+            cert,
+        )
+
+        if verify:
+            self.load_ssl_context_verify(cert, verify)
+        else:
+            self.load_ssl_context_no_verify(cert)
+
+
     ) -> None:
         self.verify = verify
         set_minimum_tls_version_1_2(self)
