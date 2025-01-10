@@ -184,6 +184,7 @@ class BaseClient:
         self.headers = Headers(headers)
         self._cookies = Cookies(cookies)
         self._persistent_cookies = persistent_cookies
+        self._session_cookies = Cookies()  # Store cookies received during the session
         self._timeout = Timeout(timeout)
         self.follow_redirects = follow_redirects
         self.max_redirects = max_redirects
@@ -303,7 +304,10 @@ class BaseClient:
         """
         Cookie values to include when sending requests.
         """
-        return self._cookies
+        # Merge client cookies with session cookies
+        merged_cookies = Cookies(self._cookies)
+        merged_cookies.update(self._session_cookies)
+        return merged_cookies
 
     @cookies.setter
     def cookies(self, cookies: CookieTypes) -> None:
