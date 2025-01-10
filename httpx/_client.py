@@ -396,11 +396,17 @@ class BaseClient:
     def _merge_cookies(
         self, cookies: typing.Optional[CookieTypes] = None
     ) -> typing.Optional[CookieTypes]:
-        """
-        Merge a cookies argument together with any cookies on the client,
-        to create the cookies used for the outgoing request.
-        """
-        if cookies or self.cookies:
+        if cookies or self._persistent_cookies:
+            # If a cookies argument has been explicitly passed, or persistent cookies are enabled, then use a
+            # fresh copy of the client cookies. This ensures we preserve cookies for later requests, since they
+            # are mutated as part of the request cycle.
+            merged_cookies = Cookies(self._cookies)
+            if not self._persistent_cookies and cookies:
+                # If a cookies argument was passed, but persistent cookies are disabled, the user intends to override client cookies
+                merged_cookies = Cookies()
+            merged_cookies.update(cookies)
+            return merged_cookies
+        elif self.cookies:
             merged_cookies = Cookies(self.cookies)
             merged_cookies.update(cookies)
             return merged_cookies
