@@ -4,7 +4,27 @@ from pathlib import Path
 import certifi
 import pytest
 
+import typing
 import httpx
+
+class ReadOnlySSLContext(httpx.SSLContext):
+    @property
+    def post_handshake_auth(self) -> bool:
+        return False
+
+    @post_handshake_auth.setter
+    def post_handshake_auth(self, value: bool) -> None:
+        raise AttributeError("Read-only property")
+
+@pytest.mark.parametrize("context_cls", [
+    ReadOnlySSLContext,
+])
+def test_load_ssl_config_readonly_context(context_cls: typing.Type[httpx.SSLContext]) -> None:
+    """Test SSLContext with read-only post_handshake_auth attribute."""
+    context = context_cls()
+    # This should not raise an error, the except AttributeError should handle it
+    assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
+    assert context.check_hostname is True
 
 
 def test_load_ssl_config():
