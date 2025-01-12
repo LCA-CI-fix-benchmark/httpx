@@ -468,6 +468,9 @@ class BaseClient:
         url = self._redirect_url(request, response)
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
+        # Update client cookie store with any cookies from the response
+        if self._persistent_cookies and response.cookies:
+            self._cookies.update(response.cookies)
         cookies = Cookies(self.cookies)
         return Request(
             method=method,
