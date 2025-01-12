@@ -42,7 +42,8 @@ from ._transports.default import AsyncHTTPTransport, HTTPTransport
 from ._transports.mock import MockTransport
 from ._transports.wsgi import WSGITransport
 from ._types import AsyncByteStream, SyncByteStream
-from ._urls import URL, QueryParams
+from ._urls import QueryParams, URL
+from .__version__ import __description__, __title__, __version__
 
 try:
     from ._main import main
