@@ -23,6 +23,14 @@ def test_load_ssl_config_verify_existing_file():
     assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
     assert context.check_hostname is True
 
+def test_load_ssl_config_verify_invalid_cafile(tmp_path):
+    # Create a special file that's neither a regular file nor directory
+    # (e.g., a named pipe/FIFO)
+    import os
+    fifo_path = tmp_path / "test.fifo"
+    os.mkfifo(fifo_path)
+    with pytest.raises(IOError):
+        httpx.SSLContext(verify=str(fifo_path))
 
 def test_load_ssl_config_verify_directory():
     path = Path(certifi.where()).parent
