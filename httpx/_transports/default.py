@@ -121,6 +121,8 @@ class HTTPTransport(BaseTransport):
     def __init__(
         self,
         ssl_context: typing.Optional[ssl.SSLContext] = None,
+        verify: typing.Union[str, bool, None] = True,
+        cert: typing.Union[str, typing.Tuple[str, str], None] = None,
         http1: bool = True,
         http2: bool = False,
         limits: Limits = DEFAULT_LIMITS,
