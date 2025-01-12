@@ -300,6 +300,15 @@ class BaseClient:
 
     @property
     def cookies(self) -> Cookies:
+        if self._persistent_cookies:
+            for cookie in self._cookies.jar:
+                if cookie.is_expired():
+                    del self._cookies.jar[cookie.name]
+
+            for domain in self._cookies.domain_jar:
+                for path in self._cookies.domain_jar[domain]:
+                    self._cookies.domain_jar[domain][path] = [cookie for cookie in self._cookies.domain_jar[domain][path] if not cookie.is_expired()]
+        
         """
         Cookie values to include when sending requests.
         """
@@ -469,6 +478,15 @@ class BaseClient:
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
         cookies = Cookies(self.cookies)
+
+        if self._persistent_cookies and response.cookies:
+            for cookie in response.cookies:
+                cookies.jar[cookie.name] = cookie
+                cookies.domain_jar\
+                    .setdefault(cookie.domain.lower(), {})\
+                    .setdefault(cookie.path.lower(), [])\
+                    .append(cookie)
+
         return Request(
             method=method,
             url=url,
