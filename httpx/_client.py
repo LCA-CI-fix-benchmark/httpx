@@ -635,8 +635,8 @@ class Client(BaseClient):
             typing.Mapping[str, typing.List[EventHook]]
         ] = None,
         base_url: URLTypes = "",
-        transport: typing.Optional[BaseTransport] = None,
-        app: typing.Optional[typing.Callable[..., typing.Any]] = None,
+        transport: typing.Optional[SyncBaseTransport] = None,
+        app: typing.Optional[typing.Callable] = None,
         trust_env: bool = True,
         default_encoding: typing.Union[str, typing.Callable[[bytes], str]] = "utf-8",
     ) -> None:
@@ -680,7 +680,7 @@ class Client(BaseClient):
             http1=http1,
             http2=http2,
             limits=limits,
-            transport=transport,
+            transport=typing.cast(SyncBaseTransport, transport),
             app=app,
         )
         self._mounts: typing.Dict[URLPattern, typing.Optional[BaseTransport]] = {
