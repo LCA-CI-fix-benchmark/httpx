@@ -62,6 +62,12 @@ def test_load_ssl_config_cert_without_key_raises(cert_pem_file):
         httpx.SSLContext(cert=cert_pem_file)
 
 
+def test_load_ssl_config_verify_invalid_path():
+    with pytest.raises(IOError, match="Could not find a suitable TLS CA certificate bundle, invalid path:"):
+        context = httpx.SSLContext(verify="/invalid/path")
+        assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
+
+
 def test_load_ssl_config_no_verify():
     context = httpx.SSLContext(verify=False)
     assert context.verify_mode == ssl.VerifyMode.CERT_NONE
