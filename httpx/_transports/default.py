@@ -26,9 +26,7 @@ client = httpx.Client(transport=transport)
 import contextlib
 import typing
 from types import TracebackType
-
 import httpcore
-
 from .._config import (
     DEFAULT_LIMITS,
     DEFAULT_NETWORK_OPTIONS,
