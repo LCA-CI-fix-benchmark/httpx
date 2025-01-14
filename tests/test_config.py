@@ -170,3 +170,8 @@ def test_proxy_with_auth_from_url():
 def test_invalid_proxy_scheme():
     with pytest.raises(ValueError):
         httpx.Proxy("invalid://example.com")
+
+def test_SSLContext_keylog_filename():
+    context = httpx.SSLContext()
+    context.keylog_filename = "/tmp/test.log"
+    assert context.keylog_filename == "/tmp/test.log"
