@@ -27,8 +27,6 @@ import contextlib
 import typing
 from types import TracebackType
 
-import httpcore
-
 from .._config import (
     DEFAULT_LIMITS,
     DEFAULT_NETWORK_OPTIONS,
@@ -37,6 +35,8 @@ from .._config import (
     NetworkOptions,
     create_ssl_context,
 )
+import httpcore
+
 from .._exceptions import (
     ConnectError,
     ConnectTimeout,
