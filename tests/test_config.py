@@ -13,6 +13,14 @@ def test_load_ssl_config():
     assert context.check_hostname is True
 
 
+def test_ssl_context_repr():
+    context = httpx.SSLContext()
+    assert repr(context) == "<SSLContext [verify=True]>"
+    
+    context = httpx.SSLContext(verify=False)
+    assert repr(context) == "<SSLContext [verify=False]>"
+
+
 def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
