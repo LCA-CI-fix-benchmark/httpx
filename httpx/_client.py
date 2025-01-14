@@ -394,15 +394,24 @@ class BaseClient:
         return merge_url
 
     def _merge_cookies(
-        self, cookies: typing.Optional[CookieTypes] = None
+        self, request: Request, cookies: typing.Optional[CookieTypes] = None
     ) -> typing.Optional[CookieTypes]:
         """
         Merge a cookies argument together with any cookies on the client,
         to create the cookies used for the outgoing request.
         """
+        if self._persistent_cookies:
+            merged_cookies = Cookies(self.cookies)
+            if cookies:
+                merged_cookies.update(cookies)
+            return merged_cookies
+        
         if cookies or self.cookies:
             merged_cookies = Cookies(self.cookies)
             merged_cookies.update(cookies)
+            return merged_cookies
+        
+        return request.cookies
             return merged_cookies
         return cookies
 
