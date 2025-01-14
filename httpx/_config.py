@@ -1,8 +1,8 @@
 import logging
 import os
-import ssl
 import typing
 from pathlib import Path
+import ssl
 
 import certifi
 
@@ -11,7 +11,6 @@ from ._models import Headers
 from ._types import CertTypes, HeaderTypes, TimeoutTypes, URLTypes, VerifyTypes
 from ._urls import URL
 from ._utils import get_ca_bundle_from_env
-
 
 SOCKET_OPTION = typing.Union[
     typing.Tuple[int, int, int],

@@ -23,10 +23,9 @@ client = httpx.Client(transport=transport)
 transport = httpx.HTTPTransport(uds="socket.uds")
 client = httpx.Client(transport=transport)
 """
+
 import contextlib
 import typing
-from types import TracebackType
-
 import httpcore
 
 from .._config import (
@@ -47,6 +46,7 @@ from .._exceptions import (
     ProxyError,
     ReadError,
     ReadTimeout,
+    from types import TracebackType,
     RemoteProtocolError,
     TimeoutException,
     UnsupportedProtocol,
