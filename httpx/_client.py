@@ -469,11 +469,13 @@ class BaseClient:
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
         cookies = Cookies(self.cookies)
+        if self._persistent_cookies and response.cookies:
+            cookies.update(response.cookies)
         return Request(
             method=method,
             url=url,
             headers=headers,
-            cookies=cookies,
+            cookies=cookies if self._persistent_cookies else None,
             stream=stream,
             extensions=request.extensions,
         )
