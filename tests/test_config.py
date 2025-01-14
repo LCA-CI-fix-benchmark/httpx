@@ -7,6 +7,13 @@ import pytest
 import httpx
 
 
+def test_load_ssl_config_with_verify_as_path():
+    context = httpx.SSLContext(verify="/path/to/cert.pem")
+    assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
+    assert context.check_hostname is True
+    assert isinstance(context.verify, str)
+    assert context.verify == "/path/to/cert.pem"
+
 def test_load_ssl_config():
     context = httpx.SSLContext()
     assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
