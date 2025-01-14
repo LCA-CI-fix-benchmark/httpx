@@ -620,6 +620,8 @@ class Client(BaseClient):
         headers: typing.Optional[HeaderTypes] = None,
         cookies: typing.Optional[CookieTypes] = None,
         ssl_context: typing.Optional[ssl.SSLContext] = None,
+        verify: typing.Union[bool, str] = True,
+        cert: typing.Optional[typing.Union[str, typing.Tuple[str, str]]] = None,
         http1: bool = True,
         http2: bool = False,
         proxy: typing.Optional[ProxyTypes] = None,
@@ -680,6 +682,8 @@ class Client(BaseClient):
             http1=http1,
             http2=http2,
             limits=limits,
+            verify=verify,
+            cert=cert,
             transport=transport,
             app=app,
         )
