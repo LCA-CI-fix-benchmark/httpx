@@ -464,11 +464,15 @@ class BaseClient:
         Given a request and a redirect response, return a new request that
         should be used to effect the redirect.
         """
+        if self._persistent_cookies:
+            self._store_cookies(response)
+            
         method = self._redirect_method(request, response)
         url = self._redirect_url(request, response)
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
-        cookies = Cookies(self.cookies)
+        cookies = self._cookies if self._persistent_cookies else Cookies(self.cookies)
+        
         return Request(
             method=method,
             url=url,
