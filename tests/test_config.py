@@ -17,6 +17,13 @@ def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
 
+@pytest.mark.parametrize("verify_path", [
+    "nonexistent.pem",
+    Path("nonexistent.pem"),
+])
+def test_load_ssl_config_verify_non_existing_path_variants(verify_path):
+    with pytest.raises(IOError, match="Could not find a suitable TLS CA certificate bundle"):
+        httpx.SSLContext(verify=verify_path)
 
 def test_load_ssl_config_verify_existing_file():
     context = httpx.SSLContext(verify=certifi.where())
