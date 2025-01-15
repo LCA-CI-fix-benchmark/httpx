@@ -1,11 +1,11 @@
+import certifi
 import logging
 import os
 import ssl
 import typing
 from pathlib import Path
 
-import certifi
-
+from ._compat import set_minimum_tls_version_1_2 
 from ._compat import set_minimum_tls_version_1_2
 from ._models import Headers
 from ._types import CertTypes, HeaderTypes, TimeoutTypes, URLTypes, VerifyTypes
