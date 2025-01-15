@@ -765,6 +765,15 @@ class Client(BaseClient):
             trust_env=trust_env,
             proxy=proxy,
         )
+        return HTTPTransport(
+            verify=verify,
+            cert=cert,
+            http1=http1,
+            http2=http2,
+            limits=limits,
+            trust_env=trust_env,
+            proxy=proxy,
+        )
 
     def _transport_for_url(self, url: URL) -> BaseTransport:
         """
