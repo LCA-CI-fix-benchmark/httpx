@@ -4,17 +4,26 @@ from ._auth import Auth, BasicAuth, DigestAuth, NetRCAuth
 from ._client import USE_CLIENT_DEFAULT, AsyncClient, Client
 from ._config import Limits, Proxy, Timeout, SSLContext
 from ._content import ByteStream
+from ._api import delete, get, head, options, patch, post, put, request, stream
+from ._auth import Auth, BasicAuth, DigestAuth, NetRCAuth
+from ._client import AsyncClient, Client, USE_CLIENT_DEFAULT
+from ._config import Limits, Proxy, SSLContext, Timeout
+from ._content import ByteStream
 from ._exceptions import (
     CloseError,
     ConnectError,
     ConnectTimeout,
+    ConnectTimeout,
     CookieConflict,
+    DecodingError,
     DecodingError,
     HTTPError,
     HTTPStatusError,
     InvalidURL,
     LocalProtocolError,
+    LocalProtocolError,
     NetworkError,
+    PoolTimeout,
     PoolTimeout,
     ProtocolError,
     ProxyError,
