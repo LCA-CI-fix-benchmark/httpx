@@ -715,7 +715,7 @@ class Client(BaseClient):
             return transport
 
         if app is not None:
-            return WSGITransport(app=app)
+            return WSGITransport(app=app, trust_env=self.trust_env)
 
         return HTTPTransport(
             ssl_context=ssl_context,
