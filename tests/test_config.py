@@ -17,6 +17,14 @@ def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
 
+def test_load_ssl_config_verify_logging_for_custom_path(caplog):
+    custom_path = "/path/to/custom/ca.pem"
+    with caplog.at_level("DEBUG", logger="httpx"):
+        context = httpx.SSLContext(verify=custom_path)
+        assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
+        assert context.check_hostname is True
+        assert f"Using custom CA bundle path: {custom_path}" in caplog.text
+
 
 def test_load_ssl_config_verify_existing_file():
     context = httpx.SSLContext(verify=certifi.where())

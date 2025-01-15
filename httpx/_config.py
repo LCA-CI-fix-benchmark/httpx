@@ -85,6 +85,7 @@ class SSLContext(ssl.SSLContext):
             ca_bundle_path = self.DEFAULT_CA_BUNDLE_PATH
         elif Path(verify).exists():
             ca_bundle_path = Path(verify)
+            logger.debug("Using custom CA bundle path: %s", ca_bundle_path)
         else:
             raise IOError(
                 "Could not find a suitable TLS CA certificate bundle, "
