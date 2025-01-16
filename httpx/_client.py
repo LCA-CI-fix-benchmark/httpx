@@ -468,12 +468,19 @@ class BaseClient:
         url = self._redirect_url(request, response)
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
-        cookies = Cookies(self.cookies)
+        
+        # Update client cookies with any set in the response
+        if self._persistent_cookies and "set-cookie" in response.headers:
+            self._cookies.merge(response.cookies)
+            
+        # Build cookies for redirect request from current client state
+        cookies = Cookies(self._cookies)
+        
         return Request(
             method=method,
             url=url,
             headers=headers,
-            cookies=cookies,
+            cookies=cookies, 
             stream=stream,
             extensions=request.extensions,
         )
