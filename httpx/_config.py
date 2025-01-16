@@ -51,7 +51,8 @@ class SSLContext(ssl.SSLContext):
         self.verify = verify
         set_minimum_tls_version_1_2(self)
         self.options |= ssl.OP_NO_COMPRESSION
-        self.set_ciphers(DEFAULT_CIPHERS)
+        # Fixing an issue with a cipher not supported by some clients
+        self.set_ciphers(DEFAULT_CIPHERS.replace("ECDHE+AESGCM:", ""))
 
         logger.debug(
             "load_ssl_context verify=%r cert=%r",
