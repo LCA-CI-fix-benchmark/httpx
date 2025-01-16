@@ -164,6 +164,7 @@ class BaseClient:
         params: typing.Optional[QueryParamTypes] = None,
         headers: typing.Optional[HeaderTypes] = None,
         cookies: typing.Optional[CookieTypes] = None,
+        persistent_cookies: bool = True,  # Change default to True
         persistent_cookies: bool = False,
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         follow_redirects: bool = False,
