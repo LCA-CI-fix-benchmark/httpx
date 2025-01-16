@@ -705,6 +705,8 @@ class Client(BaseClient):
     def _init_transport(
         self,
         ssl_context: typing.Optional[ssl.SSLContext],
+        verify: typing.Union[bool, str] = True,
+        cert: typing.Union[None, str, typing.Tuple[str, str]] = None,
         http1: bool = True,
         http2: bool = False,
         limits: Limits = DEFAULT_LIMITS,
