@@ -23,6 +23,12 @@ def test_load_ssl_config_verify_existing_file():
     assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
     assert context.check_hostname is True
 
+def test_load_ssl_config_verify_non_existing_directory():
+    non_existing_dir = "/path/to/nowhere/certs/"
+    with pytest.raises(IOError) as exc_info:
+        httpx.SSLContext(verify=non_existing_dir)
+    assert "Could not find a suitable TLS CA certificate bundle" in str(exc_info.value)
+    assert "invalid path:" in str(exc_info.value)
 
 def test_load_ssl_config_verify_directory():
     path = Path(certifi.where()).parent
