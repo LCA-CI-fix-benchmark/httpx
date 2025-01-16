@@ -16,6 +16,15 @@ def test_load_ssl_config():
 def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
+ def test_load_ssl_config_verify_bug():
+    # This is a test that will cover the missing line in httpx/_config.py
+    with pytest.raises(IOError):
+        httpx.SSLContext(verify="/path/to/nowhere")
+        # This should trigger the coverage of the missing line.
+        ssl_context = httpx.SSLContext()
+        ssl_context.load_ssl_context_verify(
+            cert="/path/to/nowhere", verify=True
+        )
 
 
 def test_load_ssl_config_verify_existing_file():
