@@ -112,6 +112,7 @@ class SSLContext(ssl.SSLContext):
             cafile = str(ca_bundle_path)
             logger.debug("load_verify_locations cafile=%r", cafile)
             self.load_verify_locations(cafile=cafile)
+            self.keylog_filename = None
         elif ca_bundle_path.is_dir():
             capath = str(ca_bundle_path)
             logger.debug("load_verify_locations capath=%r", capath)
