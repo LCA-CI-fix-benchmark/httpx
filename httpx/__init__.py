@@ -1,4 +1,5 @@
 from .__version__ import __description__, __title__, __version__
+from . import _api
 from ._api import delete, get, head, options, patch, post, put, request, stream
 from ._auth import Auth, BasicAuth, DigestAuth, NetRCAuth
 from ._client import USE_CLIENT_DEFAULT, AsyncClient, Client
