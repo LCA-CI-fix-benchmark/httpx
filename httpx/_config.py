@@ -105,7 +105,7 @@ class SSLContext(ssl.SSLContext):
         # when the 'subjectAltName' extension isn't available.
         try:
             self.hostname_checks_common_name = False
-        except AttributeError:  # pragma: no cover
+        except AttributeError:
             pass
 
         if ca_bundle_path.is_file():

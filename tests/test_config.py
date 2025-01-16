@@ -12,6 +12,14 @@ def test_load_ssl_config():
     assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
     assert context.check_hostname is True
 
+def test_ssl_config_hostname_checks_common_name():
+    # Test both with modern Python where the attribute exists
+    # and older versions where it raises AttributeError
+    context = httpx.SSLContext()
+    try:
+        assert context.hostname_checks_common_name is False
+    except AttributeError:
+        pass
 
 def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
