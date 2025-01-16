@@ -10,7 +10,6 @@ httpx.ConnectError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: 
 ```
 
 You can configure the verification using `httpx.SSLContext()`.
-
 ```pycon
 >>> ssl_context = httpx.SSLContext()
 >>> ssl_context
