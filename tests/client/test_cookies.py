@@ -144,7 +144,7 @@ def test_get_cookie() -> None:
     response = client.get(url)
 
     assert response.status_code == 200
-    assert response.cookies["example-name"] == "example-value"
+    assert response.cookies.get("example-name", "default") == "example-value"
     assert client.cookies["example-name"] == "example-value"
 
 
