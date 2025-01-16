@@ -731,7 +731,7 @@ class Client(BaseClient):
         http1: bool = True,
         http2: bool = False,
         limits: Limits = DEFAULT_LIMITS,
-    ) -> BaseTransport:
+    ) -> HTTPTransport:
         return HTTPTransport(
             ssl_context=ssl_context,
             http1=http1,
