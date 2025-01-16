@@ -183,6 +183,9 @@ class BaseClient:
         self._params = QueryParams(params)
         self.headers = Headers(headers)
         self._cookies = Cookies(cookies)
+        # Ensure cookies persist across requests if the option is enabled
+        if persistent_cookies:
+            self._cookies.update(cookies)
         self._persistent_cookies = persistent_cookies
         self._timeout = Timeout(timeout)
         self.follow_redirects = follow_redirects
