@@ -170,3 +170,13 @@ def test_proxy_with_auth_from_url():
 def test_invalid_proxy_scheme():
     with pytest.raises(ValueError):
         httpx.Proxy("invalid://example.com")
+
+def test_load_ssl_config_verify_invalid_path_type(tmp_path):
+    # Create a special file (like a socket or FIFO) that is neither a regular file nor directory
+    import os
+    fifo_path = tmp_path / "test.fifo"
+    os.mkfifo(fifo_path)
+    
+    with pytest.raises(IOError) as exc_info:
+        httpx.SSLContext(verify=str(fifo_path))
+    assert "invalid path" in str(exc_info.value)
