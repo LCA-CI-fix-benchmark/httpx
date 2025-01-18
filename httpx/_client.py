@@ -705,6 +705,8 @@ class Client(BaseClient):
     def _init_transport(
         self,
         ssl_context: typing.Optional[ssl.SSLContext],
+        verify: typing.Union[str, bool, ssl.SSLContext] = True,
+        cert: typing.Optional[typing.Union[str, typing.Tuple[str, str]]] = None,
         http1: bool = True,
         http2: bool = False,
         limits: Limits = DEFAULT_LIMITS,
@@ -722,6 +724,8 @@ class Client(BaseClient):
             http1=http1,
             http2=http2,
             limits=limits,
+            verify=verify,
+            cert=cert,
         )
 
     def _init_proxy_transport(
