@@ -400,6 +400,10 @@ class BaseClient:
         Merge a cookies argument together with any cookies on the client,
         to create the cookies used for the outgoing request.
         """
+        # Update client cookie store from response if enabled
+        if self._persistent_cookies and hasattr(cookies, "_cookies"):
+            self._cookies.update(cookies)
+            
         if cookies or self.cookies:
             merged_cookies = Cookies(self.cookies)
             merged_cookies.update(cookies)
@@ -468,7 +472,14 @@ class BaseClient:
         url = self._redirect_url(request, response)
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
-        cookies = Cookies(self.cookies)
+        
+        # Update client cookie store if persistent cookies enabled
+        if self._persistent_cookies and "set-cookie" in response.headers:
+            self._cookies.extract_cookies(response)
+        
+        # Use updated client cookies for redirect
+        cookies = Cookies(self._cookies)
+        
         return Request(
             method=method,
             url=url,
