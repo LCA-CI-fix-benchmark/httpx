@@ -23,6 +23,15 @@ def test_load_ssl_config_verify_existing_file():
     assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
     assert context.check_hostname is True
 
+def test_load_ssl_config_verify_raises_on_invalid_path():
+    class MockPath:
+        def is_file(self): return False
+        def is_dir(self): return False
+        def exists(self): return True
+        def __str__(self): return "/mock/invalid/path"
+
+    with pytest.raises(IOError, match="Could not find a suitable TLS CA certificate bundle"):
+        httpx.SSLContext(verify=MockPath())
 
 def test_load_ssl_config_verify_directory():
     path = Path(certifi.where()).parent
