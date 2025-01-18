@@ -2,15 +2,14 @@ import logging
 import os
 import ssl
 import typing
+import certifi
 from pathlib import Path
 
-import certifi
-
 from ._compat import set_minimum_tls_version_1_2
+from ._utils import get_ca_bundle_from_env
 from ._models import Headers
 from ._types import CertTypes, HeaderTypes, TimeoutTypes, URLTypes, VerifyTypes
 from ._urls import URL
-from ._utils import get_ca_bundle_from_env
 
 
 SOCKET_OPTION = typing.Union[
