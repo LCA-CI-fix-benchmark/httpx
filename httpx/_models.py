@@ -1148,10 +1148,12 @@ class Cookies(typing.MutableMapping[str, str]):
     def __setitem__(self, name: str, value: str) -> None:
         return self.set(name, value)
 
+    def __missing__(self, key):
+        return None
+
     def __getitem__(self, name: str) -> str:
         value = self.get(name)
-        if value is None:
-            raise KeyError(name)
+        return value if value is not None else None
         return value
 
     def __delitem__(self, name: str) -> None:
