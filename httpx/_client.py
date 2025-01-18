@@ -717,7 +717,7 @@ class Client(BaseClient):
         if app is not None:
             return WSGITransport(app=app)
 
-        return HTTPTransport(
+        return AsyncHTTPTransport(
             ssl_context=ssl_context,
             http1=http1,
             http2=http2,
@@ -732,7 +732,7 @@ class Client(BaseClient):
         http2: bool = False,
         limits: Limits = DEFAULT_LIMITS,
     ) -> BaseTransport:
-        return HTTPTransport(
+        return AsyncHTTPTransport(
             ssl_context=ssl_context,
             http1=http1,
             http2=http2,
