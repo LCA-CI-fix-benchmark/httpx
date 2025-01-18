@@ -724,10 +724,12 @@ class Client(BaseClient):
             limits=limits,
         )
 
-    def _init_proxy_transport(
+    def _init_proxy_transport(  
         self,
         proxy: Proxy,
         ssl_context: typing.Optional[ssl.SSLContext] = None,
+        verify: typing.Optional[bool] = True,
+        cert: typing.Optional[typing.Union[str, typing.Tuple[str, str]]] = None,
         http1: bool = True,
         http2: bool = False,
         limits: Limits = DEFAULT_LIMITS,
