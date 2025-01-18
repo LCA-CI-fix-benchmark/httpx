@@ -13,9 +13,14 @@ def test_load_ssl_config():
     assert context.check_hostname is True
 
 
-def test_load_ssl_config_verify_non_existing_path():
+@pytest.mark.parametrize(
+    "invalid_path",
+    ["/path/to/nowhere", "invalid_path_string"]
+)
+def test_load_ssl_config_verify_invalid_path(invalid_path):
+    """Test both non-existing paths and invalid path strings."""
     with pytest.raises(IOError):
-        httpx.SSLContext(verify="/path/to/nowhere")
+        httpx.SSLContext(verify=invalid_path)
 
 
 def test_load_ssl_config_verify_existing_file():
