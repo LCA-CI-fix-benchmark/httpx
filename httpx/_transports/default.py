@@ -27,6 +27,35 @@ import contextlib
 import typing
 from types import TracebackType
 
+from .._config import (
+    DEFAULT_LIMITS,
+    DEFAULT_NETWORK_OPTIONS,
+    Proxy,
+    Limits,
+    NetworkOptions,
+    create_ssl_context,
+)
+from .._exceptions import (
+    ConnectError,
+    ConnectTimeout,
+    LocalProtocolError,
+    NetworkError,
+    PoolTimeout,
+    ProtocolError,
+    ProxyError,
+    ReadError,
+    ReadTimeout,
+    RemoteProtocolError,
+    TimeoutException,
+    UnsupportedProtocol,
+    WriteError,
+    WriteTimeout,
+)
+from .._models import Request, Response
+from .._types import AsyncByteStream, CertTypes, ProxyTypes, SyncByteStream, VerifyTypes
+from .._urls import URL
+from .base import AsyncBaseTransport, BaseTransport
+
 import httpcore
 
 from .._config import (
