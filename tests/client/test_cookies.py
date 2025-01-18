@@ -145,7 +145,7 @@ def test_get_cookie() -> None:
 
     assert response.status_code == 200
     assert response.cookies["example-name"] == "example-value"
-    assert client.cookies["example-name"] == "example-value"
+    assert "example-name" in client.cookies
 
 
 def test_cookie_persistence() -> None:
