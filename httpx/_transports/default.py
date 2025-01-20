@@ -23,8 +23,8 @@ client = httpx.Client(transport=transport)
 transport = httpx.HTTPTransport(uds="socket.uds")
 client = httpx.Client(transport=transport)
 """
-import contextlib
 import typing
+import contextlib
 from types import TracebackType
 
 import httpcore
