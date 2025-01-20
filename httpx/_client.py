@@ -400,11 +400,13 @@ class BaseClient:
         Merge a cookies argument together with any cookies on the client,
         to create the cookies used for the outgoing request.
         """
-        if cookies or self.cookies:
-            merged_cookies = Cookies(self.cookies)
+        merged_cookies = Cookies(self.cookies)
+        if cookies:
             merged_cookies.update(cookies)
-            return merged_cookies
-        return cookies
+        # Ensure response cookies are persisted if the flag is set
+        if self._persistent_cookies:
+            self._cookies.update(merged_cookies)
+        return merged_cookies
 
     def _merge_headers(
         self, headers: typing.Optional[HeaderTypes] = None
@@ -630,7 +632,7 @@ class Client(BaseClient):
         params: typing.Optional[QueryParamTypes] = None,
         headers: typing.Optional[HeaderTypes] = None,
         cookies: typing.Optional[CookieTypes] = None,
-        persistent_cookies: bool = False,
+        persistent_cookies: bool = True,  # Change default to true
         verify: VerifyTypes = True,
         cert: typing.Optional[CertTypes] = None,
         http1: bool = True,
@@ -657,7 +659,7 @@ class Client(BaseClient):
             auth=auth,
             params=params,
             headers=headers,
-            cookies=cookies,
+            cookies=cookies if cookies else Cookies(),  # Ensure cookies are initialized
             persistent_cookies=persistent_cookies,
             timeout=timeout,
             follow_redirects=follow_redirects,
