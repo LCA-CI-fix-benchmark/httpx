@@ -183,6 +183,8 @@ class BaseClient:
         self._params = QueryParams(params)
         self.headers = Headers(headers)
         self._cookies = Cookies(cookies)
+        if persistent_cookies:
+            self._cookies.update(cookies)
         self._persistent_cookies = persistent_cookies
         self._timeout = Timeout(timeout)
         self.follow_redirects = follow_redirects
@@ -399,12 +401,12 @@ class BaseClient:
         """
         Merge a cookies argument together with any cookies on the client,
         to create the cookies used for the outgoing request.
-        """
-        if cookies or self.cookies:
-            merged_cookies = Cookies(self.cookies)
+        Ensure persistent cookies are correctly managed.
+       """
+        merged_cookies = Cookies(self.cookies)
+        if cookies:
             merged_cookies.update(cookies)
-            return merged_cookies
-        return cookies
+        return merged_cookies
 
     def _merge_headers(
         self, headers: typing.Optional[HeaderTypes] = None
