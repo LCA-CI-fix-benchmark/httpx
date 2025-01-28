@@ -33,8 +33,7 @@ from ._exceptions import (
     UnsupportedProtocol,
     WriteError,
     WriteTimeout,
-)
-from ._models import Cookies, Headers, Request, Response
+)from ._models import Cookies, Headers, Request, Response
 from ._status_codes import codes
 from ._transports.asgi import ASGITransport
 from ._transports.base import AsyncBaseTransport, BaseTransport
