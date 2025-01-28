@@ -170,3 +170,13 @@ def test_proxy_with_auth_from_url():
 def test_invalid_proxy_scheme():
     with pytest.raises(ValueError):
         httpx.Proxy("invalid://example.com")
+
+@@ ... @@
+def test_ssl_context_verify_path_not_exists():
+    """Test SSLContext with a verify path that doesn't exist"""
+    # Non-existent path that is not a bool
+    verify = "/path/does/not/exist"
+    with pytest.raises(IOError) as exc_info:
+        httpx.SSLContext(verify=verify)
+    assert "Could not find a suitable TLS CA certificate bundle" in str(exc_info.value)
+    assert "invalid path: /path/does/not/exist" in str(exc_info.value)
