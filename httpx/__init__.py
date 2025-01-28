@@ -1,3 +1,4 @@
+import sys
 from .__version__ import __description__, __title__, __version__
 from ._api import delete, get, head, options, patch, post, put, request, stream
 from ._auth import Auth, BasicAuth, DigestAuth, NetRCAuth
@@ -47,15 +48,10 @@ from ._urls import URL, QueryParams
 try:
     from ._main import main
 except ImportError:  # pragma: no cover
-
     def main() -> None:  # type: ignore
-        import sys
-
-        print(
-            "The httpx command line client could not run because the required "
+        print("The httpx command line client could not run because the required "
             "dependencies were not installed.\nMake sure you've installed "
-            "everything with: pip install 'httpx[cli]'"
-        )
+            "everything with: pip install 'httpx[cli]'")
         sys.exit(1)
 
 
@@ -130,7 +126,6 @@ __all__ = [
     "WriteTimeout",
     "WSGITransport",
 ]
-
 
 __locals = locals()
 for __name in __all__:
