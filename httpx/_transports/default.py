@@ -28,9 +28,8 @@ import typing
 from types import TracebackType
 
 import httpcore
-
 from .._config import (
-    DEFAULT_LIMITS,
+    DEFAULT_LIMITS, 
     DEFAULT_NETWORK_OPTIONS,
     Proxy,
     Limits,
@@ -38,7 +37,6 @@ from .._config import (
     create_ssl_context,
 )
 from .._exceptions import (
-    ConnectError,
     ConnectTimeout,
     LocalProtocolError,
     NetworkError,
@@ -49,6 +47,7 @@ from .._exceptions import (
     ReadTimeout,
     RemoteProtocolError,
     TimeoutException,
+    ConnectError,
     UnsupportedProtocol,
     WriteError,
     WriteTimeout,
