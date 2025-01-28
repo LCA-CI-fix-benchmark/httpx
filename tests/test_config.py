@@ -11,6 +11,9 @@ def test_load_ssl_config():
     context = httpx.SSLContext()
     assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
     assert context.check_hostname is True
+    context = httpx.SSLContext(verify=False)
+    assert context.verify_mode == ssl.VerifyMode.CERT_NONE
+    assert context.check_hostname is False
 
 
 def test_load_ssl_config_verify_non_existing_path():
