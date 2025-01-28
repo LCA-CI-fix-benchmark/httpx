@@ -26,32 +26,20 @@ client = httpx.Client(transport=transport)
 import contextlib
 import typing
 from types import TracebackType
-
 import httpcore
-
 from .._config import (
     DEFAULT_LIMITS,
     DEFAULT_NETWORK_OPTIONS,
-    Proxy,
     Limits,
     NetworkOptions,
+    Proxy,
     create_ssl_context,
 )
 from .._exceptions import (
-    ConnectError,
-    ConnectTimeout,
-    LocalProtocolError,
-    NetworkError,
-    PoolTimeout,
-    ProtocolError,
-    ProxyError,
-    ReadError,
-    ReadTimeout,
-    RemoteProtocolError,
-    TimeoutException,
-    UnsupportedProtocol,
-    WriteError,
-    WriteTimeout,
+    ConnectError, ConnectTimeout, LocalProtocolError, NetworkError,
+    PoolTimeout, ProtocolError, ProxyError, ReadError, ReadTimeout,
+    RemoteProtocolError, TimeoutException, UnsupportedProtocol,
+    WriteError, WriteTimeout,
 )
 from .._models import Request, Response
 from .._types import AsyncByteStream, CertTypes, ProxyTypes, SyncByteStream, VerifyTypes
