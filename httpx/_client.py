@@ -1029,6 +1029,9 @@ class Client(BaseClient):
         )
         if self._persistent_cookies:
             self.cookies.extract_cookies(response)
+            # Update client cookies with response cookies
+            if "set-cookie" in response.headers:
+                self.cookies.update(response.cookies)
         response.default_encoding = self._default_encoding
 
         logger.info(
@@ -1765,6 +1768,9 @@ class AsyncClient(BaseClient):
         )
         if self._persistent_cookies:
             self.cookies.extract_cookies(response)
+            # Update client cookies with response cookies
+            if "set-cookie" in response.headers:
+                self.cookies.update(response.cookies)
         response.default_encoding = self._default_encoding
 
         logger.info(
