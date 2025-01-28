@@ -28,15 +28,6 @@ import typing
 from types import TracebackType
 
 import httpcore
-
-from .._config import (
-    DEFAULT_LIMITS,
-    DEFAULT_NETWORK_OPTIONS,
-    Proxy,
-    Limits,
-    NetworkOptions,
-    create_ssl_context,
-)
 from .._exceptions import (
     ConnectError,
     ConnectTimeout,
@@ -52,6 +43,14 @@ from .._exceptions import (
     UnsupportedProtocol,
     WriteError,
     WriteTimeout,
+)
+from .._config import (
+    DEFAULT_LIMITS,
+    DEFAULT_NETWORK_OPTIONS,
+    Limits,
+    NetworkOptions,
+    Proxy,
+    create_ssl_context,
 )
 from .._models import Request, Response
 from .._types import AsyncByteStream, CertTypes, ProxyTypes, SyncByteStream, VerifyTypes
