@@ -73,6 +73,7 @@ class SSLContext(ssl.SSLContext):
         self.check_hostname = False
         self.verify_mode = ssl.CERT_NONE
         self._load_client_certs(cert)
+        logger.debug("Created SSL context with verify=False cert=%r", cert)
         return self
 
     def load_ssl_context_verify(

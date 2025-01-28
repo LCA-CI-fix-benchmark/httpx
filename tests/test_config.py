@@ -68,9 +68,10 @@ def test_load_ssl_config_no_verify():
     assert context.check_hostname is False
 
 
-def test_SSLContext_with_get_request(server, cert_pem_file):
-    context = httpx.SSLContext(verify=cert_pem_file)
-    response = httpx.get(server.url, ssl_context=context)
+def test_SSLContext_no_verify_with_get_request(server):
+    context = httpx.SSLContext(verify=False, cert=None)
+    with pytest.warns(UserWarning, match=r'Unverified HTTPS request is being made'):
+        response = httpx.get(server.url, ssl_context=context)
     assert response.status_code == 200
 
 
