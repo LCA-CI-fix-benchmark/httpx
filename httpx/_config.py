@@ -54,7 +54,7 @@ class SSLContext(ssl.SSLContext):
         self.set_ciphers(DEFAULT_CIPHERS)
 
         logger.debug(
-            "load_ssl_context verify=%r cert=%r",
+            "load_ssl_context verify=%r cert=%r keylog_filename=%r",
             verify,
             cert,
         )
