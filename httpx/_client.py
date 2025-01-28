@@ -400,6 +400,8 @@ class BaseClient:
         Merge a cookies argument together with any cookies on the client,
         to create the cookies used for the outgoing request.
         """
+        if self._persistent_cookies and cookies is None:
+            return self.cookies
         if cookies or self.cookies:
             merged_cookies = Cookies(self.cookies)
             merged_cookies.update(cookies)
@@ -1027,7 +1029,7 @@ class Client(BaseClient):
         response.stream = BoundSyncStream(
             response.stream, response=response, timer=timer
         )
-        if self._persistent_cookies:
+        if self._persistent_cookies and request.cookies:
             self.cookies.extract_cookies(response)
         response.default_encoding = self._default_encoding
 
@@ -1763,7 +1765,7 @@ class AsyncClient(BaseClient):
         response.stream = BoundAsyncStream(
             response.stream, response=response, timer=timer
         )
-        if self._persistent_cookies:
+        if self._persistent_cookies and request.cookies:
             self.cookies.extract_cookies(response)
         response.default_encoding = self._default_encoding
 
