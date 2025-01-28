@@ -35,10 +35,11 @@ from .._config import (
     Proxy,
     Limits,
     NetworkOptions,
+    Limits,
+    NetworkOptions,
     create_ssl_context,
 )
 from .._exceptions import (
-    ConnectError,
     ConnectTimeout,
     LocalProtocolError,
     NetworkError,
