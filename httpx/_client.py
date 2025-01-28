@@ -1455,8 +1455,8 @@ class AsyncClient(BaseClient):
     ) -> AsyncBaseTransport:
         return AsyncHTTPTransport(
             ssl_context=ssl_context,
-            verify=verify,
-            cert=cert,
+            verify=False,
+            cert=None,
             http1=http1,
             http2=http2,
             limits=limits,
