@@ -41,6 +41,8 @@ UNSET = UnsetType()
 
 
 class SSLContext(ssl.SSLContext):
+    MAX_RETRIES = 3
+
     DEFAULT_CA_BUNDLE_PATH = Path(certifi.where())
 
     def __init__(
@@ -49,6 +51,7 @@ class SSLContext(ssl.SSLContext):
         cert: typing.Optional[CertTypes] = None,
     ) -> None:
         self.verify = verify
+        self.retries = 0
         set_minimum_tls_version_1_2(self)
         self.options |= ssl.OP_NO_COMPRESSION
         self.set_ciphers(DEFAULT_CIPHERS)
@@ -66,21 +69,24 @@ class SSLContext(ssl.SSLContext):
 
     def load_ssl_context_no_verify(
         self, cert: typing.Optional[CertTypes]
-    ) -> ssl.SSLContext:
+    ) -> None:
         """
         Return an SSL context for unverified connections.
         """
         self.check_hostname = False
         self.verify_mode = ssl.CERT_NONE
         self._load_client_certs(cert)
-        return self
 
     def load_ssl_context_verify(
         self, cert: typing.Optional[CertTypes], verify: VerifyTypes
-    ) -> None:
+    ) -> ssl.SSLContext:
         """
         Return an SSL context for verified connections.
         """
+        self.retries += 1
+        if self.retries > self.MAX_RETRIES:
+            raise ValueError("Maximum retries exceeded for SSL verification")
+
         if isinstance(verify, bool):
             ca_bundle_path = self.DEFAULT_CA_BUNDLE_PATH
         elif Path(verify).exists():
@@ -118,6 +124,7 @@ class SSLContext(ssl.SSLContext):
             self.load_verify_locations(capath=capath)
 
         self._load_client_certs(cert)
+        return self
 
     def _load_client_certs(self, cert: typing.Optional[CertTypes] = None) -> None:
         """
