@@ -16,6 +16,18 @@ def test_load_ssl_config():
 def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
+ def test_load_ssl_config_verify_with_untrusted_cert():
+     # Create a temporary certificate file with an untrusted certificate
+     cert_file = Path("untrusted_cert.pem")
+     with cert_file.open("w") as f:
+         f.write("untrusted_cert_content")
+
+     # Test that the SSL context raises an error when verifying with the untrusted certificate
+     with pytest.raises(ssl.SSLError):
+         httpx.SSLContext(verify=cert_file)
+
+     # Clean up the temporary certificate file
+     cert_file.unlink()
 
 
 def test_load_ssl_config_verify_existing_file():
