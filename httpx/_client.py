@@ -1452,6 +1452,8 @@ class AsyncClient(BaseClient):
         http1: bool = True,
         http2: bool = False,
         limits: Limits = DEFAULT_LIMITS,
+        verify: typing.Optional[VerifyTypes] = None,
+        cert: typing.Optional[CertTypes] = None,
     ) -> AsyncBaseTransport:
         return AsyncHTTPTransport(
             ssl_context=ssl_context,
