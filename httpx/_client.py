@@ -983,17 +983,27 @@ class Client(BaseClient):
         """
         Sends a single request, without handling any redirections.
         """
+        MAX_RETRY_ATTEMPTS = 3
+        attempts = 0
         transport = self._transport_for_url(request.url)
         timer = Timer()
         timer.sync_start()
 
-        if not isinstance(request.stream, SyncByteStream):
-            raise RuntimeError(
-                "Attempted to send an async request with a sync Client instance."
-            )
+        while attempts < MAX_RETRY_ATTEMPTS:
+            try:
+                if not isinstance(request.stream, SyncByteStream):
+                    raise RuntimeError(
+                        "Attempted to send an async request with a sync Client instance."
+                    )
 
-        with request_context(request=request):
-            response = transport.handle_request(request)
+                with request_context(request=request):
+                    response = transport.handle_request(request)
+                break
+            except ValueError as e:
+                attempts += 1
+                if attempts == MAX_RETRY_ATTEMPTS:
+                    raise
+                print(f"Error: {e}. Retrying ({attempts}/{MAX_RETRY_ATTEMPTS}).")
 
         assert isinstance(response.stream, SyncByteStream)
 
@@ -1699,17 +1709,27 @@ class AsyncClient(BaseClient):
         """
         Sends a single request, without handling any redirections.
         """
+        MAX_RETRY_ATTEMPTS = 3
+        attempts = 0
         transport = self._transport_for_url(request.url)
         timer = Timer()
         await timer.async_start()
 
-        if not isinstance(request.stream, AsyncByteStream):
-            raise RuntimeError(
-                "Attempted to send an sync request with an AsyncClient instance."
-            )
+        while attempts < MAX_RETRY_ATTEMPTS:
+            try:
+                if not isinstance(request.stream, AsyncByteStream):
+                    raise RuntimeError(
+                        "Attempted to send an sync request with an AsyncClient instance."
+                    )
 
-        with request_context(request=request):
-            response = await transport.handle_async_request(request)
+                with request_context(request=request):
+                    response = await transport.handle_async_request(request)
+                break
+            except ValueError as e:
+                attempts += 1
+                if attempts == MAX_RETRY_ATTEMPTS:
+                    raise
+                print(f"Error: {e}. Retrying ({attempts}/{MAX_RETRY_ATTEMPTS}).")
 
         assert isinstance(response.stream, AsyncByteStream)
         response.request = request
