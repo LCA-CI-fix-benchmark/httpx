@@ -1,3 +1,6 @@
+# Import version first since other modules may depend on it
+from .__version__ import __description__, __title__, __version__
+
 from .__version__ import __description__, __title__, __version__
 from ._api import delete, get, head, options, patch, post, put, request, stream
 from ._auth import Auth, BasicAuth, DigestAuth, NetRCAuth
@@ -5,6 +8,7 @@ from ._client import USE_CLIENT_DEFAULT, AsyncClient, Client
 from ._config import Limits, Proxy, Timeout, SSLContext
 from ._content import ByteStream
 from ._exceptions import (
+    HTTPError,
     CloseError,
     ConnectError,
     ConnectTimeout,
@@ -130,7 +134,6 @@ __all__ = [
     "WriteTimeout",
     "WSGITransport",
 ]
-
 
 __locals = locals()
 for __name in __all__:
