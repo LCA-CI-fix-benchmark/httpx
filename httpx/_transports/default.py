@@ -27,8 +27,8 @@ import contextlib
 import typing
 from types import TracebackType
 
-import httpcore
 
+import httpcore
 from .._config import (
     DEFAULT_LIMITS,
     DEFAULT_NETWORK_OPTIONS,
