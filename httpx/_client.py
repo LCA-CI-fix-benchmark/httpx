@@ -1661,6 +1661,21 @@ class AsyncClient(BaseClient):
             history=[],
         )
         try:
+            max_attempts = 3
+            attempts = 0
+            while attempts < max_attempts: 
+                try:
+                    if not isinstance(request.stream, AsyncByteStream):
+                        raise RuntimeError(
+                            "Attempted to send a sync request with an AsyncClient instance."
+                        )
+                    
+                    break
+                except RuntimeError:
+                    attempts += 1
+                    if attempts == max_attempts:
+                        raise
+
             if not stream:
                 await response.aread()
 
