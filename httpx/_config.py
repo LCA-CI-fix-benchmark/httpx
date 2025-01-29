@@ -47,6 +47,7 @@ class SSLContext(ssl.SSLContext):
         self,
         verify: VerifyTypes = True,
         cert: typing.Optional[CertTypes] = None,
+        keylog_filename: typing.Optional[str] = None,
     ) -> None:
         self.verify = verify
         set_minimum_tls_version_1_2(self)
@@ -60,6 +61,10 @@ class SSLContext(ssl.SSLContext):
         )
 
         if verify:
+            if keylog_filename:
+                self.keylog_filename = keylog_filename
+                logger.debug("keylog_filename=%r", keylog_filename)
+
             self.load_ssl_context_verify(cert, verify)
         else:
             self.load_ssl_context_no_verify(cert)
@@ -146,7 +151,7 @@ class SSLContext(ssl.SSLContext):
     ) -> "SSLContext":
         return super().__new__(cls, protocol, *args, **kwargs)
 
-
+        
 class Timeout:
     """
     Timeout configuration.
