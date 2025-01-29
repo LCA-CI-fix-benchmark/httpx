@@ -14,8 +14,9 @@ def test_load_ssl_config():
 
 
 def test_load_ssl_config_verify_non_existing_path():
-    with pytest.raises(IOError):
+    with pytest.raises(IOError) as excinfo:
         httpx.SSLContext(verify="/path/to/nowhere")
+    assert "invalid path: /path/to/nowhere" in str(excinfo.value)
 
 
 def test_load_ssl_config_verify_existing_file():
