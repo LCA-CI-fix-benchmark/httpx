@@ -25,8 +25,8 @@ client = httpx.Client(transport=transport)
 """
 import contextlib
 import typing
-from types import TracebackType
 
+from types import TracebackType
 import httpcore
 
 from .._config import (
@@ -34,8 +34,8 @@ from .._config import (
     DEFAULT_NETWORK_OPTIONS,
     Proxy,
     Limits,
-    NetworkOptions,
     create_ssl_context,
+    NetworkOptions,
 )
 from .._exceptions import (
     ConnectError,
