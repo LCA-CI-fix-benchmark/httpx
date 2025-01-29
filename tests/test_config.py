@@ -30,6 +30,13 @@ def test_load_ssl_config_verify_directory():
     assert context.verify_mode == ssl.VerifyMode.CERT_REQUIRED
     assert context.check_hostname is True
 
+@pytest.mark.parametrize(
+    "verify",
+    ["", None, "/nonexistent/path", Path("/nonexistent/path")],
+)
+def test_load_ssl_config_verify_invalid_path(verify):
+    with pytest.raises(IOError):
+        httpx.SSLContext(verify=verify)
 
 def test_load_ssl_config_cert_and_key(cert_pem_file, cert_private_key_file):
     context = httpx.SSLContext(cert=(cert_pem_file, cert_private_key_file))
