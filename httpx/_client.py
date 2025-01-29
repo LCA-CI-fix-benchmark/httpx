@@ -1449,14 +1449,10 @@ class AsyncClient(BaseClient):
         self,
         proxy: Proxy,
         ssl_context: typing.Optional[ssl.SSLContext] = None,
-        http1: bool = True,
-        http2: bool = False,
         limits: Limits = DEFAULT_LIMITS,
     ) -> AsyncBaseTransport:
         return AsyncHTTPTransport(
             ssl_context=ssl_context,
-            verify=verify,
-            cert=cert,
             http1=http1,
             http2=http2,
             limits=limits,
