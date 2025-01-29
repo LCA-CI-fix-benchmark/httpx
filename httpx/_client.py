@@ -1027,8 +1027,9 @@ class Client(BaseClient):
         response.stream = BoundSyncStream(
             response.stream, response=response, timer=timer
         )
+        response.cookies = Cookies(self.cookies)
         if self._persistent_cookies:
-            self.cookies.extract_cookies(response)
+            response.cookies.extract_cookies(response)
         response.default_encoding = self._default_encoding
 
         logger.info(
@@ -1763,8 +1764,9 @@ class AsyncClient(BaseClient):
         response.stream = BoundAsyncStream(
             response.stream, response=response, timer=timer
         )
+        response.cookies = Cookies(self.cookies)
         if self._persistent_cookies:
-            self.cookies.extract_cookies(response)
+            response.cookies.extract_cookies(response)
         response.default_encoding = self._default_encoding
 
         logger.info(
