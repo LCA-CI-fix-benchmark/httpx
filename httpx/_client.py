@@ -506,6 +506,8 @@ class BaseClient:
         Return the URL for the redirect to follow.
         """
         location = response.headers["Location"]
+        if isinstance(location, bytes):
+          location = location.decode()
 
         try:
             url = URL(location)
