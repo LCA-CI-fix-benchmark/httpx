@@ -17,6 +17,23 @@ def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
 
+@@ ... @@
+def test_load_ssl_config_with_post_handshake_auth():
+    """Test that post_handshake_auth is set when available."""
+    context = httpx.SSLContext()
+    # Should be enabled by default in modern Python
+    assert context.post_handshake_auth is True
+    
+    # Test with a context that doesn't support post_handshake_auth
+    class LegacySSLContext(ssl.SSLContext):
+        @property
+        def post_handshake_auth(self):
+            raise AttributeError()
+    
+    legacy_context = LegacySSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    # This should not raise an error even though post_handshake_auth is not available
+    httpx.SSLContext._load_client_certs(legacy_context)
+
 
 def test_load_ssl_config_verify_existing_file():
     context = httpx.SSLContext(verify=certifi.where())
