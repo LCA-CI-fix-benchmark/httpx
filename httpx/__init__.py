@@ -58,7 +58,6 @@ except ImportError:  # pragma: no cover
         )
         sys.exit(1)
 
-
 __all__ = [
     "__description__",
     "__title__",
