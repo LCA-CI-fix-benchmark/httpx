@@ -1261,8 +1261,7 @@ class Client(BaseClient):
                 ClientState.CLOSED: (
                     "Cannot reopen a client instance, once it has been closed."
                 ),
-            }[self._state]
-            raise RuntimeError(msg)
+            }[self._state] raise RuntimeError(msg)
 
         self._state = ClientState.OPENED
 
@@ -1455,8 +1454,6 @@ class AsyncClient(BaseClient):
     ) -> AsyncBaseTransport:
         return AsyncHTTPTransport(
             ssl_context=ssl_context,
-            verify=verify,
-            cert=cert,
             http1=http1,
             http2=http2,
             limits=limits,
