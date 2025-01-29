@@ -1,8 +1,7 @@
-from .__version__ import __description__, __title__, __version__
 from ._api import delete, get, head, options, patch, post, put, request, stream
 from ._auth import Auth, BasicAuth, DigestAuth, NetRCAuth
-from ._client import USE_CLIENT_DEFAULT, AsyncClient, Client
-from ._config import Limits, Proxy, Timeout, SSLContext
+from ._client import AsyncClient, Client, USE_CLIENT_DEFAULT
+from ._config import Limits, Proxy, SSLContext, Timeout
 from ._content import ByteStream
 from ._exceptions import (
     CloseError,
@@ -42,7 +41,9 @@ from ._transports.default import AsyncHTTPTransport, HTTPTransport
 from ._transports.mock import MockTransport
 from ._transports.wsgi import WSGITransport
 from ._types import AsyncByteStream, SyncByteStream
-from ._urls import URL, QueryParams
+from ._urls import QueryParams, URL
+from .__version__ import __description__, __title__, __version__
+from ._api import delete, get, head, options, patch, post, put, request, stream
 
 try:
     from ._main import main
