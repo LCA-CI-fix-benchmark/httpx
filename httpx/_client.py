@@ -468,7 +468,7 @@ class BaseClient:
         url = self._redirect_url(request, response)
         headers = self._redirect_headers(request, url, method)
         stream = self._redirect_stream(request, method)
-        cookies = Cookies(self.cookies)
+        cookies = Cookies(self.cookies) if self._persistent_cookies else None
         return Request(
             method=method,
             url=url,
