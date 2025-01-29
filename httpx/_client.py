@@ -995,6 +995,8 @@ class Client(BaseClient):
                 request = self._build_redirect_request(request, response)
                 history = history + [response]
 
+                if self._persistent_cookies:
+                    self.cookies.extract_cookies(response)
                 if follow_redirects:
                     response.read()
                 else:
