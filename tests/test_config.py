@@ -1,5 +1,6 @@
 import ssl
 from pathlib import Path
+import os
 
 import certifi
 import pytest
@@ -147,6 +148,18 @@ def test_timeout_repr():
 
     timeout = httpx.Timeout(None, read=5.0)
     assert repr(timeout) == "Timeout(connect=None, read=5.0, write=None, pool=None)"
+
+
+def test_ssl_context_keylog_filename():
+    with pytest.raises(AttributeError):
+        httpx.SSLContext().keylog_filename = "test.log"  # type: ignore
+
+
+def test_ssl_context_keylog_filename_explicit_protocol():
+    context = httpx.SSLContext(protocol=ssl.PROTOCOL_TLS)
+    assert context
+    context.keylog_filename = "test.log"
+    assert context.keylog_filename == "test.log"
 
 
 def test_proxy_from_url():
