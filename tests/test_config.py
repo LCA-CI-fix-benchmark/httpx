@@ -98,6 +98,11 @@ def test_timeout_all_parameters_set():
     assert timeout == httpx.Timeout(timeout=5.0)
 
 
+def test_timeout_repr_all_different():
+    timeout = httpx.Timeout(connect=1.0, read=2.0, write=3.0, pool=4.0) 
+    assert repr(timeout) == "Timeout(connect=1.0, read=2.0, write=3.0, pool=4.0)"
+
+
 def test_timeout_from_nothing():
     timeout = httpx.Timeout(None)
     assert timeout.connect is None
