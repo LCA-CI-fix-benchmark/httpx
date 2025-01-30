@@ -62,7 +62,7 @@ class SSLContext(ssl.SSLContext):
         if verify:
             self.load_ssl_context_verify(cert, verify)
         else:
-            self.load_ssl_context_no_verify(cert)
+            self.load_ssl_context_no_verify()
 
     def load_ssl_context_no_verify(
         self, cert: typing.Optional[CertTypes]
