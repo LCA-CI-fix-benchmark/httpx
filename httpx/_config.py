@@ -1,8 +1,8 @@
 import logging
 import os
+from pathlib import Path
 import ssl
 import typing
-from pathlib import Path
 
 import certifi
 
