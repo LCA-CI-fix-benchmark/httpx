@@ -622,6 +622,8 @@ class Client(BaseClient):
         ssl_context: typing.Optional[ssl.SSLContext] = None,
         http1: bool = True,
         http2: bool = False,
+        verify: typing.Optional[typing.Union[str, bool]] = None,
+        cert: typing.Optional[typing.Union[str, typing.Tuple[str, str]]] = None,
         proxy: typing.Optional[ProxyTypes] = None,
         proxies: typing.Optional[ProxiesTypes] = None,
         mounts: typing.Optional[
@@ -721,6 +723,8 @@ class Client(BaseClient):
             ssl_context=ssl_context,
             http1=http1,
             http2=http2,
+            verify=verify,
+            cert=cert,
             limits=limits,
         )
 
@@ -1455,8 +1459,6 @@ class AsyncClient(BaseClient):
     ) -> AsyncBaseTransport:
         return AsyncHTTPTransport(
             ssl_context=ssl_context,
-            verify=verify,
-            cert=cert,
             http1=http1,
             http2=http2,
             limits=limits,
