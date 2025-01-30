@@ -1025,7 +1025,8 @@ class Client(BaseClient):
 
         response.request = request
         response.stream = BoundSyncStream(
-            response.stream, response=response, timer=timer
+            response.stream, response=response, timer=timer,
+            persist_cookies=self._persistent_cookies,
         )
         if self._persistent_cookies:
             self.cookies.extract_cookies(response)
@@ -1761,7 +1762,8 @@ class AsyncClient(BaseClient):
         assert isinstance(response.stream, AsyncByteStream)
         response.request = request
         response.stream = BoundAsyncStream(
-            response.stream, response=response, timer=timer
+            response.stream, response=response, timer=timer,
+            persist_cookies=self._persistent_cookies,
         )
         if self._persistent_cookies:
             self.cookies.extract_cookies(response)
