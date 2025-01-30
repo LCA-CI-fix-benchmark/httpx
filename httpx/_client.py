@@ -1014,8 +1014,9 @@ class Client(BaseClient):
         timer.sync_start()
 
         if not isinstance(request.stream, SyncByteStream):
-            raise RuntimeError(
-                "Attempted to send an async request with a sync Client instance."
+            # Convert async byte streams to sync when using a sync client
+            request.stream = SyncByteStream(
+                content=request.stream.read(), close_func=request.stream.aclose
             )
 
         with request_context(request=request):
@@ -1751,8 +1752,9 @@ class AsyncClient(BaseClient):
         await timer.async_start()
 
         if not isinstance(request.stream, AsyncByteStream):
-            raise RuntimeError(
-                "Attempted to send an sync request with an AsyncClient instance."
+            # Convert sync byte streams to async when using an async client 
+            request.stream = AsyncByteStream(
+                content=await anyio.to_thread.run_sync(request.stream.read)
             )
 
         with request_context(request=request):
