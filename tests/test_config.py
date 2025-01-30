@@ -16,6 +16,7 @@ def test_load_ssl_config():
 def test_load_ssl_config_verify_non_existing_path():
     with pytest.raises(IOError):
         httpx.SSLContext(verify="/path/to/nowhere")
+    # This test should cover the IOError raised in _config.py:139 when verify path doesn't exist
 
 
 def test_load_ssl_config_verify_existing_file():
