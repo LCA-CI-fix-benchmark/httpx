@@ -9,11 +9,6 @@ The following additional keyword arguments are currently supported by httpcore..
 
 Example usages...
 
-# Disable HTTP/2 on a single specific domain.
-mounts = {
-    "all://": httpx.HTTPTransport(http2=True),
-    "all://*example.org": httpx.HTTPTransport()
-}
 
 # Using advanced httpcore configuration, with connection retries.
 transport = httpx.HTTPTransport(retries=1)
@@ -24,8 +19,8 @@ transport = httpx.HTTPTransport(uds="socket.uds")
 client = httpx.Client(transport=transport)
 """
 import contextlib
-import typing
 from types import TracebackType
+import typing
 
 import httpcore
 
