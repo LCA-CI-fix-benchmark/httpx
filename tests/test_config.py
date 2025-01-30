@@ -14,8 +14,11 @@ def test_load_ssl_config():
 
 
 def test_load_ssl_config_verify_non_existing_path():
+    invalid_path = "/path/to/nowhere"
     with pytest.raises(IOError):
-        httpx.SSLContext(verify="/path/to/nowhere")
+        httpx.SSLContext(verify=invalid_path)
+    error_msg = f"Could not find a suitable TLS CA certificate bundle, invalid path: {invalid_path}"
+    assert str(exc_info.value) == error_msg
 
 
 def test_load_ssl_config_verify_existing_file():
