@@ -658,7 +658,7 @@ class Client(BaseClient):
             params=params,
             headers=headers,
             cookies=cookies,
-            persistent_cookies=persistent_cookies,
+            persistent_cookies=True,
             timeout=timeout,
             follow_redirects=follow_redirects,
             max_redirects=max_redirects,
